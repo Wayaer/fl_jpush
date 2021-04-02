@@ -10,99 +10,79 @@
 android: {
 
   defaultConfig {
-    applicationId "替换成自己应用 ID"
-
-    ndk {
-	//选择要添加的对应 cpu 类型的 .so 库。
-	abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'x86_64', 'mips', 'mips64', 'arm64-v8a',        
-    }
+    applicationId '替换成自己应用 ID'
 
     manifestPlaceholders = [
         JPUSH_PKGNAME : applicationId,
-        JPUSH_APPKEY : "appkey", // NOTE: JPush 上注册的包名对应的 Appkey.
-        JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        JPUSH_APPKEY : 'appkey', 
+        JPUSH_CHANNEL : 'developer-default', 
     ]
   }    
 }
 ```
 
 ##### iOS:
-
-- 在 xcode8 之后需要点开推送选项： TARGETS -> Capabilities -> Push Notification 设为 on 状态
+原生需要自己配置证书 等相关参数
 
 ### 使用
 
 ```dart
-import 'package:fl_jpush/fl_jpush.dart';
+import 'package:fl_jpush/fl_dart';
 ```
 
 ### APIs
 
-**注意** : 需要先调用 JPush.setup 来初始化插件，才能保证其他功能正常工作。
+**注意** : 需要先调用 setupWithJPush 来初始化插件，才能保证其他功能正常工作。
 
-[Common API](#common-api)
-
-- [addEventHandler](#addeventhandler)
-- [setup](#setup)
-- [getRegistrationID](#getregistrationid)
-- [stopPush](#stoppush)
-- [resumePush](#resumepush)
-- [setAlias](#setalias)
-- [deleteAlias](#deletealias)
-- [addTags](#addtags)
-- [deleteTags](#deletetags)
-- [setTags](#settags)
-- [cleanTags](#cleantags)
-- [getAllTags](getalltags)
-- [sendLocalNotification](#sendlocalnotification)
-- [clearAllNotifications](#clearallnotifications)
-
-[iOS Only]()
-
-- [applyPushAuthority](#applypushauthority)
-- [setBadge](#setbadge)
-- [getLaunchAppNotification](#getlaunchappnotification)
-
-**注意：addEventHandler 方法建议放到 setup 之前，其他方法需要在 setup 方法之后调用，**
-
-####  addEventHandler
+#### addEventHandlerWithJPush
 
 添加事件监听方法。
 
 ```dart
-JPush jpush = new JPush();
-jpush.addEventHandler(
-      // 接收通知回调方法。
-      onReceiveNotification: (Map<String, dynamic> message) async {
-         print("flutter onReceiveNotification: $message");
-      },
-      // 点击通知回调方法。
-      onOpenNotification: (Map<String, dynamic> message) async {
-        print("flutter onOpenNotification: $message");
-      },
-      // 接收自定义消息回调方法。
-      onReceiveMessage: (Map<String, dynamic> message) async {
-        print("flutter onReceiveMessage: $message");
-      },
-  );
+
+  Future<void> addEventHandler() async {
+    addEventHandlerWithJPush(onReceiveNotification: (JPushMessage message) {
+      print('onReceiveNotification: ${message.toMap}');
+      text = 'onReceiveNotification: ${message.title}';
+      setState(() {});
+    }, onOpenNotification: (JPushMessage message) {
+      print('onOpenNotification: ${message.toMap}');
+      text = 'onOpenNotification: ${message.title}';
+      setState(() {});
+    }, onReceiveMessage: (JPushMessage message) {
+      print('onReceiveMessage: ${message.toMap}');
+      text = 'onReceiveMessage: ${message.title}';
+      setState(() {});
+    }, onReceiveNotificationAuthorization: (JPushMessage message) {
+      print('onReceiveNotificationAuthorization: ${message.toMap}');
+      text = 'onReceiveNotificationAuthorization: ${message.title}';
+      setState(() {});
+    });
+
+  }
+
 ```
 
-#### setup
+#### setupWithJPush
 
-添加初始化方法，调用 setup 方法会执行两个操作：
+添加初始化方法，调用 setupWithJPush 方法会执行两个操作：
 
-- 初始化 JPush SDK
-- 将缓存的事件下发到 dart 环境中。
 
-**注意：** 插件版本 >= 0.0.8 android 端支持在 setup 方法中动态设置 channel，动态设置的 channel 优先级比 manifestPlaceholders 中的 JPUSH_CHANNEL 优先级要高。
+**注意：**  android 端支持在 setupWithJPush 方法中动态设置 channel，动态设置的 channel 优先级比 manifestPlaceholders 中的 JPUSH_CHANNEL 优先级要高。
 ```dart
-JPush jpush = new JPush();
-jpush.setup(
-      appKey: "替换成你自己的 appKey",
-      channel: "theChannel",
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  /// 初始化
+  setupWithJPush(
+      iosKey: 'AppKey', //你自己应用的 AppKey
       production: false,
-      debug: false, // 设置是否打印 debug 日志
-    );
+      channel: 'channel',
+      debug: false);
+
+  runApp(MaterialApp());
+}
 ```
 
 #### getRegistrationID
@@ -110,153 +90,217 @@ jpush.setup(
 获取 registrationId，这个 JPush 运行通过 registrationId 来进行推送.
 
 ```dart
-JPush jpush = new JPush();
-jpush.getRegistrationID().then((rid) { });
+ void getRegistrationID (){
+   getRegistrationIDWithJPush.then((String rid) {
+      print('get registration id : $rid');
+    });
+  }
 ```
 
-#### stopPush
+#### stopPushWithJPush
 
 停止推送功能，调用该方法将不会接收到通知。
 
 ```dart
-JPush jpush = new JPush();
-jpush.stopPush();
+
+stopPushWithJPush
 ```
 
-#### resumePush
+#### resumePushWithJPush
 
-调用 stopPush 后，可以通过 resumePush 方法恢复推送。
+调用 stopPushWithJPush 后，可以通过 resumePushWithJPush 方法恢复推送。
 
 ```dart
-JPush jpush = new JPush();
-jpush.resumePush();
+
+resumePushWithJPush;
 ```
 
-#### setAlias
+#### setAliasWithJPush
 
 设置别名，极光后台可以通过别名来推送，一个 App 应用只有一个别名，一般用来存储用户 id。
 
-```
-JPush jpush = new JPush();
-jpush.setAlias("your alias").then((map) { });
+```dart
+
+setAliasWithJPush('your alias').then((AliasResultModel model) { });
 ```
 
-#### deleteAlias
+#### deleteAliasWithJPush
 
-可以通过 deleteAlias 方法来删除已经设置的 alias。
+删除 alias。
 
 ```dart
-JPush jpush = new JPush();
-jpush.deleteAlias().then((map) {})
+
+deleteAliasWithJPush.then((AliasResultModel model) {})
 ```
 
-#### addTags
+
+#### getAliasWithJPush
+
+获取 alias.
+
+```dart
+
+getAliasWithJPush.then((AliasResultModel model) {})
+```
+
+#### addTagsWithJPush
 
 在原来的 Tags 列表上添加指定 tags。
 
-```
-JPush jpush = new JPush();
-jpush.addTags(["tag1","tag2"]).then((map) {});
+```dart
+
+addTagsWithJPush(['tag1','tag2']).then((TagResultModel model) {});
 ```
 
-####  deleteTags
+####  deleteTagsWithJPush
 
 在原来的 Tags 列表上删除指定 tags。
 
-```
-JPush jpush = new JPush();
-jpush.deleteTags(["tag1","tag2"]).then((map) {});
+```dart
+
+deleteTagsWithJPush(['tag1','tag2']).then((TagResultModel model) {});
 ```
 
-#### setTags
+#### setTagsWithJPush
 
 重置 tags。
 
 ```dart
-JPush jpush = new JPush();
-jpush.setTags(["tag1","tag2"]).then((map) {});
+
+setTagsWithJPush(['tag1','tag2']).then((TagResultModel model) {});
 ```
 
-#### cleanTags
+#### validTagWithJPush
+
+验证tag是否绑定。
+
+```dart
+
+validTagWithJPush('tag1').then((TagResultModel model) {});
+```
+
+#### cleanTagsWithJPush
 
 清空所有 tags
 
 ```dart
-jpush.setTags().then((map) {});
+
+cleanTagsWithJPush.then((TagResultModel model) {});
 ```
 
-#### getAllTags
+#### getAllTagsWithJPush
 
 获取当前 tags 列表。
 
 ```dart
 
-JPush jpush = new JPush();
-jpush.getAllTags().then((map) {});
+getAllTagsWithJPush.then((TagResultModel model) {});
 
 ```
 
-#### sendLocalNotification
+#### sendLocalNotificationWithJPush
 
 指定触发时间，添加本地推送通知。
 
 ```dart
 // 延时 3 秒后触发本地通知。
-JPush jpush = new JPush();
+
 var fireDate = DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch + 3000);
 var localNotification = LocalNotification(
-   id: 234,
-   title: 'notification title',
+   id: 222,
+   title: 'title',
    buildId: 1,
-   content: 'notification content',
+   content: 'content',
    fireTime: fireDate,
-   subtitle: 'notification subtitle', // 该参数只有在 iOS 有效
+   subtitle: 'subtitle', // 该参数只有在 iOS 有效
    badge: 5, // 该参数只有在 iOS 有效
-   extras: {"fa": "0"} // 设置 extras ，extras 需要是 Map<String, String>
+   extras: {'hh': '11'} // 设置 extras ，extras 需要是 Map<String, String>
   );
-jpush.sendLocalNotification(localNotification).then((res) {});
+sendLocalNotificationWithJPush(localNotification).then((localNotification) {});
 ```
 
-#### clearAllNotifications
+#### clearNotificationWithJPush
+
+清空通知栏上某个通知
+
+```dart
+
+bool status = await clearNotificationWithJPush(notificationId);
+```
+
+
+#### clearAllNotificationsWithJPush
 
 清楚通知栏上所有通知。
 
 ```dart
-JPush jpush = new JPush();
-jpush.clearAllNotifications();
+
+clearAllNotificationsWithJPush;
 ```
 
-#### applyPushAuthority
+
+#### isNotificationEnabledWithJPush
+
+检测通知授权状态是否打开
+
+```dart
+
+bool status = await isNotificationEnabledWithJPush;
+```
+
+**Android Only **
+
+
+#### isPushStoppedJPush
+
+ Push Service 是否已经被停止
+
+```dart
+
+bool status = await isPushStoppedJPush;
+```
+
+#### getUdID
+
+获取UDID
+
+```dart
+
+String udid = await getUdID;
+```
+
+
+**iOS Only **
+
+#### applyPushAuthorityWithJPush
 
 申请推送权限，注意这个方法只会向用户弹出一次推送权限请求（如果用户不同意，之后只能用户到设置页面里面勾选相应权限），需要开发者选择合适的时机调用。
 
 **注意： iOS10+ 可以通过该方法来设置推送是否前台展示，是否触发声音，是否设置应用角标 badge**
 
 ```dart
-JPush jpush = new JPush();
-jpush.applyPushAuthority(new NotificationSettingsIOS(
+
+applyPushAuthorityWithJPush(NotificationSettingsIOS(
       sound: true,
       alert: true,
       badge: true));
 ```
 
-#### setBadge
-
-**iOS Only **
+#### setBadgeWithJPush
 
 设置应用 badge 值，该方法还会同步 JPush 服务器的的 badge 值，JPush 服务器的 badge 值用于推送 badge 自动 +1 时会用到。
 
 ```dart
-JPush jpush = new JPush();
-jpush.setBadge(66).then((map) {});
+
+setBadgeWithJPush(66).then((bool status) {});
 ```
 
-### getLaunchAppNotification
+### getLaunchAppNotificationWithJPush
 
 获取 iOS 点击推送启动应用的那条通知。
 
 ```dart
-JPush jpush = new JPush();
-jpush.getLaunchAppNotification().then((map) {});
+
+getLaunchAppNotificationWithJPush().then((Map<dynamic, dynamic> map) {});
 ```
 

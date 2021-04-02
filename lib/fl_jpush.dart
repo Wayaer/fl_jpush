@@ -126,7 +126,7 @@ Future<TagResultModel> get getAllTagsWithJPush async {
   return null;
 }
 
-/// 获取全部 alias.
+/// 获取 alias.
 Future<AliasResultModel> get getAliasWithJPush async {
   final Map<dynamic, dynamic> map = await _channel.invokeMethod('getAlias');
   if (map != null) return AliasResultModel.fromMap(map);
@@ -192,11 +192,11 @@ Future<LocalNotification> sendLocalNotificationWithJPush(
   return notification;
 }
 
-/// 调用此 API 检测通知授权状态是否打开
+///  检测通知授权状态是否打开
 Future<bool> get isNotificationEnabledWithJPush =>
     _channel.invokeMethod<bool>('isNotificationEnabled');
 
-/// 调用此 API Push Service 是否已经被停止
+///  Push Service 是否已经被停止
 Future<bool> get isPushStoppedJPush async {
   if (!Platform.isAndroid) return true;
   return _channel.invokeMethod<bool>('isPushStopped');
@@ -209,7 +209,7 @@ Future<String> get getUdID async {
   return await _channel.invokeMethod<String>('getUdID');
 }
 
-/// 调用此 API 跳转至系统设置中应用设置界面
+///  跳转至系统设置中应用设置界面
 Future<void> get openSettingsForNotificationWithJPush =>
     _channel.invokeMethod('openSettingsForNotification');
 

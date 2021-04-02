@@ -6,7 +6,7 @@ Future<void> main() async {
 
   /// 初始化
   setupWithJPush(
-      iosKey: '3af087cca42c9f95df54ab89', //你自己应用的 AppKey
+      iosKey: 'AppKey', //你自己应用的 AppKey
       production: false,
       channel: 'channel',
       debug: false);
@@ -32,20 +32,20 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> addEventHandler() async {
     addEventHandlerWithJPush(onReceiveNotification: (JPushMessage message) {
-      print('flutter onReceiveNotification: ${message.toMap}');
-      text = 'flutter onReceiveNotification: ${message.title}';
+      print('onReceiveNotification: ${message.toMap}');
+      text = 'onReceiveNotification: ${message.title}';
       setState(() {});
     }, onOpenNotification: (JPushMessage message) {
-      print('flutter onOpenNotification: ${message.toMap}');
-      text = 'flutter onOpenNotification: ${message.title}';
+      print('onOpenNotification: ${message.toMap}');
+      text = 'onOpenNotification: ${message.title}';
       setState(() {});
     }, onReceiveMessage: (JPushMessage message) {
-      print('flutter onReceiveMessage: ${message.toMap}');
-      text = 'flutter onReceiveMessage: ${message.title}';
+      print('onReceiveMessage: ${message.toMap}');
+      text = 'onReceiveMessage: ${message.title}';
       setState(() {});
     }, onReceiveNotificationAuthorization: (JPushMessage message) {
-      print('flutter onReceiveNotificationAuthorization: ${message.toMap}');
-      text = 'flutter onReceiveNotificationAuthorization: ${message.title}';
+      print('onReceiveNotificationAuthorization: ${message.toMap}');
+      text = 'onReceiveNotificationAuthorization: ${message.title}';
       setState(() {});
     });
 
@@ -53,8 +53,8 @@ class _HomePageState extends State<HomePage> {
         const NotificationSettingsIOS(sound: true, alert: true, badge: true));
 
     getRegistrationIDWithJPush.then((String rid) {
-      print('flutter get registration id : $rid');
-      text = 'flutter getRegistrationID: $rid';
+      print('get registration id : $rid');
+      text = 'getRegistrationID: $rid';
       setState(() {});
     });
   }
@@ -239,7 +239,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               getLaunchAppNotificationWithJPush
                   .then((Map<dynamic, dynamic> map) {
-                print('flutter getLaunchAppNotification:$map');
+                print('getLaunchAppNotification:$map');
                 text = 'getLaunchAppNotification success: $map';
                 setState(() {});
               });

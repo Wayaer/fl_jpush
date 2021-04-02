@@ -1,0 +1,21 @@
+name: fl_jpush
+description:  jpush plugin for flutter, only Android and IOS are supported
+version: 0.0.1
+repository: https://github.com/Wayaer/fl_jpush.git
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+  flutter: '>=1.22.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: flutter.jpush
+        pluginClass: JPushPlugin
+      ios:
+        pluginClass: JPushPlugin

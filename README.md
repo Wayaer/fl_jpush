@@ -27,7 +27,7 @@ android: {
 ### 使用
 
 ```dart
-import 'package:fl_jpush/fl_dart';
+import 'package:fl_jpush/fl_jpush_dart';
 ```
 
 ### APIs
@@ -40,7 +40,7 @@ import 'package:fl_jpush/fl_dart';
 
 ```dart
 
-  Future<void> addEventHandler() async {
+  Future<void> addEventHandlerWithJPush() async {
     addEventHandlerWithJPush(onReceiveNotification: (JPushMessage message) {
       print('onReceiveNotification: ${message.toMap}');
       text = 'onReceiveNotification: ${message.title}';

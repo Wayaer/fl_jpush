@@ -330,11 +330,11 @@ class NotificationSettingsIOS {
 ///  {string} [content] - 通知内容
 ///  {object} [extra] - extra 字段
 ///  {number} [fireTime] - 通知触发时间（毫秒）
-/// // iOS Only
+///  iOS Only
 ///  {number} [badge] - 本地推送触发后应用角标值
-/// // iOS Only
+///  iOS Only
 ///  {string} [soundName] - 指定推送的音频文件
-/// // iOS 10+ Only
+///  iOS 10+ Only
 ///  {string} [subtitle] - 子标题
 class LocalNotification {
   const LocalNotification(

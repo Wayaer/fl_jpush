@@ -4,6 +4,29 @@
 
 ##### Android:
 
+在 `/android/app/src/main/res/values/strings.xml` 中添加下列代码：（没有strings.xml 手动创建）
+```xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">极光推送</string>
+</resources>
+
+```
+在 `example/android/app/src/main/AndroidManifest.xml` 中添加下列代码：
+```xml
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jpush.example">
+   <application
+        android:label="@string/app_name" >
+
+           ...
+
+    </application>
+</manifest>
+
+```
 在 `/android/app/build.gradle` 中添加下列代码：
 
 ```groovy
@@ -16,6 +39,15 @@ android: {
         JPUSH_PKGNAME : applicationId,
         JPUSH_APPKEY : 'appkey', 
         JPUSH_CHANNEL : 'developer-default', 
+        MEIZU_APPKEY : "MZ-魅族的APPKEY",
+        MEIZU_APPID : "MZ-魅族的APPID",
+        XIAOMI_APPID : "MI-小米的APPID",
+        XIAOMI_APPKEY : "MI-小米的APPKEY",
+        OPPO_APPKEY : "OP-oppo的APPKEY",
+        OPPO_APPID : "OP-oppo的APPID",
+        OPPO_APPSECRET : "OP-oppo的APPSECRET",
+        VIVO_APPKEY : "vivo的APPKEY",
+        VIVO_APPID : "vivo的APPID"
     ]
   }    
 }

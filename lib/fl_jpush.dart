@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-typedef JPushEventHandler = void Function(JPushMessage event);
+typedef JPushEventHandler = void Function(JPushMessage? event);
 
 MethodChannel _channel = const MethodChannel('fl_jpush');
 
-Future<void> setupWithJPush(
-    {String iosKey,
-    bool production,
-    String channel = '',
+Future<void> setupJPush(
+    {required String iosKey,
+    bool production = false,
+    String? channel = '',
     bool debug = false}) async {
   await _channel.invokeMethod<dynamic>('setup', <String, dynamic>{
     'appKey': iosKey,
@@ -21,30 +20,30 @@ Future<void> setupWithJPush(
 }
 
 /// 初始化 JPush 必须先初始化才能执行其他操作(比如接收事件传递)
-void addEventHandlerWithJPush({
+void addJPushEventHandler({
   /// 接收普通消息
-  JPushEventHandler onReceiveNotification,
+  JPushEventHandler? onReceiveNotification,
 
   /// 点击通知栏消息回调
-  JPushEventHandler onOpenNotification,
-  JPushEventHandler onReceiveMessage,
+  JPushEventHandler? onOpenNotification,
+  JPushEventHandler? onReceiveMessage,
 
   /// ios 消息认证
-  JPushEventHandler onReceiveNotificationAuthorization,
+  JPushEventHandler? onReceiveNotificationAuthorization,
 }) {
   _channel.setMethodCallHandler((MethodCall call) async {
-    final Map<dynamic, dynamic> map = call.arguments as Map<dynamic, dynamic>;
-    JPushMessage message;
+    final Map<dynamic, dynamic>? map = call.arguments as Map<dynamic, dynamic>;
+    JPushMessage? message;
     if (map != null) {
       if (Platform.isIOS) {
         final _IOSModel _iosModel = _IOSModel.fromJson(map);
         message = JPushMessage();
-        message.title = _iosModel.aps.alert.title;
-        message.body = _iosModel.aps.alert.body;
-        message.subtitle = _iosModel.aps.alert.subtitle;
+        message.title = _iosModel.aps?.alert?.title;
+        message.body = _iosModel.aps?.alert?.body;
+        message.subtitle = _iosModel.aps?.alert?.subtitle;
         message.extras = _iosModel.extras;
-        message.badge = _iosModel.aps.badge;
-        message.sound = _iosModel.aps.sound;
+        message.badge = _iosModel.aps?.badge;
+        message.sound = _iosModel.aps?.sound;
         message.notificationAuthorization = _iosModel.notificationAuthorization;
       } else {
         message = JPushMessage.fromMap(map);
@@ -72,7 +71,7 @@ void addEventHandlerWithJPush({
 
 /// iOS Only
 /// 申请推送权限，注意这个方法只会向用户弹出一次推送权限请求（如果用户不同意，之后只能用户到设置页面里面勾选相应权限），需要开发者选择合适的时机调用。
-Future<void> applyPushAuthorityWithJPush(
+Future<void> applyJPushAuthority(
     [NotificationSettingsIOS iosSettings =
         const NotificationSettingsIOS()]) async {
   if (!Platform.isIOS) return;
@@ -81,69 +80,69 @@ Future<void> applyPushAuthorityWithJPush(
 }
 
 /// 设置 Tag （会覆盖之前设置的 tags）
-Future<TagResultModel> setTagsWithJPush(List<String> tags) async {
-  final Map<dynamic, dynamic> map =
+Future<TagResultModel?> setJPushTags(List<String> tags) async {
+  final Map<dynamic, dynamic>? map =
       await _channel.invokeMethod('setTags', tags);
   if (map != null) return TagResultModel.fromMap(map);
   return null;
 }
 
 /// 验证tag是否绑定
-Future<TagResultModel> validTagWithJPush(String tag) async {
-  final Map<dynamic, dynamic> map =
+Future<TagResultModel?> validJPushTag(String tag) async {
+  final Map<dynamic, dynamic>? map =
       await _channel.invokeMethod('validTag', tag);
   if (map != null) return TagResultModel.fromMap(map);
   return null;
 }
 
 /// 清空所有 tags。
-Future<TagResultModel> get cleanTagsWithJPush async {
-  final Map<dynamic, dynamic> map = await _channel.invokeMethod('cleanTags');
+Future<TagResultModel?> get cleanJPushTags async {
+  final Map<dynamic, dynamic>? map = await _channel.invokeMethod('cleanTags');
   if (map != null) return TagResultModel.fromMap(map);
   return null;
 }
 
 /// 在原有 tags 的基础上添加 tags
-Future<TagResultModel> addTagsWithJPush(List<String> tags) async {
-  final Map<dynamic, dynamic> map =
+Future<TagResultModel?> addJPushTags(List<String> tags) async {
+  final Map<dynamic, dynamic>? map =
       await _channel.invokeMethod('addTags', tags);
   if (map != null) return TagResultModel.fromMap(map);
   return null;
 }
 
 /// 删除指定的 tags
-Future<TagResultModel> deleteTagsWithJPush(List<String> tags) async {
-  final Map<dynamic, dynamic> map =
+Future<TagResultModel?> deleteJPushTags(List<String> tags) async {
+  final Map<dynamic, dynamic>? map =
       await _channel.invokeMethod('deleteTags', tags);
   if (map != null) return TagResultModel.fromMap(map);
   return null;
 }
 
 /// 获取所有当前绑定的 tags
-Future<TagResultModel> get getAllTagsWithJPush async {
-  final Map<dynamic, dynamic> map = await _channel.invokeMethod('getAllTags');
+Future<TagResultModel?> get getAllJPushTags async {
+  final Map<dynamic, dynamic>? map = await _channel.invokeMethod('getAllTags');
   if (map != null) return TagResultModel.fromMap(map);
   return null;
 }
 
 /// 获取 alias.
-Future<AliasResultModel> get getAliasWithJPush async {
-  final Map<dynamic, dynamic> map = await _channel.invokeMethod('getAlias');
+Future<AliasResultModel?> get getJPushAlias async {
+  final Map<dynamic, dynamic>? map = await _channel.invokeMethod('getAlias');
   if (map != null) return AliasResultModel.fromMap(map);
   return null;
 }
 
 /// 重置 alias.
-Future<AliasResultModel> setAliasWithJPush(String alias) async {
-  final Map<dynamic, dynamic> map =
+Future<AliasResultModel?> setJPushAlias(String alias) async {
+  final Map<dynamic, dynamic>? map =
       await _channel.invokeMethod('setAlias', alias);
   if (map != null) return AliasResultModel.fromMap(map);
   return null;
 }
 
 /// 删除原有 alias
-Future<AliasResultModel> get deleteAliasWithJPush async {
-  final Map<dynamic, dynamic> map = await _channel.invokeMethod('deleteAlias');
+Future<AliasResultModel?> get deleteJPushAlias async {
+  final Map<dynamic, dynamic>? map = await _channel.invokeMethod('deleteAlias');
   if (map != null) return AliasResultModel.fromMap(map);
   return null;
 }
@@ -151,21 +150,21 @@ Future<AliasResultModel> get deleteAliasWithJPush async {
 /// 设置应用 Badge（小红点）
 /// 清空应用Badge（小红点）设置 badge = 0
 /// 注意：如果是 Android 手机，目前仅支持华为手机
-Future<bool> setBadgeWithJPush(int badge) =>
+Future<bool?> setJPushBadge(int badge) =>
     _channel.invokeMethod('setBadge', badge);
 
 /// 停止接收推送，调用该方法后应用将不再受到推送，如果想要重新收到推送可以调用 resumePush。
-Future<bool> get stopPushWithJPush => _channel.invokeMethod('stopPush');
+Future<bool?> get stopJPush => _channel.invokeMethod('stopPush');
 
 /// 恢复推送功能。
-Future<bool> get resumePushWithJPush => _channel.invokeMethod('resumePush');
+Future<bool?> get resumeJPush => _channel.invokeMethod('resumePush');
 
 /// 清空通知栏上的所有通知。
-Future<bool> get clearAllNotificationsWithJPush =>
+Future<bool?> get clearAllJPushNotifications =>
     _channel.invokeMethod<bool>('clearAllNotifications');
 
 /// 清空通知栏上某个通知
-Future<bool> clearNotificationWithJPush(int notificationId) =>
+Future<bool?> clearJPushNotification(int notificationId) =>
     _channel.invokeMethod('clearNotification', notificationId);
 
 ///
@@ -174,43 +173,43 @@ Future<bool> clearNotificationWithJPush(int notificationId) =>
 /// 注意：notification 可能是 remoteNotification 和 localNotification，两种推送字段不一样。
 /// 如果不是通过点击推送启动应用，比如点击应用 icon 直接启动应用，notification 会返回 @{}。
 ///
-Future<Map<dynamic, dynamic>> get getLaunchAppNotificationWithJPush async {
+Future<Map<dynamic, dynamic>?> get getJPushLaunchAppNotification async {
   if (!Platform.isIOS) return null;
   return await _channel.invokeMethod('getLaunchAppNotification');
 }
 
 /// 获取 RegistrationId, JPush 可以通过制定 RegistrationId 来进行推送。
-Future<String> get getRegistrationIDWithJPush =>
+Future<String?> get getJPushRegistrationID =>
     _channel.invokeMethod('getRegistrationID');
 
 /// 发送本地通知到调度器，指定时间出发该通知。
-Future<LocalNotification> sendLocalNotificationWithJPush(
+Future<LocalNotification?> sendJPushLocalNotification(
     LocalNotification notification) async {
-  final bool data = await _channel.invokeMethod<bool>(
+  final bool? data = await _channel.invokeMethod<bool>(
       'sendLocalNotification', notification.toMap);
   if (data == null) return null;
   return notification;
 }
 
 ///  检测通知授权状态是否打开
-Future<bool> get isNotificationEnabledWithJPush =>
+Future<bool?> get isNotificationEnabled =>
     _channel.invokeMethod<bool>('isNotificationEnabled');
 
 ///  Push Service 是否已经被停止
-Future<bool> get isPushStoppedJPush async {
+Future<bool?> get isJPushStopped async {
   if (!Platform.isAndroid) return true;
   return _channel.invokeMethod<bool>('isPushStopped');
 }
 
 /// 获取UDID
 /// 仅支持android
-Future<String> get getUdID async {
+Future<String?> get getJPushUdID async {
   if (!Platform.isAndroid) return null;
-  return await _channel.invokeMethod<String>('getUdID');
+  return await _channel.invokeMethod<String>('getJPushUdID');
 }
 
 ///  跳转至系统设置中应用设置界面
-Future<void> get openSettingsForNotificationWithJPush =>
+Future<void> get openSettingsForNotification =>
     _channel.invokeMethod('openSettingsForNotification');
 
 /// 统一android ios 回传数据解析
@@ -233,18 +232,18 @@ class JPushMessage {
     message = json['message'].toString();
   }
 
-  String title;
-  String alert;
-  Map<dynamic, dynamic> extras;
-  String message;
+  String? title;
+  String? alert;
+  Map<dynamic, dynamic>? extras;
+  String? message;
 
   /// only ios
   /// 监测通知授权状态返回结果
-  bool notificationAuthorization;
-  String body;
-  String sound;
-  String subtitle;
-  int badge;
+  bool? notificationAuthorization;
+  String? body;
+  String? sound;
+  String? subtitle;
+  int? badge;
 
   Map<String, dynamic> get toMap => <String, dynamic>{
         'title': title,
@@ -261,7 +260,7 @@ class JPushMessage {
 
 class TagResultModel {
   TagResultModel({
-    this.code,
+    required this.code,
     this.tags,
     this.isBind,
   });
@@ -276,13 +275,13 @@ class TagResultModel {
         : null;
   }
 
-  List<String> tags;
+  List<String>? tags;
 
   /// jPush状态🐴
-  int code;
+  late int code;
 
   /// 校验tag 是否绑定
-  bool isBind;
+  bool? isBind;
 
   Map<String, dynamic> get toMap =>
       <String, dynamic>{'tags': tags, 'code': code, 'isBind': isBind};
@@ -290,20 +289,20 @@ class TagResultModel {
 
 class AliasResultModel {
   AliasResultModel({
-    this.code,
+    required this.code,
     this.alias,
   });
 
   AliasResultModel.fromMap(Map<dynamic, dynamic> json) {
     code = json['code'] as int;
     alias = json['alias'] as String;
-    if (alias != null && alias.isEmpty) alias = null;
+    if (alias != null && alias!.isEmpty) alias = null;
   }
 
-  String alias;
+  String? alias;
 
   /// jPush状态🐴
-  int code;
+  late int code;
 
   Map<String, dynamic> get toMap =>
       <String, dynamic>{'alias': alias, 'code': code};
@@ -338,29 +337,25 @@ class NotificationSettingsIOS {
 ///  {string} [subtitle] - 子标题
 class LocalNotification {
   const LocalNotification(
-      {@required this.id,
-      @required this.title,
-      @required this.content,
-      @required this.fireTime,
+      {required this.id,
+      required this.title,
+      required this.content,
+      required this.fireTime,
       this.buildId,
       this.extra,
       this.badge = 0,
       this.soundName,
-      this.subtitle})
-      : assert(id != null),
-        assert(title != null),
-        assert(content != null),
-        assert(fireTime != null);
+      this.subtitle});
 
-  final int buildId;
+  final int? buildId;
   final int id;
   final String title;
   final String content;
-  final Map<String, String> extra;
+  final Map<String, String>? extra;
   final DateTime fireTime;
   final int badge;
-  final String soundName;
-  final String subtitle;
+  final String? soundName;
+  final String? subtitle;
 
   Map<String, dynamic> get toMap => <String, dynamic>{
         'id': id,
@@ -387,9 +382,9 @@ class _IOSModel {
     notificationAuthorization = json['notificationAuthorization'] as bool;
   }
 
-  bool notificationAuthorization;
-  _ApsModel aps;
-  Map<dynamic, dynamic> extras;
+  bool? notificationAuthorization;
+  _ApsModel? aps;
+  Map<dynamic, dynamic>? extras;
 }
 
 class _ApsModel {
@@ -404,10 +399,10 @@ class _ApsModel {
     sound = json['sound'] as String;
   }
 
-  int mutableContent;
-  _AlertModel alert;
-  int badge;
-  String sound;
+  int? mutableContent;
+  _AlertModel? alert;
+  int? badge;
+  String? sound;
 }
 
 class _AlertModel {
@@ -419,7 +414,7 @@ class _AlertModel {
     body = json['body'].toString();
   }
 
-  String subtitle;
-  String title;
-  String body;
+  String? subtitle;
+  String? title;
+  String? body;
 }

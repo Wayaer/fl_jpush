@@ -5,7 +5,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// 初始化
-  setupWithJPush(
+  setupJPush(
       iosKey: 'AppKey', //你自己应用的 AppKey
       production: false,
       channel: 'channel',
@@ -31,28 +31,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> addEventHandler() async {
-    addEventHandlerWithJPush(onReceiveNotification: (JPushMessage message) {
-      print('onReceiveNotification: ${message.toMap}');
-      text = 'onReceiveNotification: ${message.title}';
+    addJPushEventHandler(onReceiveNotification: (JPushMessage? message) {
+      print('onReceiveNotification: ${message?.toMap}');
+      text = 'onReceiveNotification: ${message?.title}';
       setState(() {});
-    }, onOpenNotification: (JPushMessage message) {
-      print('onOpenNotification: ${message.toMap}');
-      text = 'onOpenNotification: ${message.title}';
+    }, onOpenNotification: (JPushMessage? message) {
+      print('onOpenNotification: ${message?.toMap}');
+      text = 'onOpenNotification: ${message?.title}';
       setState(() {});
-    }, onReceiveMessage: (JPushMessage message) {
-      print('onReceiveMessage: ${message.toMap}');
-      text = 'onReceiveMessage: ${message.title}';
+    }, onReceiveMessage: (JPushMessage? message) {
+      print('onReceiveMessage: ${message?.toMap}');
+      text = 'onReceiveMessage: ${message?.title}';
       setState(() {});
-    }, onReceiveNotificationAuthorization: (JPushMessage message) {
-      print('onReceiveNotificationAuthorization: ${message.toMap}');
-      text = 'onReceiveNotificationAuthorization: ${message.title}';
+    }, onReceiveNotificationAuthorization: (JPushMessage? message) {
+      print('onReceiveNotificationAuthorization: ${message?.toMap}');
+      text = 'onReceiveNotificationAuthorization: ${message?.title}';
       setState(() {});
     });
 
-    applyPushAuthorityWithJPush(
+    applyJPushAuthority(
         const NotificationSettingsIOS(sound: true, alert: true, badge: true));
 
-    getRegistrationIDWithJPush.then((String rid) {
+    getJPushRegistrationID.then((String? rid) {
       print('get registration id : $rid');
       text = 'getRegistrationID: $rid';
       setState(() {});
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
         Container(
             alignment: Alignment.center,
             margin: const EdgeInsets.all(10),
-            child: Text(text ?? 'Unknown'),
+            child: Text(text),
             height: 80),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _Button(
@@ -85,8 +85,8 @@ class _HomePageState extends State<HomePage> {
                     subtitle: 'LocalMessage test',
                     badge: 5,
                     extra: <String, String>{'LocalMessage': 'test'});
-                final LocalNotification res =
-                    await sendLocalNotificationWithJPush(localNotification);
+                final LocalNotification? res =
+                    await sendJPushLocalNotification(localNotification);
                 if (res == null) return;
                 text = res.toMap.toString();
                 setState(() {});
@@ -96,8 +96,8 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'setTags',
               onPressed: () async {
-                final TagResultModel map =
-                    await setTagsWithJPush(<String>['test1', 'test2']);
+                final TagResultModel? map =
+                    await setJPushTags(<String>['test1', 'test2']);
                 if (map == null) return;
                 text = 'set tags success: ${map.toMap}}]';
                 setState(() {});
@@ -105,17 +105,17 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'addTags',
               onPressed: () async {
-                final TagResultModel map =
-                    await addTagsWithJPush(<String>['test3', 'test4']);
-                text = 'addTags success: ${map.toMap}}';
+                final TagResultModel? map =
+                    await addJPushTags(<String>['test3', 'test4']);
+                text = 'addTags success: ${map?.toMap}}';
                 setState(() {});
               }),
           _Button(
               title: 'deleteTags',
               onPressed: () async {
-                final TagResultModel map =
-                    await deleteTagsWithJPush(<String>['test1', 'test2']);
-                text = 'deleteTags success: ${map.toMap}}';
+                final TagResultModel? map =
+                    await deleteJPushTags(<String>['test1', 'test2']);
+                text = 'deleteTags success: ${map?.toMap}}';
                 setState(() {});
               }),
         ]),
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'validTag',
               onPressed: () async {
-                final TagResultModel map = await validTagWithJPush('test1');
+                final TagResultModel? map = await validJPushTag('test1');
                 if (map == null) return;
                 text = 'valid tags success: ${map.toMap}}]';
                 setState(() {});
@@ -131,15 +131,15 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'getAllTags',
               onPressed: () async {
-                final TagResultModel map = await getAllTagsWithJPush;
-                text = 'getAllTags success: ${map.toMap}';
+                final TagResultModel? map = await getAllJPushTags;
+                text = 'getAllTags success: ${map?.toMap}';
                 setState(() {});
               }),
           _Button(
               title: 'cleanTags',
               onPressed: () async {
-                final TagResultModel map = await cleanTagsWithJPush;
-                text = 'cleanTags success: ${map.toMap}}';
+                final TagResultModel? map = await cleanJPushTags;
+                text = 'cleanTags success: ${map?.toMap}}';
                 setState(() {});
               }),
         ]),
@@ -147,22 +147,22 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'setAlias',
               onPressed: () async {
-                final AliasResultModel map = await setAliasWithJPush('alias1');
-                text = 'setAlias success: ${map.toMap}';
+                final AliasResultModel? map = await setJPushAlias('alias1');
+                text = 'setAlias success: ${map?.toMap}';
                 setState(() {});
               }),
           _Button(
               title: 'getAlias',
               onPressed: () async {
-                final AliasResultModel map = await getAliasWithJPush;
-                text = 'getAlias success: ${map.toMap}';
+                final AliasResultModel? map = await getJPushAlias;
+                text = 'getAlias success: ${map?.toMap}';
                 setState(() {});
               }),
           _Button(
               title: 'deleteAlias',
               onPressed: () async {
-                final AliasResultModel map = await deleteAliasWithJPush;
-                text = 'deleteAlias success: ${map.toMap}';
+                final AliasResultModel? map = await deleteJPushAlias;
+                text = 'deleteAlias success: ${map?.toMap}';
                 setState(() {});
               }),
         ]),
@@ -170,14 +170,14 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'stopPush',
               onPressed: () async {
-                final bool status = await stopPushWithJPush;
+                final bool? status = await stopJPush;
                 text = 'stopPush success: $status';
                 setState(() {});
               }),
           _Button(
               title: 'resumePush',
               onPressed: () async {
-                final bool status = await resumePushWithJPush;
+                final bool? status = await resumeJPush;
                 text = 'resumePush success: $status';
                 setState(() {});
               }),
@@ -186,16 +186,14 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'clearAllNotifications',
               onPressed: () async {
-                final bool data = await clearAllNotificationsWithJPush;
+                final bool? data = await clearAllJPushNotifications;
                 text = 'clearAllNotifications success: $data';
                 setState(() {});
               }),
           _Button(
               title: 'clearNotification',
               onPressed: () async {
-                if (notificationID == null) return;
-                final bool data =
-                    await clearNotificationWithJPush(notificationID);
+                final bool? data = await clearJPushNotification(notificationID);
                 text = 'clearNotification success: $data';
                 setState(() {});
               }),
@@ -204,7 +202,7 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'setBadge 66',
               onPressed: () async {
-                final bool map = await setBadgeWithJPush(66);
+                final bool? map = await setJPushBadge(66);
                 if (map == null) return;
                 text = 'setBadge success: $map';
                 setState(() {});
@@ -212,7 +210,7 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'setBadge 0',
               onPressed: () async {
-                final bool map = await setBadgeWithJPush(0);
+                final bool? map = await setJPushBadge(0);
                 if (map == null) return;
                 text = 'setBadge 0 success: $map';
                 setState(() {});
@@ -222,12 +220,12 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: '打开系统设置',
               onPressed: () {
-                openSettingsForNotificationWithJPush;
+                openSettingsForNotification;
               }),
           _Button(
               title: '通知授权是否打开',
               onPressed: () {
-                isNotificationEnabledWithJPush.then((bool value) {
+                isNotificationEnabled.then((bool? value) {
                   text = '通知授权是否打开: $value';
                   setState(() {});
                 });
@@ -237,8 +235,7 @@ class _HomePageState extends State<HomePage> {
         _Button(
             title: 'getLaunchAppNotification',
             onPressed: () {
-              getLaunchAppNotificationWithJPush
-                  .then((Map<dynamic, dynamic> map) {
+              getJPushLaunchAppNotification.then((Map<dynamic, dynamic>? map) {
                 print('getLaunchAppNotification:$map');
                 text = 'getLaunchAppNotification success: $map';
                 setState(() {});
@@ -249,7 +246,7 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'Push 是否已经被停止',
               onPressed: () {
-                isPushStoppedJPush.then((bool value) {
+                isJPushStopped.then((bool? value) {
                   text = 'Push Service 是否已经被停止: $value';
                   setState(() {});
                 });
@@ -257,7 +254,7 @@ class _HomePageState extends State<HomePage> {
           _Button(
               title: 'getUDID',
               onPressed: () async {
-                final String id = await getUdID;
+                final String? id = await getJPushUdID;
                 if (id == null) return;
                 text = 'getUDID success: $id';
                 setState(() {});
@@ -269,7 +266,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _Button extends StatelessWidget {
-  const _Button({@required this.onPressed, @required this.title});
+  const _Button({required this.onPressed, required this.title});
 
   final VoidCallback onPressed;
   final String title;

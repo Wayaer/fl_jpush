@@ -153,7 +153,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 channelResult!!.success(isEnabled == 1)
             }
             "isPushStopped" -> channelResult!!.success(JPushInterface.isPushStopped(context))
-            "getUdID" -> channelResult!!.success(JPushInterface.getUdid(context))
+            "getJPushUdID" -> channelResult!!.success(JPushInterface.getUdid(context))
             "openSettingsForNotification" -> JPushInterface.goToAppNotificationSettings(context)
             else -> channelResult!!.notImplemented()
 

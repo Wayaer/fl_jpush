@@ -96,7 +96,7 @@ Future<TagResultModel?> validJPushTag(String tag) async {
 }
 
 /// 清空所有 tags。
-Future<TagResultModel?> get cleanJPushTags async {
+Future<TagResultModel?> cleanJPushTags() async {
   final Map<dynamic, dynamic>? map = await _channel.invokeMethod('cleanTags');
   if (map != null) return TagResultModel.fromMap(map);
   return null;
@@ -119,14 +119,14 @@ Future<TagResultModel?> deleteJPushTags(List<String> tags) async {
 }
 
 /// 获取所有当前绑定的 tags
-Future<TagResultModel?> get getAllJPushTags async {
+Future<TagResultModel?> getAllJPushTags() async {
   final Map<dynamic, dynamic>? map = await _channel.invokeMethod('getAllTags');
   if (map != null) return TagResultModel.fromMap(map);
   return null;
 }
 
 /// 获取 alias.
-Future<AliasResultModel?> get getJPushAlias async {
+Future<AliasResultModel?> getJPushAlias() async {
   final Map<dynamic, dynamic>? map = await _channel.invokeMethod('getAlias');
   if (map != null) return AliasResultModel.fromMap(map);
   return null;
@@ -141,7 +141,7 @@ Future<AliasResultModel?> setJPushAlias(String alias) async {
 }
 
 /// 删除原有 alias
-Future<AliasResultModel?> get deleteJPushAlias async {
+Future<AliasResultModel?> deleteJPushAlias() async {
   final Map<dynamic, dynamic>? map = await _channel.invokeMethod('deleteAlias');
   if (map != null) return AliasResultModel.fromMap(map);
   return null;
@@ -154,13 +154,13 @@ Future<bool?> setJPushBadge(int badge) =>
     _channel.invokeMethod('setBadge', badge);
 
 /// 停止接收推送，调用该方法后应用将不再受到推送，如果想要重新收到推送可以调用 resumePush。
-Future<bool?> get stopJPush => _channel.invokeMethod('stopPush');
+Future<bool?> stopJPush() => _channel.invokeMethod('stopPush');
 
 /// 恢复推送功能。
-Future<bool?> get resumeJPush => _channel.invokeMethod('resumePush');
+Future<bool?> resumeJPush() => _channel.invokeMethod('resumePush');
 
 /// 清空通知栏上的所有通知。
-Future<bool?> get clearAllJPushNotifications =>
+Future<bool?> clearAllJPushNotifications() =>
     _channel.invokeMethod<bool>('clearAllNotifications');
 
 /// 清空通知栏上某个通知
@@ -173,13 +173,13 @@ Future<bool?> clearJPushNotification(int notificationId) =>
 /// 注意：notification 可能是 remoteNotification 和 localNotification，两种推送字段不一样。
 /// 如果不是通过点击推送启动应用，比如点击应用 icon 直接启动应用，notification 会返回 @{}。
 ///
-Future<Map<dynamic, dynamic>?> get getJPushLaunchAppNotification async {
+Future<Map<dynamic, dynamic>?> getJPushLaunchAppNotification() async {
   if (!Platform.isIOS) return null;
   return await _channel.invokeMethod('getLaunchAppNotification');
 }
 
 /// 获取 RegistrationId, JPush 可以通过制定 RegistrationId 来进行推送。
-Future<String?> get getJPushRegistrationID =>
+Future<String?> getJPushRegistrationID() =>
     _channel.invokeMethod('getRegistrationID');
 
 /// 发送本地通知到调度器，指定时间出发该通知。
@@ -192,24 +192,24 @@ Future<LocalNotification?> sendJPushLocalNotification(
 }
 
 ///  检测通知授权状态是否打开
-Future<bool?> get isNotificationEnabled =>
+Future<bool?> isNotificationEnabled() =>
     _channel.invokeMethod<bool>('isNotificationEnabled');
 
 ///  Push Service 是否已经被停止
-Future<bool?> get isJPushStopped async {
+Future<bool?> isJPushStopped() async {
   if (!Platform.isAndroid) return true;
   return _channel.invokeMethod<bool>('isPushStopped');
 }
 
 /// 获取UDID
 /// 仅支持android
-Future<String?> get getJPushUdID async {
+Future<String?> getJPushUdID() async {
   if (!Platform.isAndroid) return null;
   return await _channel.invokeMethod<String>('getJPushUdID');
 }
 
 ///  跳转至系统设置中应用设置界面
-Future<void> get openSettingsForNotification =>
+Future<void> openSettingsForNotification() =>
     _channel.invokeMethod('openSettingsForNotification');
 
 /// 统一android ios 回传数据解析

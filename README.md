@@ -94,7 +94,7 @@ Future<void> main() async {
 ```dart
  void getRegistrationID (){
 
-   getJPushRegistrationID.then((String? rid) {
+   getJPushRegistrationID().then((String? rid) {
       print('get registration id : $rid');
     });
 
@@ -109,7 +109,7 @@ Future<void> main() async {
 
 void fun()  {
 
-    stopJPush;
+    stopJPush();
 
 }
 ```
@@ -121,7 +121,7 @@ void fun()  {
 ```dart
 void fun()  {
 
-    resumeJPush;
+    resumeJPush();
 
 }
 ```
@@ -146,7 +146,7 @@ void fun()  {
 
 void fun()  {
 
-    deleteJPushAlias.then((AliasResultModel? model) {});
+    deleteJPushAlias().then((AliasResultModel? model) {});
 
 }
 ```
@@ -159,7 +159,7 @@ void fun()  {
 ```dart
 void fun()  {
 
-    getJPushAlias.then((AliasResultModel? model) {});
+    getJPushAlias().then((AliasResultModel? model) {});
 
 }
 ```
@@ -220,7 +220,7 @@ void fun()  {
 ```dart
 void fun()  {
 
-    cleanJPushTags.then((TagResultModel? model) {});
+    cleanJPushTags().then((TagResultModel? model) {});
 
 }
 ```
@@ -232,7 +232,7 @@ void fun()  {
 ```dart
 void fun()  {
 
-    getAllJPushTags.then((TagResultModel? model) {});
+    getAllJPushTags().then((TagResultModel? model) {});
 
 }
 
@@ -284,7 +284,7 @@ Future<void> fun() async {
 
 Future<void> fun() async {
 
-    clearAllJPushNotifications;
+    clearAllJPushNotifications();
 
 }
 ```
@@ -297,7 +297,7 @@ Future<void> fun() async {
 ```dart
 Future<void> fun() async {
 
-    bool? status = await isNotificationEnabled;
+    bool? status = await isNotificationEnabled();
 
 }
 ```
@@ -312,7 +312,7 @@ Future<void> fun() async {
 ```dart
 Future<void> fun() async {
 
-    bool? status = await isJPushStopped;
+    bool? status = await isJPushStopped();
 
 }
 ```
@@ -325,7 +325,7 @@ Future<void> fun() async {
 
 Future<void> fun() async {
 
-    String? udid = await getJPushUdID;
+    String? udid = await getJPushUdID();
 
 }
 ```

@@ -72,6 +72,7 @@ import 'package:fl_jpush/fl_jpush_dart';
 ```dart
 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
 
   /// 初始化
@@ -82,6 +83,7 @@ Future<void> main() async {
       debug: false);
 
   runApp(MaterialApp());
+
 }
 ```
 
@@ -91,9 +93,11 @@ Future<void> main() async {
 
 ```dart
  void getRegistrationID (){
+
    getJPushRegistrationID.then((String? rid) {
       print('get registration id : $rid');
     });
+
   }
 ```
 
@@ -104,7 +108,9 @@ Future<void> main() async {
 ```dart
 
 void fun()  {
-stopJPush;
+
+    stopJPush;
+
 }
 ```
 
@@ -114,7 +120,9 @@ stopJPush;
 
 ```dart
 void fun()  {
-resumeJPush;
+
+    resumeJPush;
+
 }
 ```
 
@@ -125,7 +133,8 @@ resumeJPush;
 ```dart
 void fun()  {
 
-setJPushAlias('your alias').then((AliasResultModel? model) { });
+    setJPushAlias('your alias').then((AliasResultModel? model) { });
+
 }
 ```
 
@@ -136,7 +145,9 @@ setJPushAlias('your alias').then((AliasResultModel? model) { });
 ```dart
 
 void fun()  {
-deleteJPushAlias.then((AliasResultModel? model) {});
+
+    deleteJPushAlias.then((AliasResultModel? model) {});
+
 }
 ```
 
@@ -147,7 +158,9 @@ deleteJPushAlias.then((AliasResultModel? model) {});
 
 ```dart
 void fun()  {
-getJPushAlias.then((AliasResultModel? model) {});
+
+    getJPushAlias.then((AliasResultModel? model) {});
+
 }
 ```
 
@@ -157,7 +170,9 @@ getJPushAlias.then((AliasResultModel? model) {});
 
 ```dart
 void fun()  {
-addJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+
+    addJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+
 }
 ```
 
@@ -167,7 +182,9 @@ addJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
 
 ```dart
 void fun()  {
-deleteJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+
+    deleteJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+
 }
 ```
 
@@ -178,7 +195,9 @@ deleteJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
 ```dart
 
 void fun()  {
-setJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+
+    setJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+
 }
 ```
 
@@ -188,7 +207,9 @@ setJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
 
 ```dart
 void fun()  {
-validJPushTag('tag1').then((TagResultModel? model) {});
+
+    validJPushTag('tag1').then((TagResultModel? model) {});
+
 }
 ```
 
@@ -198,7 +219,9 @@ validJPushTag('tag1').then((TagResultModel? model) {});
 
 ```dart
 void fun()  {
-cleanJPushTags.then((TagResultModel? model) {});
+
+    cleanJPushTags.then((TagResultModel? model) {});
+
 }
 ```
 
@@ -208,7 +231,9 @@ cleanJPushTags.then((TagResultModel? model) {});
 
 ```dart
 void fun()  {
-getAllJPushTags.then((TagResultModel? model) {});
+
+    getAllJPushTags.then((TagResultModel? model) {});
+
 }
 
 ```
@@ -221,18 +246,18 @@ getAllJPushTags.then((TagResultModel? model) {});
 /// 延时 3 秒后触发本地通知。
 void fun()  {
 
-var fireDate = DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch + 3000);
-var localNotification = LocalNotification(
-   id: 222,
-   title: 'title',
-   buildId: 1,
-   content: 'content',
-   fireTime: fireDate,
-   subtitle: 'subtitle', // 该参数只有在 iOS 有效
-   badge: 5, // 该参数只有在 iOS 有效
-   extras: {'hh': '11'} // 设置 extras ，extras 需要是 Map<String, String>
+    var fireDate = DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch + 3000);
+     var localNotification = LocalNotification(
+       id: 222,
+       title: 'title',
+       buildId: 1,
+       content: 'content',
+       fireTime: fireDate,
+       subtitle: 'subtitle', // 该参数只有在 iOS 有效
+       badge: 5, // 该参数只有在 iOS 有效
+       extras: {'hh': '11'} // 设置 extras ，extras 需要是 Map<String, String>
   );
-sendJPushLocalNotification(localNotification).then((localNotification) {});
+    sendJPushLocalNotification(localNotification).then((localNotification) {});
 
 }
 ```
@@ -244,7 +269,9 @@ sendJPushLocalNotification(localNotification).then((localNotification) {});
 ```dart
 
 Future<void> fun() async {
-bool? status = await clearJPushNotification(notificationId);
+
+    bool? status = await clearJPushNotification(notificationId);
+
 }
 ```
 
@@ -256,7 +283,9 @@ bool? status = await clearJPushNotification(notificationId);
 ```dart
 
 Future<void> fun() async {
-clearAllJPushNotifications;
+
+    clearAllJPushNotifications;
+
 }
 ```
 
@@ -268,7 +297,8 @@ clearAllJPushNotifications;
 ```dart
 Future<void> fun() async {
 
-bool? status = await isNotificationEnabled;
+    bool? status = await isNotificationEnabled;
+
 }
 ```
 
@@ -281,7 +311,9 @@ bool? status = await isNotificationEnabled;
 
 ```dart
 Future<void> fun() async {
-bool? status = await isJPushStopped;
+
+    bool? status = await isJPushStopped;
+
 }
 ```
 
@@ -292,7 +324,9 @@ bool? status = await isJPushStopped;
 ```dart
 
 Future<void> fun() async {
-String? udid = await getJPushUdID;
+
+    String? udid = await getJPushUdID;
+
 }
 ```
 
@@ -308,10 +342,11 @@ String? udid = await getJPushUdID;
 ```dart
 void fun()  {
 
-  applyJPushAuthority(NotificationSettingsIOS(
+    applyJPushAuthority(NotificationSettingsIOS(
       sound: true,
       alert: true,
       badge: true));
+
 }
 ```
 
@@ -322,7 +357,9 @@ void fun()  {
 ```dart
 
 void fun(){
-setJPushBadge(66).then((bool? status) {});
+
+    setJPushBadge(66).then((bool? status) {});
+
 }
 ```
 
@@ -333,7 +370,9 @@ setJPushBadge(66).then((bool? status) {});
 ```dart
 
 void fun(){
-getJPushLaunchAppNotification().then((Map<dynamic, dynamic>? map) {});
+
+    getJPushLaunchAppNotification().then((Map<dynamic, dynamic>? map) {});
+
 }
 ```
 

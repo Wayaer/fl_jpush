@@ -1,3 +1,5 @@
+## [0.2.2]
+ * fix bugs for Android
 ## [0.2.1]
  * normative approach
  * add doc

@@ -5,12 +5,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// 初始化
-  setupJPush(
+  final bool? key = await setupJPush(
       iosKey: 'AppKey', //你自己应用的 AppKey
       production: false,
       channel: 'channel',
       debug: false);
-
+  print('初始化成功：$key');
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false, title: '极光推送', home: HomePage()));
 }
@@ -253,11 +253,11 @@ class _HomePageState extends State<HomePage> {
                 });
               }),
           _Button(
-              title: 'getUDID',
+              title: 'getAndroidUdID',
               onPressed: () async {
-                final String? id = await getJPushUdID();
+                final String? id = await getAndroidJPushUdID();
                 if (id == null) return;
-                text = 'getUDID success: $id';
+                text = 'getAndroidJPushUdID success: $id';
                 setState(() {});
               }),
         ]),

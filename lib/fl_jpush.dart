@@ -6,18 +6,17 @@ typedef JPushEventHandler = void Function(JPushMessage? event);
 
 MethodChannel _channel = const MethodChannel('fl_jpush');
 
-Future<void> setupJPush(
-    {required String iosKey,
-    bool production = false,
-    String? channel = '',
-    bool debug = false}) async {
-  await _channel.invokeMethod<dynamic>('setup', <String, dynamic>{
-    'appKey': iosKey,
-    'channel': channel,
-    'production': production,
-    'debug': debug
-  });
-}
+Future<bool?> setupJPush(
+        {required String iosKey,
+        bool production = false,
+        String? channel = '',
+        bool debug = false}) =>
+    _channel.invokeMethod<bool>('setup', <String, dynamic>{
+      'appKey': iosKey,
+      'channel': channel,
+      'production': production,
+      'debug': debug
+    });
 
 /// 初始化 JPush 必须先初始化才能执行其他操作(比如接收事件传递)
 void addJPushEventHandler({
@@ -203,9 +202,9 @@ Future<bool?> isJPushStopped() async {
 
 /// 获取UDID
 /// 仅支持android
-Future<String?> getJPushUdID() async {
+Future<String?> getAndroidJPushUdID() async {
   if (!Platform.isAndroid) return null;
-  return await _channel.invokeMethod<String>('getJPushUdID');
+  return await _channel.invokeMethod<String>('getUdID');
 }
 
 ///  跳转至系统设置中应用设置界面
@@ -224,12 +223,21 @@ class JPushMessage {
   });
 
   JPushMessage.fromMap(Map<dynamic, dynamic> json) {
-    notificationAuthorization = json['notificationAuthorization'] as bool;
-    badge = json['badge'] as int;
-    title = json['title'].toString();
-    alert = json['alert'].toString();
-    extras = json['extras'] as Map<dynamic, dynamic>;
-    message = json['message'].toString();
+    notificationAuthorization = json['notificationAuthorization'] == null
+        ? null
+        : json['notificationAuthorization'] as bool;
+    badge = json['badge'] == null ? null : json['badge'] as int;
+    title = json['title'] == null ? null : json['title'] as String;
+    alert = json['alert'] == null ? null : json['alert'] as String;
+    message = json['message'] == null ? null : json['message'] as String;
+    extras =
+        json['extras'] == null ? null : json['extras'] as Map<dynamic, dynamic>;
+  }
+
+  dynamic? isNull(Map<dynamic, dynamic> json, String key) {
+    final dynamic? value = json[key];
+    if (value == null) return null;
+    return value;
   }
 
   String? title;

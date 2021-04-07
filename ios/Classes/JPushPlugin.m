@@ -99,6 +99,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
     
     if([@"setup" isEqualToString:call.method]) {
         [self setup:call result: result];
+        result([NSNumber numberWithBool:YES]);
     } else if([@"applyPushAuthority" isEqualToString:call.method]) {
         [self applyPushAuthority:call result:result];
     } else if([@"setTags" isEqualToString:call.method]) {

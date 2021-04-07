@@ -10,6 +10,7 @@ import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.api.JPushMessage
 import cn.jpush.android.data.JPushLocalNotification
 import cn.jpush.android.service.JPushMessageReceiver
+import com.google.firebase.FirebaseApp
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
@@ -20,7 +21,7 @@ import java.util.*
 
 
 class JPushPlugin : FlutterPlugin, MethodCallHandler {
-    private var context: Context? = null
+    private lateinit var context: Context
 
     companion object {
         lateinit var channel: MethodChannel
@@ -57,6 +58,8 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 JPushInterface.init(context) // 初始化 JPush
                 val channel = map["channel"] as String?
                 JPushInterface.setChannel(context, channel)
+                FirebaseApp.initializeApp(context)
+                channelResult!!.success(true)
             }
             "setTags" -> {
                 val sequence: Int = getSequence()
@@ -153,7 +156,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 channelResult!!.success(isEnabled == 1)
             }
             "isPushStopped" -> channelResult!!.success(JPushInterface.isPushStopped(context))
-            "getJPushUdID" -> channelResult!!.success(JPushInterface.getUdid(context))
+            "getUdID" -> channelResult!!.success(JPushInterface.getUdid(context))
             "openSettingsForNotification" -> JPushInterface.goToAppNotificationSettings(context)
             else -> channelResult!!.notImplemented()
 

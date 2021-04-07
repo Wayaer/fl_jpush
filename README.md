@@ -349,7 +349,7 @@ Future<void> fun() async {
 }
 ```
 
-#### getJPushUdID
+#### getAndroidJPushUdID
 
 获取UDID
 
@@ -357,7 +357,7 @@ Future<void> fun() async {
 
 Future<void> fun() async {
 
-    String? udid = await getJPushUdID();
+    String? udid = await getAndroidJPushUdID();
 
 }
 ```

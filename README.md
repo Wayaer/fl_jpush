@@ -38,23 +38,27 @@ android: {
     manifestPlaceholders = [
         JPUSH_PKGNAME : applicationId,
         JPUSH_APPKEY : 'appkey', 
+        
         JPUSH_CHANNEL : 'developer-default', 
-        MEIZU_APPKEY : "MZ-魅族的APPKEY",
-        MEIZU_APPID : "MZ-魅族的APPID",
-        XIAOMI_APPID : "MI-小米的APPID",
-        XIAOMI_APPKEY : "MI-小米的APPKEY",
-        OPPO_APPKEY : "OP-oppo的APPKEY",
-        OPPO_APPID : "OP-oppo的APPID",
-        OPPO_APPSECRET : "OP-oppo的APPSECRET",
-        VIVO_APPKEY : "vivo的APPKEY",
-        VIVO_APPID : "vivo的APPID"
+        // 下面是多厂商配置，如需要开通使用请联系技术支持
+        // 如果不需要使用，预留空字段即可
+        MEIZU_APPKEY : "",
+        MEIZU_APPID : "",
+        XIAOMI_APPID : "",
+        XIAOMI_APPKEY : "",
+        OPPO_APPKEY : "",
+        OPPO_APPID : "",
+        OPPO_APPSECRET : "",
+        VIVO_APPKEY : "",
+        VIVO_APPID : ""
     ]
   }    
 }
 ```
 
 ##### iOS:
-原生需要自己配置证书 等相关参数
+ Capability 添加 "Background Modes"  "Push Notifications"
+ 并保证"Background Modes"中的"Remote notifications"处于选中状态
 
 ### 使用
 

@@ -1,3 +1,5 @@
+## [0.2.3]
+ * fix bugs 
 ## [0.2.2]
  * fix bugs for Android
 ## [0.2.1]

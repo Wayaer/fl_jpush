@@ -37,13 +37,16 @@ android {
         minSdkVersion 17
         consumerProguardFiles 'consumer-rules.pro'
     }
+
     lintOptions {
         disable 'InvalidPackage'
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     packagingOptions {
         merge 'AndroidManifest.xml'
         merge 'proguard.txt'

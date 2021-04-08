@@ -223,21 +223,12 @@ class JPushMessage {
   });
 
   JPushMessage.fromMap(Map<dynamic, dynamic> json) {
-    notificationAuthorization = json['notificationAuthorization'] == null
-        ? null
-        : json['notificationAuthorization'] as bool;
-    badge = json['badge'] == null ? null : json['badge'] as int;
-    title = json['title'] == null ? null : json['title'] as String;
-    alert = json['alert'] == null ? null : json['alert'] as String;
-    message = json['message'] == null ? null : json['message'] as String;
-    extras =
-        json['extras'] == null ? null : json['extras'] as Map<dynamic, dynamic>;
-  }
-
-  dynamic? isNull(Map<dynamic, dynamic> json, String key) {
-    final dynamic? value = json[key];
-    if (value == null) return null;
-    return value;
+    notificationAuthorization = json['notificationAuthorization'] as bool?;
+    badge = json['badge'] as int?;
+    title = json['title'] as String?;
+    alert = json['alert'] as String?;
+    message = json['message'] as String?;
+    extras = json['extras'] as Map<dynamic, dynamic>?;
   }
 
   String? title;
@@ -275,12 +266,8 @@ class TagResultModel {
 
   TagResultModel.fromMap(Map<dynamic, dynamic> json) {
     code = json['code'] as int;
-    isBind = json['isBind'] as bool;
-    tags = json['tags'] != null
-        ? (json['tags'] as List<dynamic>)
-            .map((dynamic e) => e.toString())
-            .toList()
-        : null;
+    isBind = json['isBind'] as bool?;
+    tags = json['tags'] as List<String>?;
   }
 
   List<String>? tags;
@@ -303,7 +290,7 @@ class AliasResultModel {
 
   AliasResultModel.fromMap(Map<dynamic, dynamic> json) {
     code = json['code'] as int;
-    alias = json['alias'] as String;
+    alias = json['alias'] as String?;
     if (alias != null && alias!.isEmpty) alias = null;
   }
 
@@ -386,8 +373,8 @@ class _IOSModel {
     aps = json['aps'] != null
         ? _ApsModel.fromJson(json['aps'] as Map<dynamic, dynamic>)
         : null;
-    extras = json['extras'] as Map<dynamic, dynamic>;
-    notificationAuthorization = json['notificationAuthorization'] as bool;
+    extras = json['extras'] as Map<dynamic, dynamic>?;
+    notificationAuthorization = json['notificationAuthorization'] as bool?;
   }
 
   bool? notificationAuthorization;
@@ -399,12 +386,12 @@ class _ApsModel {
   _ApsModel({this.mutableContent, this.alert, this.badge, this.sound});
 
   _ApsModel.fromJson(Map<dynamic, dynamic> json) {
-    mutableContent = json['mutable-content'] as int;
+    mutableContent = json['mutable-content'] as int?;
     alert = json['alert'] != null
         ? _AlertModel.fromJson(json['alert'] as Map<dynamic, dynamic>)
         : null;
-    badge = json['badge'] as int;
-    sound = json['sound'] as String;
+    badge = json['badge'] as int?;
+    sound = json['sound'] as String?;
   }
 
   int? mutableContent;
@@ -417,9 +404,9 @@ class _AlertModel {
   _AlertModel({this.subtitle, this.title, this.body});
 
   _AlertModel.fromJson(Map<dynamic, dynamic> json) {
-    subtitle = json['subtitle'].toString();
-    title = json['title'].toString();
-    body = json['body'].toString();
+    subtitle = json['subtitle'] as String?;
+    title = json['title'] as String?;
+    body = json['body'] as String?;
   }
 
   String? subtitle;

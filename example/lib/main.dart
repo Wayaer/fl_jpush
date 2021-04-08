@@ -51,12 +51,6 @@ class _HomePageState extends State<HomePage> {
 
     applyJPushAuthority(
         const NotificationSettingsIOS(sound: true, alert: true, badge: true));
-
-    getJPushRegistrationID().then((String? rid) {
-      print('get registration id : $rid');
-      text = 'getRegistrationID: $rid';
-      setState(() {});
-    });
   }
 
   @override
@@ -70,12 +64,19 @@ class _HomePageState extends State<HomePage> {
             margin: const EdgeInsets.all(10),
             child: Text(text),
             height: 80),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        Wrap(alignment: WrapAlignment.center, children: <Widget>[
+          _Button(
+              title: 'getRegistrationID',
+              onPressed: () {
+                getJPushRegistrationID().then((String? rid) {
+                  print('get registration id : $rid');
+                  text = 'getRegistrationID: $rid';
+                  setState(() {});
+                });
+              }),
           _Button(
               title: '发本地推送',
               onPressed: () async {
-                // 三秒后出发本地推送
-
                 final LocalNotification localNotification = LocalNotification(
                     id: notificationID,
                     title: 'test',
@@ -91,8 +92,6 @@ class _HomePageState extends State<HomePage> {
                 text = res.toMap.toString();
                 setState(() {});
               }),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _Button(
               title: 'setTags',
               onPressed: () async {
@@ -118,8 +117,6 @@ class _HomePageState extends State<HomePage> {
                 text = 'deleteTags success: ${map?.toMap}}';
                 setState(() {});
               }),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _Button(
               title: 'validTag',
               onPressed: () async {
@@ -142,8 +139,6 @@ class _HomePageState extends State<HomePage> {
                 text = 'cleanTags success: ${map?.toMap}}';
                 setState(() {});
               }),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _Button(
               title: 'setAlias',
               onPressed: () async {
@@ -165,8 +160,6 @@ class _HomePageState extends State<HomePage> {
                 text = 'deleteAlias success: ${map?.toMap}';
                 setState(() {});
               }),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _Button(
               title: 'stopPush',
               onPressed: () async {
@@ -181,8 +174,6 @@ class _HomePageState extends State<HomePage> {
                 text = 'resumePush success: $status';
                 setState(() {});
               }),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _Button(
               title: 'clearAllNotifications',
               onPressed: () async {
@@ -197,8 +188,6 @@ class _HomePageState extends State<HomePage> {
                 text = 'clearNotification success: $data';
                 setState(() {});
               }),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _Button(
               title: 'setBadge 66',
               onPressed: () async {
@@ -215,8 +204,6 @@ class _HomePageState extends State<HomePage> {
                 text = 'setBadge 0 success: $map';
                 setState(() {});
               }),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
           _Button(
               title: '打开系统设置',
               onPressed: () {

@@ -172,7 +172,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             when (intent!!.action) {
                 JPushInterface.ACTION_REGISTRATION_ID -> {
 //                    val rId = intent.getStringExtra(JPushInterface.EXTRA_REGISTRATION_ID)
-
                 }
                 JPushInterface.ACTION_MESSAGE_RECEIVED -> {
                     val message = intent.getStringExtra(JPushInterface.EXTRA_MESSAGE)

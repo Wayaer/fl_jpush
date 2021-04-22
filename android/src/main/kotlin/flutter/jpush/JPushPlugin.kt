@@ -248,10 +248,10 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             val res: MutableMap<String, Any?> = HashMap()
             res["code"] = jPushMessage.errorCode
             res["isBind"] = jPushMessage.tagCheckStateResult
-            if (jPushMessage.tags != null)
-                handle.post {
-                    channelResult?.success(res)
-                }
+            if (jPushMessage.tags != null) res["tags"] = jPushMessage.tags.toList()
+            handle.post {
+                channelResult?.success(res)
+            }
         }
 
         override fun onAliasOperatorResult(context: Context, jPushMessage: JPushMessage) {

@@ -38,7 +38,6 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
                 JPUSH_APPKEY : "3af087cca42c9f95df54ab89", //JPush 上注册的包名对应的 Appkey.
@@ -53,6 +52,20 @@ android {
                 VIVO_APPKEY : "vivo的APPKEY",
                 VIVO_APPID : "vivo的APPID"
         ]
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            consumerProguardFiles 'consumer-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'consumer-rules.pro'
+        }
+        debug {
+            minifyEnabled true
+            shrinkResources true
+            consumerProguardFiles 'consumer-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'consumer-rules.pro'
+        }
     }
     
 }

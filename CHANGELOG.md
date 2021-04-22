@@ -1,3 +1,6 @@
+## [0.2.6]
+  * add Android proguard rules
+  * fix the bug that validJPushTag has no return value
 ## [0.2.5]
  * fix bugs 
 ## [0.2.2]

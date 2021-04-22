@@ -90,7 +90,7 @@ Future<TagResultModel?> setJPushTags(List<String> tags) async {
 Future<TagResultModel?> validJPushTag(String tag) async {
   final Map<dynamic, dynamic>? map =
       await _channel.invokeMethod('validTag', tag);
-  if (map != null) return TagResultModel.fromMap(map);
+  if (map != null) return TagResultModel.fromMap(map, tag);
   return null;
 }
 
@@ -260,17 +260,23 @@ class JPushMessage {
 class TagResultModel {
   TagResultModel({
     required this.code,
-    this.tags,
+    required this.tags,
     this.isBind,
   });
 
-  TagResultModel.fromMap(Map<dynamic, dynamic> json) {
+  TagResultModel.fromMap(Map<dynamic, dynamic> json, [String? tag]) {
     code = json['code'] as int;
     isBind = json['isBind'] as bool?;
-    tags = json['tags'] as List<String>?;
+    tags = json['tags'] == null
+        ? tag == null
+            ? <String>[]
+            : <String>[tag]
+        : (json['tags'] as List<dynamic>)
+            .map((dynamic e) => e as String)
+            .toList();
   }
 
-  List<String>? tags;
+  late List<String> tags;
 
   /// jPush状态🐴
   late int code;

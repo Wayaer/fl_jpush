@@ -1,3 +1,6 @@
+## [0.2.7]
+ * update Android com.android.tools.build:gradle version
+ * replace jcenter() to mavenCentral()
 ## [0.2.6]
   * add Android proguard rules
   * fix the bug that validJPushTag has no return value

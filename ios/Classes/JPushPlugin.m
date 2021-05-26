@@ -99,98 +99,74 @@ static NSMutableArray<FlutterResult>* getRidResults;
     
     if([@"setup" isEqualToString:call.method]) {
         [self setup:call result: result];
-        result([NSNumber numberWithBool:YES]);
+        result(@(YES));
     } else if([@"applyPushAuthority" isEqualToString:call.method]) {
         [self applyPushAuthority:call result:result];
     } else if([@"setTags" isEqualToString:call.method]) {
-        
         NSSet *tagSet;
         if (call.arguments != NULL) tagSet = [NSSet setWithArray: call.arguments];
         [JPUSHService setTags:tagSet completion:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"validTag" isEqualToString:call.method]) {\
         NSString *tag = call.arguments;
-        
         [JPUSHService validTag:tag completion:^(NSInteger code, NSSet *iTags, NSInteger seq,BOOL isBind) {
             result(@{@"tags": [iTags allObjects] ?: @[],
                      @"isBind": [NSNumber numberWithBool:isBind],
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"cleanTags" isEqualToString:call.method]) {
-        
         [JPUSHService cleanTags:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"addTags" isEqualToString:call.method]) {
-        
         NSSet *tagSet;
         if (call.arguments != NULL) tagSet = [NSSet setWithArray:call.arguments];
         [JPUSHService addTags:tagSet completion:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"deleteTags" isEqualToString:call.method]) {
-        
         NSSet *tagSet;
         if (call.arguments != NULL) tagSet = [NSSet setWithArray:call.arguments];
         [JPUSHService deleteTags:tagSet completion:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"getAllTags" isEqualToString:call.method]) {
-        
         [JPUSHService getAllTags:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"getAlias" isEqualToString:call.method]) {
-        
         [JPUSHService getAlias:^(NSInteger code, NSString *iAlias, NSInteger seq) {
             result(@{@"alias": iAlias ?: @"",
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"setAlias" isEqualToString:call.method]) {
-        
         NSString *alias = call.arguments;
         [JPUSHService setAlias:alias completion:^(NSInteger code, NSString *iAlias, NSInteger seq) {
             result(@{@"alias": iAlias ?: @"",
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"deleteAlias" isEqualToString:call.method]) {
-        
         [JPUSHService deleteAlias:^(NSInteger code, NSString *iAlias, NSInteger seq) {
             result(@{@"alias": iAlias ?: @"",
                      @"code": [NSNumber numberWithInteger:code]});
         } seq: 0];
-        
     } else if([@"setBadge" isEqualToString:call.method]) {
-        
-        NSInteger badge = [call.arguments[@"badge"] integerValue];
+        NSInteger badge = [call.arguments intValue];
         if (badge < 0) badge = 0;
         [[UIApplication sharedApplication] setApplicationIconBadgeNumber: badge];
         [JPUSHService setBadge: badge];
-        result([NSNumber numberWithBool:YES]);
-        
+        result(@(YES));
     } else if([@"stopPush" isEqualToString:call.method]) {
-        
         [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-        result([NSNumber numberWithBool:YES]);
-        
+        result(@(YES));
     } else if([@"resumePush" isEqualToString:call.method]) {
-        
-        result([NSNumber numberWithBool:YES]);
-        
+        result(@(YES));  
     } else if([@"clearAllNotifications" isEqualToString:call.method]) {
         [self clearAllNotifications:call result:result];
     } else if ([@"clearNotification" isEqualToString:call.method]) {
@@ -257,7 +233,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
         // iOS 10 以下移除所有推送；iOS 10 以上移除所有在通知中心显示推送和待推送请求
         [JPUSHService removeNotification:nil];
     }
-    result([NSNumber numberWithBool:YES]);
+    result(@(YES));
 }
 - (void)clearNotification:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSNumber *notificationId = call.arguments;
@@ -271,7 +247,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
         identifier.delivered = YES;
     }
     [JPUSHService removeNotification:identifier];
-    result([NSNumber numberWithBool:YES]);
+    result(@(YES));
 }
 
 
@@ -342,7 +318,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
         NSLog(@"result");
     };
     [JPUSHService addNotification:request];
-    result([NSNumber numberWithBool:YES]);
+    result(@(YES));
 }
 
 

@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="flutter.jpush">
+    package="fl.jpush">
 
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
 
     <application>
         <receiver
-            android:name="flutter.jpush.JPushPlugin$JPushReceiver"
+            android:name="fl.jpush.JPushPlugin$JPushReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -20,7 +20,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="flutter.jpush.JPushPlugin$JPushEventReceiver">
+        <receiver android:name="fl.jpush.JPushPlugin$JPushEventReceiver">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
                 <category android:name="${applicationId}" />
@@ -45,7 +45,6 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="${JPUSH_APPKEY}" /> <!-- </>值来自开发者平台取得的AppKey -->
-
 
     </application>
 

@@ -1,4 +1,4 @@
-package flutter.jpush
+package fl.jpush
 
 import cn.jpush.android.service.JCommonService
 

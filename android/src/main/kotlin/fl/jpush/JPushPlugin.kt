@@ -1,4 +1,4 @@
-package flutter.jpush
+package fl.jpush
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver

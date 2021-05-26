@@ -11,7 +11,7 @@ dependencies:
     path: ../
   flutter:
     sdk: flutter
-  flutter_curiosity: ^2.0.3
+  flutter_curiosity: ^2.2.0
 
 dev_dependencies:
   flutter_test:

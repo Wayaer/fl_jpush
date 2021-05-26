@@ -1,3 +1,6 @@
+## [0.2.8]
+  * modify the return parameter to be non null
+  * update Android version
 ## [0.2.7]
  * update Android com.android.tools.build:gradle version
  * replace jcenter() to mavenCentral()

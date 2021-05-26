@@ -6,17 +6,20 @@ typedef JPushEventHandler = void Function(JPushMessage? event);
 
 MethodChannel _channel = const MethodChannel('fl_jpush');
 
-Future<bool?> setupJPush(
-        {required String iosKey,
-        bool production = false,
-        String? channel = '',
-        bool debug = false}) =>
-    _channel.invokeMethod<bool>('setup', <String, dynamic>{
-      'appKey': iosKey,
-      'channel': channel,
-      'production': production,
-      'debug': debug
-    });
+Future<bool> setupJPush(
+    {required String iosKey,
+    bool production = false,
+    String? channel = '',
+    bool debug = false}) async {
+  final bool? state = await _channel.invokeMethod<bool?>(
+      'setup', <String, dynamic>{
+    'appKey': iosKey,
+    'channel': channel,
+    'production': production,
+    'debug': debug
+  });
+  return state ?? false;
+}
 
 /// 初始化 JPush 必须先初始化才能执行其他操作(比如接收事件传递)
 void addJPushEventHandler({
@@ -149,22 +152,36 @@ Future<AliasResultModel?> deleteJPushAlias() async {
 /// 设置应用 Badge（小红点）
 /// 清空应用Badge（小红点）设置 badge = 0
 /// 注意：如果是 Android 手机，目前仅支持华为手机
-Future<bool?> setJPushBadge(int badge) =>
-    _channel.invokeMethod('setBadge', badge);
+Future<bool> setJPushBadge(int badge) async {
+  final bool? state = await _channel.invokeMethod<bool?>('setBadge', badge);
+  return state ?? false;
+}
 
 /// 停止接收推送，调用该方法后应用将不再受到推送，如果想要重新收到推送可以调用 resumePush。
-Future<bool?> stopJPush() => _channel.invokeMethod('stopPush');
+Future<bool> stopJPush() async {
+  final bool? state = await _channel.invokeMethod<bool?>('stopPush');
+  return state ?? false;
+}
 
 /// 恢复推送功能。
-Future<bool?> resumeJPush() => _channel.invokeMethod('resumePush');
+Future<bool> resumeJPush() async {
+  final bool? state = await _channel.invokeMethod<bool?>('resumePush');
+  return state ?? false;
+}
 
 /// 清空通知栏上的所有通知。
-Future<bool?> clearAllJPushNotifications() =>
-    _channel.invokeMethod<bool>('clearAllNotifications');
+Future<bool> clearAllJPushNotifications() async {
+  final bool? state =
+      await _channel.invokeMethod<bool?>('clearAllNotifications');
+  return state ?? false;
+}
 
 /// 清空通知栏上某个通知
-Future<bool?> clearJPushNotification(int notificationId) =>
-    _channel.invokeMethod('clearNotification', notificationId);
+Future<bool> clearJPushNotification(int notificationId) async {
+  final bool? state =
+      await _channel.invokeMethod<bool?>('clearNotification', notificationId);
+  return state ?? false;
+}
 
 ///
 /// iOS Only

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:fl_jpush/fl_jpush.dart';
+import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -257,6 +257,7 @@ class _HomePageState extends State<HomePage> {
                     setState(() {});
                   }),
             ]),
+        const SizedBox(height: 100),
       ])),
     );
   }

@@ -33,7 +33,7 @@
 android: {
 
   defaultConfig {
-    applicationId '替换成自己应用 ID'
+    applicationId '自己应用 ID'
 
     manifestPlaceholders = [
         JPUSH_PKGNAME : applicationId,

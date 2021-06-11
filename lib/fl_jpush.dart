@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -38,17 +39,18 @@ void addJPushEventHandler({
     final Map<dynamic, dynamic>? map = call.arguments as Map<dynamic, dynamic>;
     JPushMessage? message;
     if (map != null) {
-      if (Platform.isIOS) {
-        final _IOSModel _iosModel = _IOSModel.fromJson(map);
-        message = JPushMessage();
-        message.alert = _iosModel.aps?.alert;
-        message.extras = _iosModel.extras;
-        message.badge = _iosModel.aps?.badge;
-        message.sound = _iosModel.aps?.sound;
-        message.notificationAuthorization = _iosModel.notificationAuthorization;
-      } else {
-        message = JPushMessage.fromMap(map);
-      }
+      message = JPushMessage.fromMap(map);
+      // if (Platform.isIOS) {
+      //   final _IOSModel _iosModel = _IOSModel.fromJson(map);
+      //   message = JPushMessage();
+      //   message.alert = _iosModel.aps?.alert;
+      //   message.extras = _iosModel.extras;
+      //   message.badge = _iosModel.aps?.badge;
+      //   message.sound = _iosModel.aps?.sound;
+      //   message.notificationAuthorization = _iosModel.notificationAuthorization;
+      // } else {
+      //
+      // }
     }
     switch (call.method) {
       case 'onReceiveNotification':
@@ -230,32 +232,59 @@ Future<void> openSettingsForNotification() =>
 /// 统一android ios 回传数据解析
 class JPushMessage {
   JPushMessage({
+    this.original,
+    this.sound,
     this.alert,
     this.extras,
     this.message,
     this.badge,
     this.title,
+    this.mutableContent,
     this.notificationAuthorization,
   });
 
   JPushMessage.fromMap(Map<dynamic, dynamic> json) {
-    notificationAuthorization = json['notificationAuthorization'] as bool?;
-    badge = json['badge'] as int?;
-    alert = json['alert'] as dynamic;
-    message = json['message'] as String?;
-    title = json['title'] as String?;
-    extras = json['extras'] as Map<dynamic, dynamic>?;
-    if (Platform.isAndroid &&
-        extras != null &&
-        extras!.containsKey('cn.jpush.android.EXTRA')) {
-      extras = extras!['cn.jpush.android.EXTRA'] as Map<dynamic, dynamic>?;
+    print('--------- JPushMessage.fromMap ----------');
+    print(jsonEncode(json));
+    original = json;
+    if (json.containsKey('aps')) {
+      final Map<dynamic, dynamic>? aps = json['aps'] as Map<dynamic, dynamic>?;
+      if (aps != null) {
+        alert = aps['alert'] as dynamic;
+        badge = aps['badge'] as int?;
+        sound = aps['sound'] as String?;
+        mutableContent = aps['mutableContent'] as int?;
+        notificationAuthorization = aps['notificationAuthorization'] as bool?;
+      }
+      msgID = json['_j_msgid'] as String?;
+      notificationID = json['_j_uid'] as int?;
+    } else {
+      title = json['title'] as String?;
+      message = json['message'] as String?;
+      alert = json['alert'] as dynamic;
+      extras = json['alert'] as Map<dynamic, dynamic>?;
+      if (extras != null) {
+        msgID = extras!['cn.jpush.android.MSG_ID'] as String?;
+        notificationID = extras!['cn.jpush.android.MSG_ID'] as int?;
+        if (extras!.containsKey('cn.jpush.android.EXTRA')) {
+          extras = extras!['cn.jpush.android.EXTRA'] as Map<dynamic, dynamic>?;
+        }
+      }
     }
+    print(toMap);
+    print('--------- JPushMessage.fromMap ----------');
   }
+
+  /// 原始数据 原生返回未解析的数据
+  Map<dynamic, dynamic>? original;
 
   dynamic alert;
   Map<dynamic, dynamic>? extras;
+
   String? message;
   String? title;
+  String? msgID;
+  int? notificationID;
 
   /// only ios
   /// 监测通知授权状态返回结果
@@ -263,15 +292,21 @@ class JPushMessage {
   String? sound;
   String? subtitle;
   int? badge;
+  int? mutableContent;
 
   Map<String, dynamic> get toMap => <String, dynamic>{
+        'original': original,
         'alert': alert,
         'extras': extras,
         'message': message,
+        'title': title,
+        'msgID': msgID,
+        'notificationID': notificationID,
+        'notificationAuthorization': notificationAuthorization,
         'subtitle': subtitle,
         'sound': sound,
         'badge': badge,
-        'notificationAuthorization': notificationAuthorization,
+        'mutableContent': mutableContent,
       };
 }
 
@@ -388,36 +423,39 @@ class LocalNotification {
         'subtitle': subtitle
       };
 }
-
-/// ios 回传数据解析
-class _IOSModel {
-  _IOSModel({this.aps, this.extras, this.notificationAuthorization});
-
-  _IOSModel.fromJson(Map<dynamic, dynamic> json) {
-    aps = json['aps'] != null
-        ? _ApsModel.fromJson(json['aps'] as Map<dynamic, dynamic>)
-        : null;
-    extras = json['extras'] as Map<dynamic, dynamic>?;
-    notificationAuthorization = json['notificationAuthorization'] as bool?;
-  }
-
-  bool? notificationAuthorization;
-  _ApsModel? aps;
-  Map<dynamic, dynamic>? extras;
-}
-
-class _ApsModel {
-  _ApsModel({this.mutableContent, this.alert, this.badge, this.sound});
-
-  _ApsModel.fromJson(Map<dynamic, dynamic> json) {
-    mutableContent = json['mutable-content'] as int?;
-    alert = json['alert'] as dynamic;
-    badge = json['badge'] as int?;
-    sound = json['sound'] as String?;
-  }
-
-  int? mutableContent;
-  dynamic alert;
-  int? badge;
-  String? sound;
-}
+//
+// /// ios 回传数据解析
+// class _IOSModel {
+//   _IOSModel({this.aps, this.extras, this.notificationAuthorization});
+//
+//   _IOSModel.fromJson(Map<dynamic, dynamic> json) {
+//     aps = json['aps'] != null
+//         ? _ApsModel.fromJson(json['aps'] as Map<dynamic, dynamic>)
+//         : null;
+//     extras = json['extras'] as Map<dynamic, dynamic>?;
+//     print('-----ios-------');
+//     print(json);
+//     print(extras);
+//     notificationAuthorization = json['notificationAuthorization'] as bool?;
+//   }
+//
+//   bool? notificationAuthorization;
+//   _ApsModel? aps;
+//   Map<dynamic, dynamic>? extras;
+// }
+//
+// class _ApsModel {
+//   _ApsModel({this.mutableContent, this.alert, this.badge, this.sound});
+//
+//   _ApsModel.fromJson(Map<dynamic, dynamic> json) {
+//     mutableContent = json['mutable-content'] as int?;
+//     alert = json['alert'] as dynamic;
+//     badge = json['badge'] as int?;
+//     sound = json['sound'] as String?;
+//   }
+//
+//   int? mutableContent;
+//   dynamic alert;
+//   int? badge;
+//   String? sound;
+// }

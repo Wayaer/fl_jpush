@@ -6,7 +6,7 @@ Future<void> main() async {
 
   /// 初始化
   final bool key = await setupJPush(
-      iosKey: 'AppKey', //你自己应用的 AppKey
+      iosKey: '3af087cca42c9f95df54ab89', //你自己应用的 AppKey
       production: false,
       channel: 'channel',
       debug: false);

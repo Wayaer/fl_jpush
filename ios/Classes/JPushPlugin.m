@@ -335,7 +335,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
     _completeLaunchNotification = launchOptions;
     if (launchOptions != nil) {
         _launchNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-        _launchNotification = [self jpushFormatAPNSDic:_launchNotification.copy];
+        _launchNotification = _launchNotification.copy;
     }
     return YES;
 }
@@ -358,7 +358,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
     NSDictionary * userInfo = notification.request.content.userInfo;
     if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         [JPUSHService handleRemoteNotification:userInfo];
-        [_channel invokeMethod:@"onReceiveNotification" arguments: [self jpushFormatAPNSDic:userInfo]];
+        [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
     }
     completionHandler(notificationTypes);
 }
@@ -367,7 +367,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
     NSDictionary * userInfo = response.notification.request.content.userInfo;
     
     if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-        [_channel invokeMethod:@"onOpenNotification" arguments: [self jpushFormatAPNSDic:userInfo]];
+        [_channel invokeMethod:@"onOpenNotification" arguments: userInfo];
     }
     [JPUSHService handleRemoteNotification:userInfo];completionHandler();
 }
@@ -378,22 +378,22 @@ static NSMutableArray<FlutterResult>* getRidResults;
         @"notificationAuthorization":[NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]
     }];
 }
-
-- (NSMutableDictionary *)jpushFormatAPNSDic:(NSDictionary *)dic {
-    NSMutableDictionary *extras = @{}.mutableCopy;
-    for (NSString *key in dic) {
-        if([key isEqualToString:@"_j_business"]      ||
-           [key isEqualToString:@"_j_msgid"]         ||
-           [key isEqualToString:@"_j_uid"]           ||
-           [key isEqualToString:@"actionIdentifier"] ||
-           [key isEqualToString:@"aps"]) {
-            continue;
-        }
-        extras[key] = dic[key];
-    }
-    NSMutableDictionary *formatDic = dic.mutableCopy;
-    formatDic[@"extras"] = extras;
-    return formatDic;
-}
-
+//
+//- (NSMutableDictionary *)jpushFormatAPNSDic:(NSDictionary *)dic {
+//    NSMutableDictionary *extras = @{}.mutableCopy;
+//    for (NSString *key in dic) {
+//        if([key isEqualToString:@"_j_business"]      ||
+//           [key isEqualToString:@"_j_msgid"]         ||
+//           [key isEqualToString:@"_j_uid"]           ||
+//           [key isEqualToString:@"actionIdentifier"] ||
+//           [key isEqualToString:@"aps"]) {
+//            continue;
+//        }
+//        extras[key] = dic[key];
+//    }
+//    NSMutableDictionary *formatDic = dic.mutableCopy;
+//    formatDic[@"extras"] = extras;
+//    return formatDic;
+//}
+//
 @end

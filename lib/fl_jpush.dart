@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -33,8 +32,8 @@ void addJPushEventHandler({
   JPushEventHandler? onOpenNotification,
   JPushEventHandler? onReceiveMessage,
 
-  /// ios 获取消息认证 弹窗是否允许通知
-  required JPushNotificationAuthorization? onReceiveNotificationAuthorization,
+  /// ios 获取消息认证 回调
+  JPushNotificationAuthorization? onReceiveNotificationAuthorization,
 }) {
   _channel.setMethodCallHandler((MethodCall call) async {
     Map<dynamic, dynamic>? map;
@@ -69,12 +68,13 @@ void addJPushEventHandler({
 
 /// iOS Only
 /// 申请推送权限，注意这个方法只会向用户弹出一次推送权限请求（如果用户不同意，之后只能用户到设置页面里面勾选相应权限），需要开发者选择合适的时机调用。
-Future<void> applyJPushAuthority(
+Future<bool> applyJPushAuthority(
     [NotificationSettingsIOS iosSettings =
         const NotificationSettingsIOS()]) async {
-  if (!Platform.isIOS) return;
-  return await _channel.invokeMethod<dynamic>(
+  if (!Platform.isIOS) return false;
+  final bool? state = await _channel.invokeMethod<bool?>(
       'applyPushAuthority', iosSettings.toMap);
+  return state ?? false;
 }
 
 /// 设置 Tag （会覆盖之前设置的 tags）
@@ -239,8 +239,6 @@ class JPushMessage {
   });
 
   JPushMessage.fromMap(Map<dynamic, dynamic> json) {
-    print('--------- JPushMessage.fromMap ----------');
-    print(jsonEncode(json));
     original = json;
     if (json.containsKey('aps')) {
       final Map<dynamic, dynamic>? aps = json['aps'] as Map<dynamic, dynamic>?;
@@ -253,6 +251,7 @@ class JPushMessage {
       }
       msgID = json['_j_msgid'] == null ? null : json['_j_msgid'].toString();
       notificationID = json['_j_uid'] as int?;
+      extras = json['arguments'];
     } else {
       title = json['title'] as String?;
       message = json['message'] as String?;
@@ -265,8 +264,6 @@ class JPushMessage {
         extras = _extras['cn.jpush.android.EXTRA'];
       }
     }
-    print(toMap);
-    print('--------- JPushMessage.fromMap end ----------');
   }
 
   /// 原始数据 原生返回未解析的数据

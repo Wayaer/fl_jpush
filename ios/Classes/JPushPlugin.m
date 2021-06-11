@@ -220,6 +220,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
     JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
     entity.types = notificationTypes;
     [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+    result(@YES);
 }
 
 - (void)clearAllNotifications:(FlutterMethodCall*)call result:(FlutterResult)result {

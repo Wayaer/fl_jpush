@@ -251,7 +251,14 @@ class JPushMessage {
       }
       msgID = json['_j_msgid'] == null ? null : json['_j_msgid'].toString();
       notificationID = json['_j_uid'] as int?;
-      extras = json['arguments'];
+      extras = json;
+      (extras as Map<dynamic, dynamic>).removeWhere(
+          (dynamic key, dynamic value) =>
+              key == '_j_business' ||
+              key == '_j_data_' ||
+              key == 'aps' ||
+              key == '_j_uid' ||
+              key == '_j_msgid');
     } else {
       message = json['message'] as String?;
       alert = json['alert'] as dynamic;
@@ -371,18 +378,6 @@ class NotificationSettingsIOS {
       <String, bool>{'sound': sound, 'alert': alert, 'badge': badge};
 }
 
-///  {number} [buildId] - 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式）
-///  {number} [id] - 通知 id, 可用于取消通知
-///  {string} [title] - 通知标题
-///  {string} [content] - 通知内容
-///  {object} [extra] - extra 字段
-///  {number} [fireTime] - 通知触发时间（毫秒）
-///  iOS Only
-///  {number} [badge] - 本地推送触发后应用角标值
-///  iOS Only
-///  {string} [soundName] - 指定推送的音频文件
-///  iOS 10+ Only
-///  {string} [subtitle] - 子标题
 class LocalNotification {
   const LocalNotification(
       {required this.id,
@@ -395,14 +390,31 @@ class LocalNotification {
       this.soundName,
       this.subtitle});
 
+  /// 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式）
   final int? buildId;
+
+  /// 通知 id, 可用于取消通知
   final int id;
+
+  /// 通知标题
   final String title;
+
+  /// 通知内容
   final String content;
+
+  /// extra 字段
   final Map<String, String>? extra;
+
+  /// 通知触发时间（毫秒）
   final DateTime fireTime;
+
+  /// 本地推送触发后应用角标值
   final int badge;
+
+  /// 指定推送的音频文件
   final String? soundName;
+
+  /// 子标题
   final String? subtitle;
 
   Map<String, dynamic> get toMap => <String, dynamic>{

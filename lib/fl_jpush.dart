@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 typedef JPushEventHandler = void Function(JPushMessage? event);
+typedef JPushNotificationAuthorization = void Function(bool? state);
 
 MethodChannel _channel = const MethodChannel('fl_jpush');
 
@@ -32,25 +33,19 @@ void addJPushEventHandler({
   JPushEventHandler? onOpenNotification,
   JPushEventHandler? onReceiveMessage,
 
-  /// ios 消息认证
-  JPushEventHandler? onReceiveNotificationAuthorization,
+  /// ios 获取消息认证 弹窗是否允许通知
+  required JPushNotificationAuthorization? onReceiveNotificationAuthorization,
 }) {
   _channel.setMethodCallHandler((MethodCall call) async {
-    final Map<dynamic, dynamic>? map = call.arguments as Map<dynamic, dynamic>;
+    Map<dynamic, dynamic>? map;
     JPushMessage? message;
-    if (map != null) {
-      message = JPushMessage.fromMap(map);
-      // if (Platform.isIOS) {
-      //   final _IOSModel _iosModel = _IOSModel.fromJson(map);
-      //   message = JPushMessage();
-      //   message.alert = _iosModel.aps?.alert;
-      //   message.extras = _iosModel.extras;
-      //   message.badge = _iosModel.aps?.badge;
-      //   message.sound = _iosModel.aps?.sound;
-      //   message.notificationAuthorization = _iosModel.notificationAuthorization;
-      // } else {
-      //
-      // }
+    try {
+      if (call.arguments is Map) {
+        map = call.arguments as Map<dynamic, dynamic>;
+        message = JPushMessage.fromMap(map);
+      }
+    } catch (e) {
+      print(e);
     }
     switch (call.method) {
       case 'onReceiveNotification':
@@ -64,7 +59,7 @@ void addJPushEventHandler({
         break;
       case 'onReceiveNotificationAuthorization':
         if (onReceiveNotificationAuthorization != null)
-          onReceiveNotificationAuthorization(message);
+          onReceiveNotificationAuthorization(call.arguments as bool?);
         break;
       default:
         throw UnsupportedError('Unrecognized Event');
@@ -256,23 +251,24 @@ class JPushMessage {
         mutableContent = aps['mutableContent'] as int?;
         notificationAuthorization = aps['notificationAuthorization'] as bool?;
       }
-      msgID = json['_j_msgid'] as String?;
+      msgID = json['_j_msgid'] == null ? null : json['_j_msgid'].toString();
       notificationID = json['_j_uid'] as int?;
     } else {
       title = json['title'] as String?;
       message = json['message'] as String?;
       alert = json['alert'] as dynamic;
-      extras = json['alert'] as Map<dynamic, dynamic>?;
+      extras = json['extras'] as Map<dynamic, dynamic>?;
       if (extras != null) {
         msgID = extras!['cn.jpush.android.MSG_ID'] as String?;
-        notificationID = extras!['cn.jpush.android.MSG_ID'] as int?;
+        notificationID = extras!['cn.jpush.android.NOTIFICATION_ID'] as int?;
         if (extras!.containsKey('cn.jpush.android.EXTRA')) {
-          extras = extras!['cn.jpush.android.EXTRA'] as Map<dynamic, dynamic>?;
+          final dynamic extra = extras!['cn.jpush.android.EXTRA'];
+          if (extra is Map) extras = extra;
         }
       }
     }
     print(toMap);
-    print('--------- JPushMessage.fromMap ----------');
+    print('--------- JPushMessage.fromMap end ----------');
   }
 
   /// 原始数据 原生返回未解析的数据

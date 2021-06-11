@@ -43,9 +43,9 @@ class _HomePageState extends State<HomePage> {
       print('onReceiveMessage: ${message?.toMap}');
       text = 'onReceiveMessage: ${message?.alert}';
       setState(() {});
-    }, onReceiveNotificationAuthorization: (JPushMessage? message) {
-      print('onReceiveNotificationAuthorization: ${message?.toMap}');
-      text = 'onReceiveNotificationAuthorization: ${message?.alert}';
+    }, onReceiveNotificationAuthorization: (bool? state) {
+      print('onReceiveNotificationAuthorization: $state');
+      text = 'onReceiveNotificationAuthorization: $state';
       setState(() {});
     });
 

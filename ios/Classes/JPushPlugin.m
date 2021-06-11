@@ -374,9 +374,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
 
 
 - (void)jpushNotificationAuthorization:(JPAuthorizationStatus)status withInfo:(NSDictionary *)info {
-    [self.channel invokeMethod:@"onReceiveNotificationAuthorization" arguments: @{
-        @"notificationAuthorization":[NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]
-    }];
+    [self.channel invokeMethod:@"onReceiveNotificationAuthorization" arguments: [NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]];
 }
 //
 //- (NSMutableDictionary *)jpushFormatAPNSDic:(NSDictionary *)dic {

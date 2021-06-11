@@ -253,7 +253,6 @@ class JPushMessage {
       notificationID = json['_j_uid'] as int?;
       extras = json['arguments'];
     } else {
-      title = json['title'] as String?;
       message = json['message'] as String?;
       alert = json['alert'] as dynamic;
       final Map<dynamic, dynamic>? _extras =
@@ -264,18 +263,22 @@ class JPushMessage {
         extras = _extras['cn.jpush.android.EXTRA'];
       }
     }
+    title = json['title'] as String?;
   }
 
   /// 原始数据 原生返回未解析的数据
   Map<dynamic, dynamic>? original;
 
+  String? msgID;
+  int? notificationID;
+
   dynamic alert;
   dynamic extras;
 
-  String? message;
   String? title;
-  String? msgID;
-  int? notificationID;
+
+  /// only android
+  String? message;
 
   /// only ios
   /// 监测通知授权状态返回结果
@@ -414,39 +417,3 @@ class LocalNotification {
         'subtitle': subtitle
       };
 }
-//
-// /// ios 回传数据解析
-// class _IOSModel {
-//   _IOSModel({this.aps, this.extras, this.notificationAuthorization});
-//
-//   _IOSModel.fromJson(Map<dynamic, dynamic> json) {
-//     aps = json['aps'] != null
-//         ? _ApsModel.fromJson(json['aps'] as Map<dynamic, dynamic>)
-//         : null;
-//     extras = json['extras'] as Map<dynamic, dynamic>?;
-//     print('-----ios-------');
-//     print(json);
-//     print(extras);
-//     notificationAuthorization = json['notificationAuthorization'] as bool?;
-//   }
-//
-//   bool? notificationAuthorization;
-//   _ApsModel? aps;
-//   Map<dynamic, dynamic>? extras;
-// }
-//
-// class _ApsModel {
-//   _ApsModel({this.mutableContent, this.alert, this.badge, this.sound});
-//
-//   _ApsModel.fromJson(Map<dynamic, dynamic> json) {
-//     mutableContent = json['mutable-content'] as int?;
-//     alert = json['alert'] as dynamic;
-//     badge = json['badge'] as int?;
-//     sound = json['sound'] as String?;
-//   }
-//
-//   int? mutableContent;
-//   dynamic alert;
-//   int? badge;
-//   String? sound;
-// }

@@ -33,19 +33,19 @@ class _HomePageState extends State<HomePage> {
   Future<void> addEventHandler() async {
     addJPushEventHandler(onReceiveNotification: (JPushMessage? message) {
       print('onReceiveNotification: ${message?.toMap}');
-      text = 'onReceiveNotification: ${message?.title}';
+      text = 'onReceiveNotification: ${message?.alert}';
       setState(() {});
     }, onOpenNotification: (JPushMessage? message) {
       print('onOpenNotification: ${message?.toMap}');
-      text = 'onOpenNotification: ${message?.title}';
+      text = 'onOpenNotification: ${message?.alert}';
       setState(() {});
     }, onReceiveMessage: (JPushMessage? message) {
       print('onReceiveMessage: ${message?.toMap}');
-      text = 'onReceiveMessage: ${message?.title}';
+      text = 'onReceiveMessage: ${message?.alert}';
       setState(() {});
     }, onReceiveNotificationAuthorization: (JPushMessage? message) {
       print('onReceiveNotificationAuthorization: ${message?.toMap}');
-      text = 'onReceiveNotificationAuthorization: ${message?.title}';
+      text = 'onReceiveNotificationAuthorization: ${message?.alert}';
       setState(() {});
     });
 

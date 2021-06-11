@@ -1,3 +1,7 @@
+## [0.3.0]
+  * change [alert] to dynamic
+  * remove title and body
+  * analysis of extras in Android
 ## [0.2.8]
   * modify the return parameter to be non null
   * update Android version

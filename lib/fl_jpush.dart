@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/services.dart';
 
 typedef JPushEventHandler = void Function(JPushMessage? event);
@@ -40,9 +41,7 @@ void addJPushEventHandler({
       if (Platform.isIOS) {
         final _IOSModel _iosModel = _IOSModel.fromJson(map);
         message = JPushMessage();
-        message.title = _iosModel.aps?.alert?.title;
-        message.body = _iosModel.aps?.alert?.body;
-        message.subtitle = _iosModel.aps?.alert?.subtitle;
+        message.alert = _iosModel.aps?.alert;
         message.extras = _iosModel.extras;
         message.badge = _iosModel.aps?.badge;
         message.sound = _iosModel.aps?.sound;
@@ -231,43 +230,45 @@ Future<void> openSettingsForNotification() =>
 /// 统一android ios 回传数据解析
 class JPushMessage {
   JPushMessage({
-    this.title,
     this.alert,
     this.extras,
     this.message,
     this.badge,
+    this.title,
     this.notificationAuthorization,
   });
 
   JPushMessage.fromMap(Map<dynamic, dynamic> json) {
     notificationAuthorization = json['notificationAuthorization'] as bool?;
     badge = json['badge'] as int?;
-    title = json['title'] as String?;
-    alert = json['alert'] as String?;
+    alert = json['alert'] as dynamic;
     message = json['message'] as String?;
+    title = json['title'] as String?;
     extras = json['extras'] as Map<dynamic, dynamic>?;
+    if (Platform.isAndroid &&
+        extras != null &&
+        extras!.containsKey('cn.jpush.android.EXTRA')) {
+      extras = extras!['cn.jpush.android.EXTRA'] as Map<dynamic, dynamic>?;
+    }
   }
 
-  String? title;
-  String? alert;
+  dynamic alert;
   Map<dynamic, dynamic>? extras;
   String? message;
+  String? title;
 
   /// only ios
   /// 监测通知授权状态返回结果
   bool? notificationAuthorization;
-  String? body;
   String? sound;
   String? subtitle;
   int? badge;
 
   Map<String, dynamic> get toMap => <String, dynamic>{
-        'title': title,
         'alert': alert,
         'extras': extras,
         'message': message,
         'subtitle': subtitle,
-        'body': body,
         'sound': sound,
         'badge': badge,
         'notificationAuthorization': notificationAuthorization,
@@ -410,29 +411,13 @@ class _ApsModel {
 
   _ApsModel.fromJson(Map<dynamic, dynamic> json) {
     mutableContent = json['mutable-content'] as int?;
-    alert = json['alert'] != null
-        ? _AlertModel.fromJson(json['alert'] as Map<dynamic, dynamic>)
-        : null;
+    alert = json['alert'] as dynamic;
     badge = json['badge'] as int?;
     sound = json['sound'] as String?;
   }
 
   int? mutableContent;
-  _AlertModel? alert;
+  dynamic alert;
   int? badge;
   String? sound;
-}
-
-class _AlertModel {
-  _AlertModel({this.subtitle, this.title, this.body});
-
-  _AlertModel.fromJson(Map<dynamic, dynamic> json) {
-    subtitle = json['subtitle'] as String?;
-    title = json['title'] as String?;
-    body = json['body'] as String?;
-  }
-
-  String? subtitle;
-  String? title;
-  String? body;
 }

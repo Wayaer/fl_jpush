@@ -263,7 +263,11 @@ class JPushMessage {
         notificationID = extras!['cn.jpush.android.NOTIFICATION_ID'] as int?;
         if (extras!.containsKey('cn.jpush.android.EXTRA')) {
           final dynamic extra = extras!['cn.jpush.android.EXTRA'];
-          if (extra is Map) extras = extra;
+          if (extra is Map) {
+            extras = extra;
+          } else {
+            extras = <String, dynamic>{'extra': extra};
+          }
         }
       }
     }

@@ -257,18 +257,12 @@ class JPushMessage {
       title = json['title'] as String?;
       message = json['message'] as String?;
       alert = json['alert'] as dynamic;
-      extras = json['extras'] as Map<dynamic, dynamic>?;
-      if (extras != null) {
-        msgID = extras!['cn.jpush.android.MSG_ID'] as String?;
-        notificationID = extras!['cn.jpush.android.NOTIFICATION_ID'] as int?;
-        if (extras!.containsKey('cn.jpush.android.EXTRA')) {
-          final dynamic extra = extras!['cn.jpush.android.EXTRA'];
-          if (extra is Map) {
-            extras = extra;
-          } else {
-            extras = <String, dynamic>{'extra': extra};
-          }
-        }
+      final Map<dynamic, dynamic>? _extras =
+          json['extras'] as Map<dynamic, dynamic>?;
+      if (_extras != null) {
+        msgID = _extras['cn.jpush.android.MSG_ID'] as String?;
+        notificationID = _extras['cn.jpush.android.NOTIFICATION_ID'] as int?;
+        extras = _extras['cn.jpush.android.EXTRA'];
       }
     }
     print(toMap);
@@ -279,7 +273,7 @@ class JPushMessage {
   Map<dynamic, dynamic>? original;
 
   dynamic alert;
-  Map<dynamic, dynamic>? extras;
+  dynamic extras;
 
   String? message;
   String? title;

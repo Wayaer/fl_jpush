@@ -377,22 +377,5 @@ static NSMutableArray<FlutterResult>* getRidResults;
 - (void)jpushNotificationAuthorization:(JPAuthorizationStatus)status withInfo:(NSDictionary *)info {
     [self.channel invokeMethod:@"onReceiveNotificationAuthorization" arguments: [NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]];
 }
-//
-//- (NSMutableDictionary *)jpushFormatAPNSDic:(NSDictionary *)dic {
-//    NSMutableDictionary *extras = @{}.mutableCopy;
-//    for (NSString *key in dic) {
-//        if([key isEqualToString:@"_j_business"]      ||
-//           [key isEqualToString:@"_j_msgid"]         ||
-//           [key isEqualToString:@"_j_uid"]           ||
-//           [key isEqualToString:@"actionIdentifier"] ||
-//           [key isEqualToString:@"aps"]) {
-//            continue;
-//        }
-//        extras[key] = dic[key];
-//    }
-//    NSMutableDictionary *formatDic = dic.mutableCopy;
-//    formatDic[@"extras"] = extras;
-//    return formatDic;
-//}
-//
+
 @end

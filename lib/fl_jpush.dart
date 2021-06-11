@@ -36,16 +36,9 @@ void addJPushEventHandler({
   JPushNotificationAuthorization? onReceiveNotificationAuthorization,
 }) {
   _channel.setMethodCallHandler((MethodCall call) async {
-    Map<dynamic, dynamic>? map;
     JPushMessage? message;
-    try {
-      if (call.arguments is Map) {
-        map = call.arguments as Map<dynamic, dynamic>;
-        message = JPushMessage.fromMap(map);
-      }
-    } catch (e) {
-      print(e);
-    }
+    if (call.arguments is Map)
+      message = JPushMessage.fromMap(call.arguments as Map<dynamic, dynamic>);
     switch (call.method) {
       case 'onReceiveNotification':
         if (onReceiveNotification != null) onReceiveNotification(message);
@@ -239,7 +232,6 @@ class JPushMessage {
   });
 
   JPushMessage.fromMap(Map<dynamic, dynamic> json) {
-    original = json;
     if (json.containsKey('aps')) {
       final Map<dynamic, dynamic>? aps = json['aps'] as Map<dynamic, dynamic>?;
       if (aps != null) {
@@ -257,6 +249,7 @@ class JPushMessage {
               key == '_j_business' ||
               key == '_j_data_' ||
               key == 'aps' ||
+              key == 'actionIdentifier' ||
               key == '_j_uid' ||
               key == '_j_msgid');
     } else {
@@ -270,16 +263,21 @@ class JPushMessage {
         extras = _extras['cn.jpush.android.EXTRA'];
       }
     }
+    original = json;
     title = json['title'] as String?;
   }
 
   /// 原始数据 原生返回未解析的数据
+  /// 其他参数 均由 [original] 解析所得
   Map<dynamic, dynamic>? original;
 
   String? msgID;
   int? notificationID;
 
+  /// 一般情况下使用的数据
   dynamic alert;
+
+  /// 一般情况下使用的额外数据
   dynamic extras;
 
   String? title;
@@ -296,7 +294,6 @@ class JPushMessage {
   int? mutableContent;
 
   Map<String, dynamic> get toMap => <String, dynamic>{
-        'original': original,
         'alert': alert,
         'extras': extras,
         'message': message,
@@ -308,6 +305,7 @@ class JPushMessage {
         'sound': sound,
         'badge': badge,
         'mutableContent': mutableContent,
+        'original': original,
       };
 }
 

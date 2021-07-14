@@ -31,8 +31,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
 
 
     override fun onAttachedToEngine(plugin: FlutterPluginBinding) {
-        channel = MethodChannel(plugin.binaryMessenger,
-                "fl_jpush")
+        channel = MethodChannel(plugin.binaryMessenger, "fl_jpush")
         channel.setMethodCallHandler(this)
         context = plugin.applicationContext
     }
@@ -127,7 +126,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 }
             }
             "getLaunchAppNotification" -> {
-
+                channelResult!!.success(null)
             }
             "getRegistrationID" -> {
                 val rid = JPushInterface.getRegistrationID(context)
@@ -157,7 +156,10 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             }
             "isPushStopped" -> channelResult!!.success(JPushInterface.isPushStopped(context))
             "getUdID" -> channelResult!!.success(JPushInterface.getUdid(context))
-            "openSettingsForNotification" -> JPushInterface.goToAppNotificationSettings(context)
+            "openSettingsForNotification" -> {
+                JPushInterface.goToAppNotificationSettings(context)
+                channelResult!!.success(true)
+            }
             else -> channelResult!!.notImplemented()
 
         }
@@ -227,8 +229,14 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             return extrasMap
         }
 
-        private val extrasKeys = listOf("cn.jpush.android.TITLE",
-                "cn.jpush.android.MESSAGE", "cn.jpush.android.APPKEY", "cn.jpush.android.NOTIFICATION_CONTENT_TITLE", "key_show_entity", "platform")
+        private val extrasKeys = listOf(
+            "cn.jpush.android.TITLE",
+            "cn.jpush.android.MESSAGE",
+            "cn.jpush.android.APPKEY",
+            "cn.jpush.android.NOTIFICATION_CONTENT_TITLE",
+            "key_show_entity",
+            "platform"
+        )
     }
 
     class JPushEventReceiver : JPushMessageReceiver() {

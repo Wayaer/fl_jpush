@@ -166,7 +166,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
         [[UIApplication sharedApplication] unregisterForRemoteNotifications];
         result(@(YES));
     } else if([@"resumePush" isEqualToString:call.method]) {
-        result(@(YES));  
+        result(@(YES));
     } else if([@"clearAllNotifications" isEqualToString:call.method]) {
         [self clearAllNotifications:call result:result];
     } else if ([@"clearNotification" isEqualToString:call.method]) {
@@ -178,13 +178,12 @@ static NSMutableArray<FlutterResult>* getRidResults;
     } else if([@"sendLocalNotification"isEqualToString:call.method]) {
         [self sendLocalNotification:call result:result];
     } else if([@"isNotificationEnabled"isEqualToString:call.method]) {
-        
         [JPUSHService requestNotificationAuthorization:^(JPAuthorizationStatus status) {
             result([NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]);
         }];
-        
     } else if([@"openSettingsForNotification"isEqualToString:call.method]) {
         [JPUSHService openSettingsForNotification:^(BOOL success) {}];
+        result(@(YES));
     } else {
         result(FlutterMethodNotImplemented);
     }
@@ -323,7 +322,6 @@ static NSMutableArray<FlutterResult>* getRidResults;
 }
 
 
-
 - (void)dealloc {
     _isJPushDidLogin = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -377,5 +375,11 @@ static NSMutableArray<FlutterResult>* getRidResults;
 - (void)jpushNotificationAuthorization:(JPAuthorizationStatus)status withInfo:(NSDictionary *)info {
     [self.channel invokeMethod:@"onReceiveNotificationAuthorization" arguments: [NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]];
 }
+
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification{
+    
+    
+}
+
 
 @end

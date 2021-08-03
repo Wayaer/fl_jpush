@@ -57,13 +57,11 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            consumerProguardFiles 'consumer-rules.pro'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'consumer-rules.pro'
         }
         debug {
             minifyEnabled true
             shrinkResources true
-            consumerProguardFiles 'consumer-rules.pro'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'consumer-rules.pro'
         }
     }

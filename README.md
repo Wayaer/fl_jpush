@@ -68,42 +68,34 @@ import 'package:fl_jpush/fl_jpush_dart';
 
 ### APIs
 
-**注意** : 需要先调用 setupJPush 来初始化插件，才能保证其他功能正常工作。
+**注意** : 需要先调用 setup 来初始化插件，才能保证其他功能正常工作。
 
-#### addJPushEventHandler
+#### addEventHandler
 
 - 添加事件监听方法。
 
 ```dart
 
-  Future<void> addJPushEventHandler() async {
-    addJPushEventHandler(onReceiveNotification: (JPushMessage? message) {
+  Future<void> addEventHandler() async {
+   FlJPush.instance.addEventHandler(onReceiveNotification: (JPushMessage? message) {
       print('onReceiveNotification: ${message?.toMap}');
-      text = 'onReceiveNotification: ${message?.title}';
-      setState(() {});
     }, onOpenNotification: (JPushMessage? message) {
       print('onOpenNotification: ${message?.toMap}');
-      text = 'onOpenNotification: ${message?.title}';
-      setState(() {});
     }, onReceiveMessage: (JPushMessage? message) {
       print('onReceiveMessage: ${message?.toMap}');
-      text = 'onReceiveMessage: ${message?.title}';
-      setState(() {});
     }, onReceiveNotificationAuthorization: (JPushMessage? message) {
       print('onReceiveNotificationAuthorization: ${message?.toMap}');
-      text = 'onReceiveNotificationAuthorization: ${message?.title}';
-      setState(() {});
     });
 
   }
 
 ```
 
-#### setupJPush
+#### setup
 
-- 添加初始化方法，调用 setupJPush 方法会执行两个操作：
+- 添加初始化方法，调用 setup 方法会执行两个操作：
 
-**注意：**  android 端支持在 setupJPush 方法中动态设置 channel，动态设置的 channel 优先级比 manifestPlaceholders 中的 JPUSH_CHANNEL 优先级要高。
+**注意：**  android 端支持在 setup 方法中动态设置 channel，动态设置的 channel 优先级比 manifestPlaceholders 中的 JPUSH_CHANNEL 优先级要高。
 ```dart
 
 Future<void> main() async {
@@ -111,7 +103,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// 初始化
-  setupJPush(
+  FlJPush.instance.setup(
       iosKey: 'AppKey', //你自己应用的 AppKey
       production: false,
       channel: 'channel',
@@ -124,19 +116,19 @@ Future<void> main() async {
 
 #### getRegistrationID
 
-- 获取 registrationId，这个 JPush 运行通过 registrationId 来进行推送.
+- 获取 registrationId，JPush 运行通过 registrationId 来进行推送.
 
 ```dart
  void getRegistrationID (){
 
-   getJPushRegistrationID().then((String? rid) {
+ FlJPush.instance.getRegistrationID().then((String? rid) {
       print('get registration id : $rid');
     });
 
   }
 ```
 
-#### stopJPush
+#### stop
 
 - 停止推送功能，调用该方法将不会接收到通知。
 
@@ -144,36 +136,36 @@ Future<void> main() async {
 
 void fun()  {
 
-    stopJPush();
+ FlJPush.instance.stop();
 
 }
 ```
 
-#### resumeJPush
+#### resume
 
-- 调用 stopJPush 后，可以通过 resumeJPush 方法恢复推送。
+- 调用 stop 后，可以通过 resume 方法恢复推送。
 
 ```dart
 void fun()  {
 
-    resumeJPush();
+ FlJPush.instance.resume();
 
 }
 ```
 
-#### setJPushAlias
+#### setAlias
 
 - 设置别名，极光后台可以通过别名来推送，一个 App 应用只有一个别名，一般用来存储用户 id。
 
 ```dart
 void fun()  {
 
-    setJPushAlias('your alias').then((AliasResultModel? model) { });
+ FlJPush.instance.setAlias('your alias').then((AliasResultModel? model) { });
 
 }
 ```
 
-#### deleteJPushAlias
+#### deleteAlias
 
 - 删除 alias。
 
@@ -181,49 +173,49 @@ void fun()  {
 
 void fun()  {
 
-    deleteJPushAlias().then((AliasResultModel? model) {});
+ FlJPush.instance.deleteAlias().then((AliasResultModel? model) {});
 
 }
 ```
 
 
-#### getJPushAlias
+#### getAlias
 
 - 获取 alias.
 
 ```dart
 void fun()  {
 
-    getJPushAlias().then((AliasResultModel? model) {});
+ FlJPush.instance.getAlias().then((AliasResultModel? model) {});
 
 }
 ```
 
-#### addJPushTags
+#### addTags
 
 - 在原来的 Tags 列表上添加指定 tags。
 
 ```dart
 void fun()  {
 
-    addJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+ FlJPush.instance.addTags(['tag1','tag2']).then((TagResultModel? model) {});
 
 }
 ```
 
-####  deleteJPushTags
+####  deleteTags
 
 - 在原来的 Tags 列表上删除指定 tags。
 
 ```dart
 void fun()  {
 
-    deleteJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+ FlJPush.instance.deleteTags(['tag1','tag2']).then((TagResultModel? model) {});
 
 }
 ```
 
-#### setJPushTags
+#### setTags
 
 - 重置 tags。
 
@@ -231,49 +223,49 @@ void fun()  {
 
 void fun()  {
 
-    setJPushTags(['tag1','tag2']).then((TagResultModel? model) {});
+ FlJPush.instance.setTags(['tag1','tag2']).then((TagResultModel? model) {});
 
 }
 ```
 
-#### validJPushTag
+#### validTag
 
 - 验证tag是否绑定。
 
 ```dart
 void fun()  {
 
-    validJPushTag('tag1').then((TagResultModel? model) {});
+ FlJPush.instance.validTag('tag1').then((TagResultModel? model) {});
 
 }
 ```
 
-#### cleanJPushTags
+#### cleanTags
 
 - 清空所有 tags
 
 ```dart
 void fun()  {
 
-    cleanJPushTags().then((TagResultModel? model) {});
+ FlJPush.instance.cleanTags().then((TagResultModel? model) {});
 
 }
 ```
 
-#### getAllJPushTags
+#### getAllTags
 
 - 获取当前 tags 列表。
 
 ```dart
 void fun()  {
 
-    getAllJPushTags().then((TagResultModel? model) {});
+ FlJPush.instance.getAllTags().then((TagResultModel? model) {});
 
 }
 
 ```
 
-#### sendJPushLocalNotification
+#### sendLocalNotification
 
 - 指定触发时间，添加本地推送通知。
 
@@ -292,12 +284,12 @@ void fun()  {
        badge: 5, // 该参数只有在 iOS 有效
        extras: {'hh': '11'} // 设置 extras ，extras 需要是 Map<String, String>
   );
-    sendJPushLocalNotification(localNotification).then((localNotification) {});
+    FlJPush.instance.sendLocalNotification(localNotification).then((localNotification) {});
 
 }
 ```
 
-#### clearJPushNotification
+#### clearNotification
 
 - 清空通知栏上某个通知
 
@@ -305,13 +297,13 @@ void fun()  {
 
 Future<void> fun() async {
 
-    bool? status = await clearJPushNotification(notificationId);
+    bool? status = await FlJPush.instance.clearNotification(notificationId);
 
 }
 ```
 
 
-#### clearAllJPushNotifications
+#### clearAllNotifications
 
 - 清楚通知栏上所有通知。
 
@@ -319,7 +311,7 @@ Future<void> fun() async {
 
 Future<void> fun() async {
 
-    clearAllJPushNotifications();
+ FlJPush.instance.clearAllNotifications();
 
 }
 ```
@@ -332,7 +324,7 @@ Future<void> fun() async {
 ```dart
 Future<void> fun() async {
 
-    bool? status = await isNotificationEnabled();
+    bool? status = await FlJPush.instance.isNotificationEnabled();
 
 }
 ```
@@ -340,19 +332,19 @@ Future<void> fun() async {
 **Android Only **
 
 
-#### isJPushStopped
+#### isStopped
 
 - Push Service 是否已经被停止
 
 ```dart
 Future<void> fun() async {
 
-    bool? status = await isJPushStopped();
+    bool? status = await FlJPush.instance.isPushStopped();
 
 }
 ```
 
-#### getAndroidJPushUdID
+#### getAndroidUdID
 
 - 获取UDID
 
@@ -360,7 +352,7 @@ Future<void> fun() async {
 
 Future<void> fun() async {
 
-    String? udid = await getAndroidJPushUdID();
+    String? udid = await FlJPush.instance.getUDIDWithAndroid();
 
 }
 ```
@@ -368,7 +360,7 @@ Future<void> fun() async {
 
 **iOS Only **
 
-#### applyJPushAuthority
+#### applyAuthorityWithIOS
 
 - 申请推送权限，注意这个方法只会向用户弹出一次推送权限请求（如果用户不同意，之后只能用户到设置页面里面勾选相应权限），需要开发者选择合适的时机调用。
 
@@ -377,7 +369,7 @@ Future<void> fun() async {
 ```dart
 void fun()  {
 
-    applyJPushAuthority(NotificationSettingsIOS(
+ FlJPush.instance.applyAuthorityWithIOS(NotificationSettingsIOS(
       sound: true,
       alert: true,
       badge: true));
@@ -385,7 +377,7 @@ void fun()  {
 }
 ```
 
-#### setJPushBadge
+#### setBadge
 
 - 设置应用 badge 值，该方法还会同步 JPush 服务器的的 badge 值，JPush 服务器的 badge 值用于推送 badge 自动 +1 时会用到。
 
@@ -393,12 +385,12 @@ void fun()  {
 
 void fun(){
 
-    setJPushBadge(66).then((bool? status) {});
+ FlJPush.instance.setBadge(66).then((bool? status) {});
 
 }
 ```
 
-### getJPushLaunchAppNotification
+### getLaunchAppNotificationWithIOS
 
 - 获取 iOS 点击推送启动应用的那条通知。
 
@@ -406,7 +398,7 @@ void fun(){
 
 void fun(){
 
-    getJPushLaunchAppNotification().then((Map<dynamic, dynamic>? map) {});
+ FlJPush.instance.getLaunchAppNotificationWithIOS().then((Map<dynamic, dynamic>? map) {});
 
 }
 ```

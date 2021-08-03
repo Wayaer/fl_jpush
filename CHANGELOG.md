@@ -1,3 +1,6 @@
+## [2.0.0]
+ * add Singleton Pattern
+ * upgrade Android Gradle
 ## [1.0.0]
  * add platform restrictions
  * upgrade Android [jcore]、[jpush] SDK version

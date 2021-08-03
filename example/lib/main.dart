@@ -5,7 +5,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// 初始化
-  final bool key = await setupJPush(
+  final bool key = await FlJPush.instance.setup(
       iosKey: '3af087cca42c9f95df54ab89', //你自己应用的 AppKey
       production: false,
       channel: 'channel',
@@ -31,7 +31,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> addEventHandler() async {
-    addJPushEventHandler(onReceiveNotification: (JPushMessage? message) {
+    FlJPush.instance.addEventHandler(
+        onReceiveNotification: (JPushMessage? message) {
       print('onReceiveNotification: ${message?.toMap}');
       text = 'onReceiveNotification: ${message?.alert}';
       setState(() {});
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {});
     });
 
-    applyJPushAuthority(
+    FlJPush.instance.applyAuthorityWithIOS(
         const NotificationSettingsIOS(sound: true, alert: true, badge: true));
   }
 
@@ -69,16 +70,16 @@ class _HomePageState extends State<HomePage> {
             runSpacing: 10,
             spacing: 10,
             children: <Widget>[
-              _Button(
+              ElevatedText(
                   title: 'getRegistrationID',
                   onPressed: () {
-                    getJPushRegistrationID().then((String? rid) {
+                    FlJPush.instance.getRegistrationID().then((String? rid) {
                       print('get registration id : $rid');
                       text = 'getRegistrationID: $rid';
                       setState(() {});
                     });
                   }),
-              _Button(
+              ElevatedText(
                   title: '发本地推送',
                   onPressed: () async {
                     final LocalNotification localNotification =
@@ -92,142 +93,152 @@ class _HomePageState extends State<HomePage> {
                             subtitle: 'LocalMessage test',
                             badge: 5,
                             extra: <String, String>{'LocalMessage': 'test'});
-                    final LocalNotification? res =
-                        await sendJPushLocalNotification(localNotification);
+                    final LocalNotification? res = await FlJPush.instance
+                        .sendLocalNotification(localNotification);
                     if (res == null) return;
                     text = res.toMap.toString();
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'setTags',
                   onPressed: () async {
-                    final TagResultModel? map =
-                        await setJPushTags(<String>['test1', 'test2']);
+                    final TagResultModel? map = await FlJPush.instance
+                        .setTags(<String>['test1', 'test2']);
                     if (map == null) return;
                     text = 'set tags success: ${map.toMap}}]';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'addTags',
                   onPressed: () async {
-                    final TagResultModel? map =
-                        await addJPushTags(<String>['test3', 'test4']);
+                    final TagResultModel? map = await FlJPush.instance
+                        .addTags(<String>['test3', 'test4']);
                     text = 'addTags success: ${map?.toMap}}';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'deleteTags',
                   onPressed: () async {
-                    final TagResultModel? map =
-                        await deleteJPushTags(<String>['test1', 'test2']);
+                    final TagResultModel? map = await FlJPush.instance
+                        .deleteTags(<String>['test1', 'test2']);
                     text = 'deleteTags success: ${map?.toMap}}';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'validTag',
                   onPressed: () async {
-                    final TagResultModel? map = await validJPushTag('test1');
+                    final TagResultModel? map =
+                        await FlJPush.instance.validTag('test1');
                     if (map == null) return;
                     text = 'valid tags success: ${map.toMap}}]';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'getAllTags',
                   onPressed: () async {
-                    final TagResultModel? map = await getAllJPushTags();
+                    final TagResultModel? map =
+                        await FlJPush.instance.getAllTags();
                     text = 'getAllTags success: ${map?.toMap}';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'cleanTags',
                   onPressed: () async {
-                    final TagResultModel? map = await cleanJPushTags();
+                    final TagResultModel? map =
+                        await FlJPush.instance.cleanTags();
                     text = 'cleanTags success: ${map?.toMap}}';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'setAlias',
                   onPressed: () async {
-                    final AliasResultModel? map = await setJPushAlias('alias1');
+                    final AliasResultModel? map =
+                        await FlJPush.instance.setAlias('alias1');
                     text = 'setAlias success: ${map?.toMap}';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'getAlias',
                   onPressed: () async {
-                    final AliasResultModel? map = await getJPushAlias();
+                    final AliasResultModel? map =
+                        await FlJPush.instance.getAlias();
                     text = 'getAlias success: ${map?.toMap}';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'deleteAlias',
                   onPressed: () async {
-                    final AliasResultModel? map = await deleteJPushAlias();
+                    final AliasResultModel? map =
+                        await FlJPush.instance.deleteAlias();
                     text = 'deleteAlias success: ${map?.toMap}';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'stopPush',
                   onPressed: () async {
-                    final bool status = await stopJPush();
+                    final bool status = await FlJPush.instance.stop();
                     text = 'stopPush success: $status';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'resumePush',
                   onPressed: () async {
-                    final bool status = await resumeJPush();
+                    final bool status = await FlJPush.instance.resume();
                     text = 'resumePush success: $status';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'clearAllNotifications',
                   onPressed: () async {
-                    final bool data = await clearAllJPushNotifications();
+                    final bool data =
+                        await FlJPush.instance.clearAllNotifications();
                     text = 'clearAllNotifications success: $data';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'clearNotification',
                   onPressed: () async {
-                    final bool data =
-                        await clearJPushNotification(notificationID);
+                    final bool data = await FlJPush.instance
+                        .clearNotification(notificationID);
                     text = 'clearNotification success: $data';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'setBadge 66',
                   onPressed: () async {
-                    final bool map = await setJPushBadge(66);
+                    final bool map = await FlJPush.instance.setBadge(66);
                     text = 'setBadge success: $map';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: 'setBadge 0',
                   onPressed: () async {
-                    final bool map = await setJPushBadge(0);
+                    final bool map = await FlJPush.instance.setBadge(0);
                     text = 'setBadge 0 success: $map';
                     setState(() {});
                   }),
-              _Button(
+              ElevatedText(
                   title: '打开系统设置',
                   onPressed: () {
-                    openSettingsForNotification();
+                    FlJPush.instance.openSettingsForNotification();
                   }),
-              _Button(
+              ElevatedText(
                   title: '通知授权是否打开',
                   onPressed: () {
-                    isNotificationEnabled().then((bool? value) {
+                    FlJPush.instance
+                        .isNotificationEnabled()
+                        .then((bool? value) {
                       text = '通知授权是否打开: $value';
                       setState(() {});
                     });
                   }),
             ]),
         const Text('仅支持 IOS'),
-        _Button(
+        ElevatedText(
             title: 'getLaunchAppNotification',
             onPressed: () {
-              getJPushLaunchAppNotification()
+              FlJPush.instance
+                  .getLaunchAppNotificationWithIOS()
                   .then((Map<dynamic, dynamic>? map) {
                 print('getLaunchAppNotification:$map');
                 text = 'getLaunchAppNotification success: $map';
@@ -240,18 +251,19 @@ class _HomePageState extends State<HomePage> {
             runSpacing: 10,
             spacing: 10,
             children: <Widget>[
-              _Button(
+              ElevatedText(
                   title: 'Push 是否已经被停止',
                   onPressed: () {
-                    isJPushStopped().then((bool? value) {
+                    FlJPush.instance.isPushStopped().then((bool? value) {
                       text = 'Push Service 是否已经被停止: $value';
                       setState(() {});
                     });
                   }),
-              _Button(
+              ElevatedText(
                   title: 'getAndroidUdID',
                   onPressed: () async {
-                    final String? id = await getAndroidJPushUdID();
+                    final String? id =
+                        await FlJPush.instance.getUDIDWithAndroid();
                     if (id == null) return;
                     text = 'getAndroidJPushUdID success: $id';
                     setState(() {});
@@ -263,8 +275,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _Button extends StatelessWidget {
-  const _Button({required this.onPressed, required this.title});
+class ElevatedText extends StatelessWidget {
+  const ElevatedText({required this.onPressed, required this.title});
 
   final VoidCallback onPressed;
   final String title;

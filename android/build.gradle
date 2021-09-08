@@ -2,19 +2,16 @@ group 'fl.jpush'
 version '1.0'
 
 buildscript {
+    ext.kotlin_version = '1.5.30'
     repositories {
         google()
         mavenCentral()
-        maven {
-            allowInsecureProtocol = true
-            url 'http://developer.huawei.com/repo/'
-        }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
-        classpath 'com.huawei.agconnect:agcp:1.4.2.300'
+        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
     }
 }
 
@@ -22,54 +19,38 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
-        maven {
-            allowInsecureProtocol = true
-            url 'http://developer.huawei.com/repo/'
-        }
+
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.huawei.agconnect'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
     defaultConfig {
         minSdkVersion 17
         consumerProguardFiles 'consumer-rules.pro'
+        targetSdkVersion 31
     }
     packagingOptions {
         merge 'AndroidManifest.xml'
         merge 'R.txt'
         merge 'classes.jar'
         merge 'proguard.txt'
+        doNotStrip '*/mips/*.so'
+        doNotStrip '*/mips64/*.so'
     }
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'cn.jiguang.sdk:jcore:2.9.0'
-    implementation 'cn.jiguang.sdk:jpush:4.2.4'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.21"
+    implementation 'cn.jiguang.sdk:jpush:4.3.0'
 
-    // 接入华为厂商
-    implementation 'com.huawei.hms:push:5.0.4.302'
-    implementation 'cn.jiguang.sdk.plugin:huawei:4.0.0'
-    // 极光厂商插件版本与接入 JPush 版本保持一致，下同
-    // 接入 FCM 厂商
-    implementation 'com.google.firebase:firebase-messaging:22.0.0'
-    implementation 'cn.jiguang.sdk.plugin:fcm:4.0.0'
-    // 接入魅族厂商
-    implementation 'cn.jiguang.sdk.plugin:meizu:4.0.0'
-    // 接入 VIVO 厂商
-    implementation 'cn.jiguang.sdk.plugin:vivo:4.0.0'
-    // 接入 OPPO 厂商
-    implementation 'cn.jiguang.sdk.plugin:oppo:4.0.0'
-    // 接入小米厂商
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.0.0'
 }
 repositories {
     mavenCentral()

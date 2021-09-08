@@ -7,18 +7,14 @@ typedef JPushEventHandler = void Function(JPushMessage? event);
 typedef JPushNotificationAuthorization = void Function(bool? state);
 
 class FlJPush {
-  factory FlJPush() => _getInstance();
-
-  FlJPush._internal();
-
-  static FlJPush get instance => _getInstance();
-
-  static FlJPush? _instance;
-
-  static FlJPush _getInstance() {
-    _instance ??= FlJPush._internal();
-    return _instance!;
+  factory FlJPush() {
+    _singleton ??= FlJPush._();
+    return _singleton!;
   }
+
+  FlJPush._();
+
+  static FlJPush? _singleton;
 
   final MethodChannel _channel = const MethodChannel('fl_jpush');
 

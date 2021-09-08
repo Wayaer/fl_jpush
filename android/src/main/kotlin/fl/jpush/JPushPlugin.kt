@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.api.JPushMessage
 import cn.jpush.android.data.JPushLocalNotification
+import cn.jpush.android.service.JCommonService
 import cn.jpush.android.service.JPushMessageReceiver
-import com.google.firebase.FirebaseApp
+import cn.jpush.android.ups.JPushUPSManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.MethodCall
@@ -54,22 +56,31 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 val map = call.arguments<HashMap<String, Any>>()
                 val debug = map["debug"] as Boolean
                 JPushInterface.setDebugMode(debug)
-                JPushInterface.init(context) // 初始化 JPush
+                JPushUPSManager.registerToken(
+                    context,
+                    "3af087cca42c9f95df54ab89", null, null
+                ) {
+                    Log.d("registerToken", it.toString())
+                }
                 val channel = map["channel"] as String?
                 JPushInterface.setChannel(context, channel)
-                FirebaseApp.initializeApp(context)
                 channelResult!!.success(true)
             }
             "setTags" -> {
                 val sequence: Int = getSequence()
                 val tagList = call.arguments<List<String>>()
                 val tags: Set<String> = HashSet(tagList)
+                Log.d("setTags", sequence.toString())
                 JPushInterface.setTags(context, sequence, tags)
             }
             "validTag" -> {
                 val sequence: Int = getSequence()
                 val tag = call.arguments
-                JPushInterface.checkTagBindState(context, sequence, tag.toString())
+                JPushInterface.checkTagBindState(
+                    context,
+                    sequence,
+                    tag.toString()
+                )
             }
             "cleanTags" -> {
                 val sequence: Int = getSequence()
@@ -129,6 +140,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 channelResult!!.success(null)
             }
             "getRegistrationID" -> {
+                JPushInterface.requestPermission(context)
                 val rid = JPushInterface.getRegistrationID(context)
                 channelResult!!.success(rid)
             }
@@ -154,7 +166,11 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 //1表示开启，0表示关闭，-1表示检测失败
                 channelResult!!.success(isEnabled == 1)
             }
-            "isPushStopped" -> channelResult!!.success(JPushInterface.isPushStopped(context))
+            "isPushStopped" -> channelResult!!.success(
+                JPushInterface.isPushStopped(
+                    context
+                )
+            )
             "getUdID" -> channelResult!!.success(JPushInterface.getUdid(context))
             "openSettingsForNotification" -> {
                 JPushInterface.goToAppNotificationSettings(context)
@@ -176,7 +192,8 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
 //                    val rId = intent.getStringExtra(JPushInterface.EXTRA_REGISTRATION_ID)
                 }
                 JPushInterface.ACTION_MESSAGE_RECEIVED -> {
-                    val message = intent.getStringExtra(JPushInterface.EXTRA_MESSAGE)
+                    val message =
+                        intent.getStringExtra(JPushInterface.EXTRA_MESSAGE)
                     val extras = getNotificationExtras(intent)
                     val msg: MutableMap<String, Any?> = HashMap()
                     msg["message"] = message
@@ -184,8 +201,10 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                     channel.invokeMethod("onReceiveMessage", msg)
                 }
                 JPushInterface.ACTION_NOTIFICATION_RECEIVED -> {
-                    val title = intent.getStringExtra(JPushInterface.EXTRA_NOTIFICATION_TITLE)
-                    val alert = intent.getStringExtra(JPushInterface.EXTRA_ALERT)
+                    val title =
+                        intent.getStringExtra(JPushInterface.EXTRA_NOTIFICATION_TITLE)
+                    val alert =
+                        intent.getStringExtra(JPushInterface.EXTRA_ALERT)
                     val extras = getNotificationExtras(intent)
                     val notification: MutableMap<String, Any?> = HashMap()
                     notification["title"] = title
@@ -194,8 +213,10 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                     channel.invokeMethod("onReceiveNotification", notification)
                 }
                 JPushInterface.ACTION_NOTIFICATION_OPENED -> {
-                    val title = intent.getStringExtra(JPushInterface.EXTRA_NOTIFICATION_TITLE)
-                    val alert = intent.getStringExtra(JPushInterface.EXTRA_ALERT)
+                    val title =
+                        intent.getStringExtra(JPushInterface.EXTRA_NOTIFICATION_TITLE)
+                    val alert =
+                        intent.getStringExtra(JPushInterface.EXTRA_ALERT)
                     val extras = getNotificationExtras(intent)
 
                     val notification: MutableMap<String, Any?> = HashMap()
@@ -204,10 +225,14 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                     notification["extras"] = extras
                     channel.invokeMethod("onOpenNotification", notification)
 
-                    val launch = context!!.packageManager.getLaunchIntentForPackage(context.packageName)
+                    val launch =
+                        context!!.packageManager.getLaunchIntentForPackage(
+                            context.packageName
+                        )
                     if (launch != null) {
                         launch.addCategory(Intent.CATEGORY_LAUNCHER)
-                        launch.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        launch.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
                         context.startActivity(launch)
                     }
                 }
@@ -241,28 +266,39 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
 
     class JPushEventReceiver : JPushMessageReceiver() {
 
-        override fun onTagOperatorResult(context: Context, jPushMessage: JPushMessage) {
+        override fun onTagOperatorResult(
+            context: Context,
+            jPushMessage: JPushMessage
+        ) {
             super.onTagOperatorResult(context, jPushMessage)
             val res: MutableMap<String, Any?> = HashMap()
             res["code"] = jPushMessage.errorCode
-            if (jPushMessage.tags != null) res["tags"] = jPushMessage.tags.toList()
+            if (jPushMessage.tags != null) res["tags"] =
+                jPushMessage.tags.toList()
             handle.post {
                 channelResult?.success(res)
             }
         }
 
-        override fun onCheckTagOperatorResult(context: Context, jPushMessage: JPushMessage) {
+        override fun onCheckTagOperatorResult(
+            context: Context,
+            jPushMessage: JPushMessage
+        ) {
             super.onCheckTagOperatorResult(context, jPushMessage)
             val res: MutableMap<String, Any?> = HashMap()
             res["code"] = jPushMessage.errorCode
             res["isBind"] = jPushMessage.tagCheckStateResult
-            if (jPushMessage.tags != null) res["tags"] = jPushMessage.tags.toList()
+            if (jPushMessage.tags != null) res["tags"] =
+                jPushMessage.tags.toList()
             handle.post {
                 channelResult?.success(res)
             }
         }
 
-        override fun onAliasOperatorResult(context: Context, jPushMessage: JPushMessage) {
+        override fun onAliasOperatorResult(
+            context: Context,
+            jPushMessage: JPushMessage
+        ) {
             super.onAliasOperatorResult(context, jPushMessage)
             val res: MutableMap<String, Any?> = HashMap()
             res["alias"] = jPushMessage.alias
@@ -271,6 +307,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 channelResult?.success(res)
             }
         }
-
     }
+
+    class JPushCustomService : JCommonService()
 }

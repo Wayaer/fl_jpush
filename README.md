@@ -77,7 +77,7 @@ import 'package:fl_jpush/fl_jpush_dart';
 ```dart
 
   Future<void> addEventHandler() async {
-   FlJPush.instance.addEventHandler(onReceiveNotification: (JPushMessage? message) {
+   FlJPush().addEventHandler(onReceiveNotification: (JPushMessage? message) {
       print('onReceiveNotification: ${message?.toMap}');
     }, onOpenNotification: (JPushMessage? message) {
       print('onOpenNotification: ${message?.toMap}');
@@ -98,19 +98,15 @@ import 'package:fl_jpush/fl_jpush_dart';
 **注意：**  android 端支持在 setup 方法中动态设置 channel，动态设置的 channel 优先级比 manifestPlaceholders 中的 JPUSH_CHANNEL 优先级要高。
 ```dart
 
-Future<void> main() async {
-
-  WidgetsFlutterBinding.ensureInitialized();
-
+@override
+void initState() {
+ super.initState();
   /// 初始化
-  FlJPush.instance.setup(
+  FlJPush().setup(
       iosKey: 'AppKey', //你自己应用的 AppKey
       production: false,
       channel: 'channel',
       debug: false);
-
-  runApp(MaterialApp());
-
 }
 ```
 
@@ -121,7 +117,7 @@ Future<void> main() async {
 ```dart
  void getRegistrationID (){
 
- FlJPush.instance.getRegistrationID().then((String? rid) {
+ FlJPush().getRegistrationID().then((String? rid) {
       print('get registration id : $rid');
     });
 
@@ -136,7 +132,7 @@ Future<void> main() async {
 
 void fun()  {
 
- FlJPush.instance.stop();
+ FlJPush().stop();
 
 }
 ```
@@ -148,7 +144,7 @@ void fun()  {
 ```dart
 void fun()  {
 
- FlJPush.instance.resume();
+ FlJPush().resume();
 
 }
 ```
@@ -160,7 +156,7 @@ void fun()  {
 ```dart
 void fun()  {
 
- FlJPush.instance.setAlias('your alias').then((AliasResultModel? model) { });
+ FlJPush().setAlias('your alias').then((AliasResultModel? model) { });
 
 }
 ```
@@ -173,7 +169,7 @@ void fun()  {
 
 void fun()  {
 
- FlJPush.instance.deleteAlias().then((AliasResultModel? model) {});
+ FlJPush().deleteAlias().then((AliasResultModel? model) {});
 
 }
 ```
@@ -186,7 +182,7 @@ void fun()  {
 ```dart
 void fun()  {
 
- FlJPush.instance.getAlias().then((AliasResultModel? model) {});
+ FlJPush().getAlias().then((AliasResultModel? model) {});
 
 }
 ```
@@ -198,7 +194,7 @@ void fun()  {
 ```dart
 void fun()  {
 
- FlJPush.instance.addTags(['tag1','tag2']).then((TagResultModel? model) {});
+ FlJPush().addTags(['tag1','tag2']).then((TagResultModel? model) {});
 
 }
 ```
@@ -210,7 +206,7 @@ void fun()  {
 ```dart
 void fun()  {
 
- FlJPush.instance.deleteTags(['tag1','tag2']).then((TagResultModel? model) {});
+ FlJPush().deleteTags(['tag1','tag2']).then((TagResultModel? model) {});
 
 }
 ```
@@ -223,7 +219,7 @@ void fun()  {
 
 void fun()  {
 
- FlJPush.instance.setTags(['tag1','tag2']).then((TagResultModel? model) {});
+ FlJPush().setTags(['tag1','tag2']).then((TagResultModel? model) {});
 
 }
 ```
@@ -235,7 +231,7 @@ void fun()  {
 ```dart
 void fun()  {
 
- FlJPush.instance.validTag('tag1').then((TagResultModel? model) {});
+ FlJPush().validTag('tag1').then((TagResultModel? model) {});
 
 }
 ```
@@ -247,7 +243,7 @@ void fun()  {
 ```dart
 void fun()  {
 
- FlJPush.instance.cleanTags().then((TagResultModel? model) {});
+ FlJPush().cleanTags().then((TagResultModel? model) {});
 
 }
 ```
@@ -259,7 +255,7 @@ void fun()  {
 ```dart
 void fun()  {
 
- FlJPush.instance.getAllTags().then((TagResultModel? model) {});
+ FlJPush().getAllTags().then((TagResultModel? model) {});
 
 }
 
@@ -284,7 +280,7 @@ void fun()  {
        badge: 5, // 该参数只有在 iOS 有效
        extras: {'hh': '11'} // 设置 extras ，extras 需要是 Map<String, String>
   );
-    FlJPush.instance.sendLocalNotification(localNotification).then((localNotification) {});
+    FlJPush().sendLocalNotification(localNotification).then((localNotification) {});
 
 }
 ```
@@ -297,7 +293,7 @@ void fun()  {
 
 Future<void> fun() async {
 
-    bool? status = await FlJPush.instance.clearNotification(notificationId);
+    bool? status = await FlJPush().clearNotification(notificationId);
 
 }
 ```
@@ -311,7 +307,7 @@ Future<void> fun() async {
 
 Future<void> fun() async {
 
- FlJPush.instance.clearAllNotifications();
+ FlJPush().clearAllNotifications();
 
 }
 ```
@@ -324,7 +320,7 @@ Future<void> fun() async {
 ```dart
 Future<void> fun() async {
 
-    bool? status = await FlJPush.instance.isNotificationEnabled();
+    bool? status = await FlJPush().isNotificationEnabled();
 
 }
 ```
@@ -339,7 +335,7 @@ Future<void> fun() async {
 ```dart
 Future<void> fun() async {
 
-    bool? status = await FlJPush.instance.isPushStopped();
+    bool? status = await FlJPush().isPushStopped();
 
 }
 ```
@@ -352,7 +348,7 @@ Future<void> fun() async {
 
 Future<void> fun() async {
 
-    String? udid = await FlJPush.instance.getUDIDWithAndroid();
+    String? udid = await FlJPush().getUDIDWithAndroid();
 
 }
 ```
@@ -369,7 +365,7 @@ Future<void> fun() async {
 ```dart
 void fun()  {
 
- FlJPush.instance.applyAuthorityWithIOS(NotificationSettingsIOS(
+ FlJPush().applyAuthorityWithIOS(NotificationSettingsIOS(
       sound: true,
       alert: true,
       badge: true));
@@ -385,7 +381,7 @@ void fun()  {
 
 void fun(){
 
- FlJPush.instance.setBadge(66).then((bool? status) {});
+ FlJPush().setBadge(66).then((bool? status) {});
 
 }
 ```
@@ -398,7 +394,7 @@ void fun(){
 
 void fun(){
 
- FlJPush.instance.getLaunchAppNotificationWithIOS().then((Map<dynamic, dynamic>? map) {});
+ FlJPush().getLaunchAppNotificationWithIOS().then((Map<dynamic, dynamic>? map) {});
 
 }
 ```

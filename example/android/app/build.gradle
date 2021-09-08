@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -35,22 +35,23 @@ android {
     defaultConfig {
         applicationId "com.jpush.example"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY : "3af087cca42c9f95df54ab89", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_APPKEY  : "3af087cca42c9f95df54ab89", //JPush 上注册的包名对应的 Appkey.
                 JPUSH_CHANNEL : "flutter", //暂时填写默认值即可.
-                MEIZU_APPKEY : "MZ-魅族的APPKEY",
-                MEIZU_APPID : "MZ-魅族的APPID",
-                XIAOMI_APPID : "MI-小米的APPID",
+                /// 前缀不要去掉  MZ-  MI-
+                MEIZU_APPKEY  : "MZ-魅族的APPKEY",
+                MEIZU_APPID   : "MZ-魅族的APPID",
+                XIAOMI_APPID  : "MI-小米的APPID",
                 XIAOMI_APPKEY : "MI-小米的APPKEY",
-                OPPO_APPKEY : "OP-oppo的APPKEY",
-                OPPO_APPID : "OP-oppo的APPID",
-                OPPO_APPSECRET : "OP-oppo的APPSECRET",
-                VIVO_APPKEY : "vivo的APPKEY",
-                VIVO_APPID : "vivo的APPID"
+                OPPO_APPKEY   : "OP-oppo的APPKEY",
+                OPPO_APPID    : "OP-oppo的APPID",
+                OPPO_APPSECRET: "OP-oppo的APPSECRET",
+                VIVO_APPKEY   : "vivo的APPKEY",
+                VIVO_APPID    : "vivo的APPID"
         ]
     }
     buildTypes {
@@ -65,7 +66,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'consumer-rules.pro'
         }
     }
-    
+
 }
 
 flutter {

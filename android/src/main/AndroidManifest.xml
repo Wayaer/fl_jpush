@@ -43,16 +43,16 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
 
-                <category android:name="${applicationId}" />
+                <category android:name="${JPUSH_PKGNAME}" />
             </intent-filter>
         </receiver>
         <receiver
             android:name="fl.jpush.JPushPlugin$JPushEventReceiver"
-            android:exported="true"
-            android:permission="true">
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
-                <category android:name="${applicationId}" />
+                <category android:name="${JPUSH_PKGNAME}" />
             </intent-filter>
         </receiver>
         <!-- Since JCore2.0.0 Required SDK核心功能-->

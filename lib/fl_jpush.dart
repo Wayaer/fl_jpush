@@ -19,14 +19,14 @@ class FlJPush {
   final MethodChannel _channel = const MethodChannel('fl_jpush');
 
   Future<bool> setup(
-      {required String iosKey,
+      {required String appKey,
       bool production = false,
       String? channel = '',
       bool debug = false}) async {
     if (!_supportPlatform) return false;
     final bool? state = await _channel.invokeMethod<bool?>(
         'setup', <String, dynamic>{
-      'appKey': iosKey,
+      'appKey': appKey,
       'channel': channel,
       'production': production,
       'debug': debug

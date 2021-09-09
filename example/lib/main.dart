@@ -22,7 +22,8 @@ class _HomePageState extends State<HomePage> {
     /// 初始化
     FlJPush()
         .setup(
-            iosKey: '3af087cca42c9f95df54ab89', //你自己应用的 AppKey
+            appKey: '3af087cca42c9f95df54ab89',
+            //你自己应用的 AppKey
             production: false,
             channel: 'channel',
             debug: false)

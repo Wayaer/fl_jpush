@@ -166,6 +166,7 @@ static NSMutableArray<FlutterResult>* getRidResults;
         [[UIApplication sharedApplication] unregisterForRemoteNotifications];
         result(@(YES));
     } else if([@"resumePush" isEqualToString:call.method]) {
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
         result(@(YES));
     } else if([@"clearAllNotifications" isEqualToString:call.method]) {
         [self clearAllNotifications:call result:result];
@@ -197,7 +198,6 @@ static NSMutableArray<FlutterResult>* getRidResults;
     } else {
         [JPUSHService setLogOFF];
     }
-    
     [JPUSHService setupWithOption:_completeLaunchNotification
                            appKey:arguments[@"appKey"]
                           channel:arguments[@"channel"]

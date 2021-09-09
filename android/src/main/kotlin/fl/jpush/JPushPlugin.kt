@@ -6,11 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.api.JPushMessage
 import cn.jpush.android.data.JPushLocalNotification
-import cn.jpush.android.service.JCommonService
 import cn.jpush.android.service.JPushMessageReceiver
 import cn.jpush.android.ups.JPushUPSManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -59,7 +57,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                     context,
                     map["appKey"] as String?, null, null
                 ) {
-                    Log.d("registerToken", it.toString())
                     result.success(it.returnCode == 0)
                     if (it.returnCode == 0) {
                         JPushInterface.setChannel(
@@ -184,7 +181,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
      */
     class JPushReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            Log.d("JPushReceiver", intent?.action.toString())
             when (intent!!.action) {
                 JPushInterface.ACTION_REGISTRATION_ID -> {
 //                    val rId = intent.getStringExtra(JPushInterface.EXTRA_REGISTRATION_ID)
@@ -269,7 +265,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             jPushMessage: JPushMessage?
         ) {
             super.onTagOperatorResult(context, jPushMessage)
-            Log.d("onTagOperatorResult", jPushMessage?.alias.toString())
             val res: MutableMap<String, Any?> = HashMap()
             res["code"] = jPushMessage?.errorCode
             if (jPushMessage?.tags != null) res["tags"] =
@@ -284,10 +279,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             jPushMessage: JPushMessage?
         ) {
             super.onCheckTagOperatorResult(context, jPushMessage)
-            Log.d(
-                "onCheckTagOperator",
-                jPushMessage?.tags?.toList().toString()
-            )
             val res: MutableMap<String, Any?> = HashMap()
             res["code"] = jPushMessage?.errorCode
             res["isBind"] = jPushMessage?.tagCheckStateResult
@@ -312,6 +303,4 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             }
         }
     }
-
-    class JPushCustomService : JCommonService()
 }

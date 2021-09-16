@@ -49,8 +49,9 @@ class FlJPush {
     if (!_supportPlatform) return;
     _channel.setMethodCallHandler((MethodCall call) async {
       JPushMessage? message;
-      if (call.arguments is Map)
+      if (call.arguments is Map) {
         message = JPushMessage.fromMap(call.arguments as Map<dynamic, dynamic>);
+      }
       switch (call.method) {
         case 'onReceiveNotification':
           if (onReceiveNotification != null) onReceiveNotification(message);
@@ -62,8 +63,9 @@ class FlJPush {
           if (onReceiveMessage != null) onReceiveMessage(message);
           break;
         case 'onReceiveNotificationAuthorization':
-          if (onReceiveNotificationAuthorization != null)
+          if (onReceiveNotificationAuthorization != null) {
             onReceiveNotificationAuthorization(call.arguments as bool?);
+          }
           break;
         default:
           throw UnsupportedError('Unrecognized Event');
@@ -257,7 +259,7 @@ class FlJPush {
 
   bool get _supportPlatform {
     if (!kIsWeb && (_isAndroid || _isIOS)) return true;
-    print('Not support platform for $defaultTargetPlatform');
+    debugPrint('Not support platform for $defaultTargetPlatform');
     return false;
   }
 
@@ -290,7 +292,7 @@ class JPushMessage {
         mutableContent = aps['mutableContent'] as int?;
         notificationAuthorization = aps['notificationAuthorization'] as bool?;
       }
-      msgID = json['_j_msgid'] == null ? null : json['_j_msgid'].toString();
+      msgID = json['_j_msgid']?.toString();
       notificationID = json['_j_uid'] as int?;
       extras = json;
       (extras as Map<dynamic, dynamic>).removeWhere(

@@ -2,11 +2,13 @@ import 'package:fl_jpush/fl_jpush.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
       debugShowCheckedModeBanner: false, title: '极光推送', home: HomePage()));
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -28,26 +30,26 @@ class _HomePageState extends State<HomePage> {
             channel: 'channel',
             debug: false)
         .then((bool value) {
-      print('初始化成功：$value');
+      debugPrint('初始化成功：$value');
       addEventHandler();
     });
   }
 
   Future<void> addEventHandler() async {
     FlJPush().addEventHandler(onReceiveNotification: (JPushMessage? message) {
-      print('onReceiveNotification: ${message?.toMap}');
+      debugPrint('onReceiveNotification: ${message?.toMap}');
       text = 'onReceiveNotification: ${message?.alert}';
       setState(() {});
     }, onOpenNotification: (JPushMessage? message) {
-      print('onOpenNotification: ${message?.toMap}');
+      debugPrint('onOpenNotification: ${message?.toMap}');
       text = 'onOpenNotification: ${message?.alert}';
       setState(() {});
     }, onReceiveMessage: (JPushMessage? message) {
-      print('onReceiveMessage: ${message?.toMap}');
+      debugPrint('onReceiveMessage: ${message?.toMap}');
       text = 'onReceiveMessage: ${message?.alert}';
       setState(() {});
     }, onReceiveNotificationAuthorization: (bool? state) {
-      print('onReceiveNotificationAuthorization: $state');
+      debugPrint('onReceiveNotificationAuthorization: $state');
       text = 'onReceiveNotificationAuthorization: $state';
       setState(() {});
     });
@@ -76,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                   title: 'getRegistrationID',
                   onPressed: () {
                     FlJPush().getRegistrationID().then((String? rid) {
-                      print('get registration id : $rid');
+                      debugPrint('get registration id : $rid');
                       text = 'getRegistrationID: $rid';
                       setState(() {});
                     });
@@ -235,7 +237,7 @@ class _HomePageState extends State<HomePage> {
               FlJPush()
                   .getLaunchAppNotificationWithIOS()
                   .then((Map<dynamic, dynamic>? map) {
-                print('getLaunchAppNotification:$map');
+                debugPrint('getLaunchAppNotification:$map');
                 text = 'getLaunchAppNotification success: $map';
                 setState(() {});
               });
@@ -270,10 +272,11 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ElevatedText extends StatelessWidget {
-  const ElevatedText({required this.onPressed, required this.title});
-
   final VoidCallback onPressed;
   final String title;
+
+  const ElevatedText({Key? key, required this.onPressed, required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) =>

@@ -1,4 +1,5 @@
 ## 2.1.0
+ * add vendor channel support 
  * remove instance , direct initialization
  * update gradle version
  * update kotlin version

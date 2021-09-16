@@ -7,10 +7,7 @@ typedef JPushEventHandler = void Function(JPushMessage? event);
 typedef JPushNotificationAuthorization = void Function(bool? state);
 
 class FlJPush {
-  factory FlJPush() {
-    _singleton ??= FlJPush._();
-    return _singleton!;
-  }
+  factory FlJPush() => _singleton ??= FlJPush._();
 
   FlJPush._();
 

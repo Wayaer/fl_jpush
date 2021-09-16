@@ -37,11 +37,10 @@ android: {
 
     manifestPlaceholders = [
         JPUSH_PKGNAME : applicationId,
-        JPUSH_APPKEY : 'appkey', 
-        
+        JPUSH_APPKEY : 'appkey',
         JPUSH_CHANNEL : 'developer-default', 
-        // 下面是多厂商配置，如需要开通使用请联系技术支持
-        // 如果不需要使用，预留空字段即可
+            
+        // 如集成厂商通道，请添加以下信息
         MEIZU_APPKEY : "",
         MEIZU_APPID : "",
         XIAOMI_APPID : "",
@@ -55,6 +54,7 @@ android: {
   }    
 }
 ```
+集成厂商通道的 安装 [fl_jpush_android](https://pub.dev/packages/fl_jpush_android)
 
 ##### iOS:
  Capability 添加 "Background Modes"  "Push Notifications"

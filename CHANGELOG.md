@@ -1,4 +1,4 @@
-## 2.1.1
+## 2.1.2
  * fix bug for android
 ## 2.1.0
  * add vendor channel support 

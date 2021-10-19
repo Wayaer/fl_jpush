@@ -27,6 +27,9 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
         lateinit var channel: MethodChannel
         var channelResult: MethodChannel.Result? = null
         val handle = Handler(Looper.getMainLooper())
+        var hasOnReceiveMessage = false
+        var hasOnOpenNotification = false
+        var hasOnReceiveNotification = false
     }
 
 
@@ -170,6 +173,15 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 JPushInterface.goToAppNotificationSettings(context)
                 result.success(true)
             }
+            "setEventHandler" -> {
+                hasOnOpenNotification =
+                    call.argument<Boolean>("onOpenNotification") == true
+                hasOnReceiveMessage =
+                    call.argument<Boolean>("onReceiveMessage") == true
+                hasOnReceiveNotification =
+                    call.argument<Boolean>("onReceiveNotification") == true
+                result.success(true)
+            }
             else -> result.notImplemented()
 
         }
@@ -186,6 +198,9 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
 //                    val rId = intent.getStringExtra(JPushInterface.EXTRA_REGISTRATION_ID)
                 }
                 JPushInterface.ACTION_MESSAGE_RECEIVED -> {
+                    if (!hasOnReceiveMessage) {
+                        return
+                    }
                     val message =
                         intent.getStringExtra(JPushInterface.EXTRA_MESSAGE)
                     val extras = getNotificationExtras(intent)
@@ -195,6 +210,9 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                     channel.invokeMethod("onReceiveMessage", msg)
                 }
                 JPushInterface.ACTION_NOTIFICATION_RECEIVED -> {
+                    if (!hasOnReceiveNotification) {
+                        return
+                    }
                     val title =
                         intent.getStringExtra(JPushInterface.EXTRA_NOTIFICATION_TITLE)
                     val alert =
@@ -207,6 +225,9 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                     channel.invokeMethod("onReceiveNotification", notification)
                 }
                 JPushInterface.ACTION_NOTIFICATION_OPENED -> {
+                    if (!hasOnOpenNotification) {
+                        return
+                    }
                     val title =
                         intent.getStringExtra(JPushInterface.EXTRA_NOTIFICATION_TITLE)
                     val alert =

@@ -16,6 +16,10 @@ static NSMutableArray<FlutterResult>* getRidResults;
     NSDictionary *_launchNotification;
     NSDictionary *_completeLaunchNotification;
     BOOL _isJPushDidLogin;
+    BOOL hasOnReceiveMessage;
+    BOOL hasOnOpenNotification;
+    BOOL hasOnReceiveNotification;
+    BOOL hasOnReceiveNotificationAuthorization;
     JPAuthorizationOptions notificationTypes;
 }
 
@@ -92,7 +96,10 @@ static NSMutableArray<FlutterResult>* getRidResults;
 }
 
 - (void)networkDidReceiveMessage:(NSNotification *)notification {
-    [_channel invokeMethod:@"onReceiveMessage" arguments: [notification userInfo]];
+    if(hasOnReceiveMessage){
+        [_channel invokeMethod:@"onReceiveMessage" arguments: [notification userInfo]];
+    }
+    
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -184,6 +191,12 @@ static NSMutableArray<FlutterResult>* getRidResults;
         }];
     } else if([@"openSettingsForNotification"isEqualToString:call.method]) {
         [JPUSHService openSettingsForNotification:^(BOOL success) {}];
+        result(@(YES));
+    } else if([@"setEventHandler"isEqualToString:call.method]){
+        hasOnReceiveMessage = [call.arguments[@"onReceiveMessage"] boolValue];
+        hasOnReceiveNotification = [call.arguments[@"onReceiveNotification"] boolValue];
+        hasOnOpenNotification = [call.arguments[@"onOpenNotification"] boolValue];
+        hasOnReceiveNotificationAuthorization = [call.arguments[@"onReceiveNotificationAuthorization"] boolValue];
         result(@(YES));
     } else {
         result(FlutterMethodNotImplemented);
@@ -346,8 +359,10 @@ static NSMutableArray<FlutterResult>* getRidResults;
 
 
 - (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    [JPUSHService handleRemoteNotification:userInfo];
-    [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
+    if(hasOnReceiveNotification){
+        [JPUSHService handleRemoteNotification:userInfo];
+        [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
+    }
     completionHandler(UIBackgroundFetchResultNewData);
     return YES;
 }
@@ -363,23 +378,28 @@ static NSMutableArray<FlutterResult>* getRidResults;
 }
 
 - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
-    NSDictionary * userInfo = response.notification.request.content.userInfo;
     
-    if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-        [_channel invokeMethod:@"onOpenNotification" arguments: userInfo];
+    NSDictionary * userInfo = response.notification.request.content.userInfo;
+    if(hasOnOpenNotification){
+        if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+            [_channel invokeMethod:@"onOpenNotification" arguments: userInfo];
+        }
+        
     }
     [JPUSHService handleRemoteNotification:userInfo];completionHandler();
 }
 
 
 - (void)jpushNotificationAuthorization:(JPAuthorizationStatus)status withInfo:(NSDictionary *)info {
-    [self.channel invokeMethod:@"onReceiveNotificationAuthorization" arguments: [NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]];
+    if(hasOnOpenNotification){
+        [self.channel invokeMethod:@"onReceiveNotificationAuthorization" arguments: [NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]];
+        
+    }
 }
 
 - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification{
     
     
 }
-
 
 @end

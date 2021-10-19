@@ -32,7 +32,7 @@ class FlJPush {
   }
 
   /// 初始化 JPush 必须先初始化才能执行其他操作(比如接收事件传递)
-  void addEventHandler({
+  Future<void> addEventHandler({
     /// 接收普通消息
     JPushEventHandler? onReceiveNotification,
 
@@ -42,8 +42,15 @@ class FlJPush {
 
     /// ios 获取消息认证 回调
     JPushNotificationAuthorization? onReceiveNotificationAuthorization,
-  }) {
+  }) async {
     if (!_supportPlatform) return;
+    await _channel.invokeMethod<bool?>('setEventHandler', {
+      'onReceiveNotification': onReceiveNotification != null,
+      'onOpenNotification': onOpenNotification != null,
+      'onReceiveMessage': onReceiveMessage != null,
+      'onReceiveNotificationAuthorization':
+          onReceiveNotificationAuthorization != null,
+    });
     _channel.setMethodCallHandler((MethodCall call) async {
       JPushMessage? message;
       if (call.arguments is Map) {

@@ -237,25 +237,10 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
         private fun getNotificationExtras(intent: Intent?): Map<String?, Any?> {
             val extrasMap: MutableMap<String?, Any?> = HashMap()
             for (key in intent!!.extras!!.keySet()) {
-                if (!extrasKeys.contains(key)) {
-                    if (key == JPushInterface.EXTRA_NOTIFICATION_ID) {
-                        extrasMap[key] = intent.getIntExtra(key, 0)
-                    } else {
-                        extrasMap[key] = intent.getStringExtra(key)
-                    }
-                }
+                extrasMap[key] = intent.extras!!.get(key)
             }
             return extrasMap
         }
-
-        private val extrasKeys = listOf(
-            "cn.jpush.android.TITLE",
-            "cn.jpush.android.MESSAGE",
-            "cn.jpush.android.APPKEY",
-            "cn.jpush.android.NOTIFICATION_CONTENT_TITLE",
-            "key_show_entity",
-            "platform"
-        )
     }
 
     class JPushEventReceiver : JPushMessageReceiver() {

@@ -9,7 +9,7 @@ environment:
 dependencies:
   fl_jpush:
     path: ../
-  fl_jpush_android: ^0.0.1
+  fl_jpush_android: ^0.1.0
   flutter:
     sdk: flutter
   flutter_curiosity: ^3.3.0

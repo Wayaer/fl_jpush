@@ -19,8 +19,7 @@
 
 ```xml
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jpush.example">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.jpush.example">
     <application android:label="@string/app_name">
 
         ...
@@ -38,7 +37,6 @@ android:
 
     defaultConfig {
         applicationId '自己应用 ID'
-
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
                 JPUSH_APPKEY  : 'appkey',
@@ -100,8 +98,8 @@ Future<void> addEventHandler() async {
 
 - 添加初始化方法，调用 setup 方法会执行两个操作：
 
-**注意：**  android 端支持在 setup 方法中动态设置 channel，动态设置的 channel 优先级比
-manifestPlaceholders 中的 JPUSH_CHANNEL 优先级要高。
+**注意：**  android 端支持在 setup 方法中动态设置 channel，动态设置的 channel 优先级比 manifestPlaceholders 中的 JPUSH_CHANNEL
+优先级要高。
 
 ```dart
 
@@ -266,8 +264,7 @@ void fun() {
       // 该参数只有在 iOS 有效
       extras: {'hh': '11'} // 设置 extras ，extras 需要是 Map<String, String>
   );
-  FlJPush().sendLocalNotification(localNotification).then((
-      localNotification) {});
+  FlJPush().sendLocalNotification(localNotification).then((localNotification) {});
 }
 ```
 
@@ -345,8 +342,7 @@ void fun() {
 
 #### setBadge
 
-- 设置应用 badge 值，该方法还会同步 JPush 服务器的的 badge 值，JPush 服务器的 badge 值用于推送 badge 自动 +1
-  时会用到。
+- 设置应用 badge 值，该方法还会同步 JPush 服务器的的 badge 值，JPush 服务器的 badge 值用于推送 badge 自动 +1 时会用到。
 
 ```dart
 
@@ -362,8 +358,7 @@ void fun() {
 ```dart
 
 void fun() {
-  FlJPush().getLaunchAppNotificationWithIOS().then((
-      Map<dynamic, dynamic>? map) {});
+  FlJPush().getLaunchAppNotificationWithIOS().then((Map<dynamic, dynamic>? map) {});
 }
 ```
 

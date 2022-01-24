@@ -1,38 +1,68 @@
+## 2.2.0
+
+* Update the SDK pushed by mobile phone manufacturers
+* Upgrade Android jcore、jpush SDK version
+
 ## 2.1.2
- * fix bug for android
+
+* Fix bug for android
+
 ## 2.1.0
- * add vendor channel support 
- * remove instance , direct initialization
- * update gradle version
- * update kotlin version
+
+* Add vendor channel support
+* Remove instance , direct initialization
+* Update gradle version
+* Update kotlin version
+
 ## 2.0.0
- * add Singleton Pattern
- * upgrade Android Gradle
+
+* Add Singleton Pattern
+* Upgrade Android Gradle
+
 ## 1.0.0
- * add platform restrictions
- * upgrade Android jcore、jpush SDK version
+
+* Add platform restrictions
+* Upgrade Android jcore、jpush SDK version
+
 ## 0.3.0
- * fix bugs
- * override JPushMessage
+
+* Fix bugs
+* override JPushMessage
+
 ## 0.2.8
- * modify the return parameter to be non null
- * update Android version
+
+* modify the return parameter to be non null
+* Update Android version
+
 ## 0.2.7
- * update Android com.android.tools.build:gradle version
- * replace jcenter() to mavenCentral()
+
+* Update Android com.android.tools.build:gradle version
+* Replace jcenter() to mavenCentral()
+
 ## 0.2.6
- * add Android proguard rules
- * fix the bug that validJPushTag has no return value
+
+* Add Android proguard rules
+* Fix the bug that validJPushTag has no return value
+
 ## 0.2.5
- * fix bugs 
+
+* Fix bugs
+
 ## 0.2.2
- * fix bugs for Android
+
+* Fix bugs for Android
+
 ## 0.2.1
- * normative approach
- * add doc
+
+* Normative approach
+* Add doc
+
 ## 0.1.0
- * modify API name
- * update dart version to 2.12.1
- * support 2.0
+
+* modify API name
+* Update dart version to 2.12.1
+* Support 2.0
+
 ## 0.0.1
- * init plugin
+
+* Init plugin

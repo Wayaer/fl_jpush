@@ -1,3 +1,7 @@
+## 2.2.1
+
+* Add result interception
+
 ## 2.2.0
 
 * Update the SDK pushed by mobile phone manufacturers

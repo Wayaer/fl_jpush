@@ -277,6 +277,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 jPushMessage.tags.toList()
             handle.post {
                 channelResult?.success(res)
+                channelResult = null
             }
         }
 
@@ -292,6 +293,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 jPushMessage.tags.toList()
             handle.post {
                 channelResult?.success(res)
+                channelResult = null
             }
         }
 
@@ -306,6 +308,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             res["code"] = jPushMessage?.errorCode
             handle.post {
                 channelResult?.success(res)
+                channelResult = null
             }
         }
     }

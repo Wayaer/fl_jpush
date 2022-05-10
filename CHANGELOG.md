@@ -1,3 +1,7 @@
+## 2.3.0
+
+* Upgrade Android jcore、jpush SDK version
+
 ## 2.2.1
 
 * Add result interception

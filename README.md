@@ -43,15 +43,17 @@ android:
                 JPUSH_CHANNEL : 'developer-default',
 
                 // 如集成厂商通道，请添加以下信息
-                MEIZU_APPKEY  : "",
-                MEIZU_APPID   : "",
-                XIAOMI_APPID  : "",
-                XIAOMI_APPKEY : "",
-                OPPO_APPKEY   : "",
-                OPPO_APPID    : "",
-                OPPO_APPSECRET: "",
+                MEIZU_APPKEY  : "MZ-",
+                MEIZU_APPID   : "MZ-",
+                XIAOMI_APPID  : "MI-",
+                XIAOMI_APPKEY : "MI-",
+                OPPO_APPKEY   : "OP-",
+                OPPO_APPID    : "OP-",
+                OPPO_APPSECRET: "OP-",
                 VIVO_APPKEY   : "",
-                VIVO_APPID    : ""
+                VIVO_APPID    : "",
+                HUAWEI_APPID  : "配置文件里的appid",
+                HUAWEI_CPID   : "配置文件里的cp_id"
         ]
     }
 }
@@ -98,8 +100,7 @@ Future<void> addEventHandler() async {
 
 - 添加初始化方法，调用 setup 方法会执行两个操作：
 
-**注意：**  android 端支持在 setup 方法中动态设置 channel，动态设置的 channel 优先级比 manifestPlaceholders 中的 JPUSH_CHANNEL
-优先级要高。
+**注意：**  android 端支持在 setup 方法中动态设置 channel，动态设置的 channel 优先级比 manifestPlaceholders 中的 JPUSH_CHANNEL 优先级要高。
 
 ```dart
 

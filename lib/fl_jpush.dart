@@ -48,8 +48,6 @@ class FlJPush {
       'onReceiveNotification': onReceiveNotification != null,
       'onOpenNotification': onOpenNotification != null,
       'onReceiveMessage': onReceiveMessage != null,
-      'onReceiveNotificationAuthorization':
-          onReceiveNotificationAuthorization != null,
     });
     _channel.setMethodCallHandler((MethodCall call) async {
       JPushMessage? message;
@@ -58,18 +56,16 @@ class FlJPush {
       }
       switch (call.method) {
         case 'onReceiveNotification':
-          if (onReceiveNotification != null) onReceiveNotification(message);
+          onReceiveNotification?.call(message);
           break;
         case 'onOpenNotification':
-          if (onOpenNotification != null) onOpenNotification(message);
+          onOpenNotification?.call(message);
           break;
         case 'onReceiveMessage':
-          if (onReceiveMessage != null) onReceiveMessage(message);
+          onReceiveMessage?.call(message);
           break;
         case 'onReceiveNotificationAuthorization':
-          if (onReceiveNotificationAuthorization != null) {
-            onReceiveNotificationAuthorization(call.arguments as bool?);
-          }
+          onReceiveNotificationAuthorization?.call(call.arguments as bool?);
           break;
         default:
           throw UnsupportedError('Unrecognized Event');
@@ -190,16 +186,9 @@ class FlJPush {
     return state ?? false;
   }
 
-  /// 清空通知栏上的所有通知。
-  Future<bool> clearAllNotifications() async {
-    if (!_supportPlatform) return false;
-    final bool? state =
-        await _channel.invokeMethod<bool?>('clearAllNotifications');
-    return state ?? false;
-  }
-
   /// 清空通知栏上某个通知
-  Future<bool> clearNotification(int notificationId) async {
+  /// [notificationId] == null 清空通知栏上的所有通知。
+  Future<bool> clearNotification({int? notificationId}) async {
     if (!_supportPlatform) return false;
     final bool? state =
         await _channel.invokeMethod<bool?>('clearNotification', notificationId);
@@ -437,14 +426,14 @@ class LocalNotification {
       required this.title,
       required this.content,
       required this.fireTime,
-      this.buildId,
-      this.extra,
-      this.badge = 0,
-      this.soundName,
+      this.buildId = 1,
+      this.extra = const {},
+      this.badge = 1,
+      this.sound,
       this.subtitle});
 
   /// 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式）
-  final int? buildId;
+  final int buildId;
 
   /// 通知 id, 可用于取消通知
   final int id;
@@ -456,7 +445,7 @@ class LocalNotification {
   final String content;
 
   /// extra 字段
-  final Map<String, String>? extra;
+  final Map<String, String> extra;
 
   /// 通知触发时间（毫秒）
   final DateTime fireTime;
@@ -464,8 +453,8 @@ class LocalNotification {
   /// 本地推送触发后应用角标值
   final int badge;
 
-  /// 指定推送的音频文件
-  final String? soundName;
+  /// 指定推送的音频文件 仅支持ios
+  final String? sound;
 
   /// 子标题
   final String? subtitle;
@@ -478,7 +467,7 @@ class LocalNotification {
         'buildId': buildId,
         'extra': extra,
         'badge': badge,
-        'soundName': soundName,
+        'sound': sound,
         'subtitle': subtitle
       };
 }

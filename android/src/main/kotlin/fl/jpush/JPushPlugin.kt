@@ -125,14 +125,12 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 JPushInterface.resumePush(context)
                 result.success(true)
             }
-            "clearAllNotifications" -> {
-                JPushInterface.clearAllNotifications(context)
-                result.success(true)
-            }
             "clearNotification" -> {
                 val id = call.arguments
                 if (id != null) {
                     JPushInterface.clearNotificationById(context, id as Int)
+                } else {
+                    JPushInterface.clearAllNotifications(context)
                 }
                 result.success(id != null)
             }
@@ -257,8 +255,10 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
 
         private fun getNotificationExtras(intent: Intent?): Map<String?, Any?> {
             val extrasMap: MutableMap<String?, Any?> = HashMap()
-            for (key in intent!!.extras!!.keySet()) {
-                extrasMap[key] = intent.extras!!.get(key)
+            if (intent != null && intent.extras != null) {
+                for (key in intent.extras!!.keySet()) {
+                    extrasMap[key] = intent.extras!!.get(key)
+                }
             }
             return extrasMap
         }

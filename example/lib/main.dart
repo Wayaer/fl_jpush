@@ -32,30 +32,33 @@ class _HomePageState extends State<HomePage> {
         .then((bool value) {
       debugPrint('初始化成功：$value');
       addEventHandler();
+      FlJPush()
+          .applyAuthorityWithIOS(const NotificationSettingsIOS(
+              sound: true, alert: true, badge: true))
+          .then((value) {
+        debugPrint('请求通知 $value');
+      });
     });
   }
 
   Future<void> addEventHandler() async {
     FlJPush().addEventHandler(onReceiveNotification: (JPushMessage? message) {
       debugPrint('onReceiveNotification: ${message?.toMap}');
-      text = 'onReceiveNotification: ${message?.alert}';
+      text = 'onReceiveNotification: ${message?.toMap}';
       setState(() {});
     }, onOpenNotification: (JPushMessage? message) {
       debugPrint('onOpenNotification: ${message?.toMap}');
-      text = 'onOpenNotification: ${message?.alert}';
+      text = 'onOpenNotification: ${message?.toMap}';
       setState(() {});
     }, onReceiveMessage: (JPushMessage? message) {
       debugPrint('onReceiveMessage: ${message?.toMap}');
-      text = 'onReceiveMessage: ${message?.alert}';
+      text = 'onReceiveMessage: ${message?.toMap}';
       setState(() {});
     }, onReceiveNotificationAuthorization: (bool? state) {
       debugPrint('onReceiveNotificationAuthorization: $state');
       text = 'onReceiveNotificationAuthorization: $state';
       setState(() {});
     });
-
-    FlJPush().applyAuthorityWithIOS(
-        const NotificationSettingsIOS(sound: true, alert: true, badge: true));
   }
 
   @override
@@ -90,13 +93,9 @@ class _HomePageState extends State<HomePage> {
                         LocalNotification(
                             id: notificationID,
                             title: 'test',
-                            buildId: 1,
                             content: 'LocalMessage',
-                            fireTime:
-                                DateTime.now().add(const Duration(seconds: 1)),
-                            subtitle: 'LocalMessage test',
-                            badge: 5,
-                            extra: <String, String>{'LocalMessage': 'test'});
+                            fireTime: DateTime.now(),
+                            badge: 5);
                     final LocalNotification? res = await FlJPush()
                         .sendLocalNotification(localNotification);
                     if (res == null) return;
@@ -188,17 +187,10 @@ class _HomePageState extends State<HomePage> {
                     setState(() {});
                   }),
               ElevatedText(
-                  title: 'clearAllNotifications',
-                  onPressed: () async {
-                    final bool data = await FlJPush().clearAllNotifications();
-                    text = 'clearAllNotifications success: $data';
-                    setState(() {});
-                  }),
-              ElevatedText(
                   title: 'clearNotification',
                   onPressed: () async {
-                    final bool data =
-                        await FlJPush().clearNotification(notificationID);
+                    final bool data = await FlJPush()
+                        .clearNotification(notificationId: notificationID);
                     text = 'clearNotification success: $data';
                     setState(() {});
                   }),

@@ -51,7 +51,9 @@ android {
                 OPPO_APPID    : "OP-oppo的APPID",
                 OPPO_APPSECRET: "OP-oppo的APPSECRET",
                 VIVO_APPKEY   : "vivo的APPKEY",
-                VIVO_APPID    : "vivo的APPID"
+                VIVO_APPID    : "vivo的APPID",
+                HUAWEI_APPID  : "配置文件里的appid",
+                HUAWEI_CPID   : "配置文件里的cp_id"
         ]
     }
     buildTypes {

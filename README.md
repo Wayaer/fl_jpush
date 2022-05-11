@@ -59,7 +59,10 @@ android:
 }
 ```
 
-- 集成厂商通道的 安装 [fl_jpush_android](https://pub.dev/packages/fl_jpush_android)
+## 集成厂商通道
+
+- [华为、小米、OPPO、VIVO、魅族]安装 [fl_jpush_android](https://pub.dev/packages/fl_jpush_android)
+- [Google FCM]安装 [fl_jpush_android_fcm](https://pub.dev/packages/fl_jpush_android_fcm)
 
 ### iOS:
 

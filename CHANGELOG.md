@@ -1,4 +1,4 @@
-## 2.3.0
+## 2.3.1
 
 * Upgrade Android jcore、jpush SDK version
 

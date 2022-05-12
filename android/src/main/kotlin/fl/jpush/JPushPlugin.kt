@@ -54,7 +54,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
         channelResult = result
         when (call.method) {
             "setup" -> {
-                val map = call.arguments<HashMap<String, Any>>()
+                val map = call.arguments<HashMap<String, Any>>()!!
                 JPushInterface.setDebugMode(map["debug"] as Boolean)
                 JPushUPSManager.registerToken(
                     context,
@@ -71,7 +71,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             }
             "setTags" -> {
                 val sequence = getSequence()
-                val tagList = call.arguments<List<String>>()
+                val tagList = call.arguments<List<String>>()!!
                 val tags: Set<String> = HashSet(tagList)
                 JPushInterface.setTags(context, sequence, tags)
             }
@@ -90,13 +90,13 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             }
             "addTags" -> {
                 val sequence = getSequence()
-                val tagList = call.arguments<List<String>>()
+                val tagList = call.arguments<List<String>>()!!
                 val tags: Set<String> = HashSet(tagList)
                 JPushInterface.addTags(context, sequence, tags)
             }
             "deleteTags" -> {
                 val sequence = getSequence()
-                val tagList = call.arguments<List<String>>()
+                val tagList = call.arguments<List<String>>()!!
                 val tags: Set<String> = HashSet(tagList)
                 JPushInterface.deleteTags(context, sequence, tags)
             }
@@ -142,7 +142,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 result.success(JPushInterface.getRegistrationID(context))
             }
             "sendLocalNotification" -> {
-                val map = call.arguments<Map<String, Any>>()
+                val map = call.arguments<Map<String, Any>>()!!
                 val ln = JPushLocalNotification()
                 ln.builderId = (map["buildId"] as Int).toLong()
                 ln.notificationId = (map["id"] as Int).toLong()

@@ -428,7 +428,7 @@ class LocalNotification {
       required this.fireTime,
       this.buildId = 1,
       this.extra = const {},
-      this.badge = 1,
+      this.badge,
       this.sound,
       this.subtitle});
 
@@ -451,7 +451,7 @@ class LocalNotification {
   final DateTime fireTime;
 
   /// 本地推送触发后应用角标值
-  final int badge;
+  final int? badge;
 
   /// 指定推送的音频文件 仅支持ios
   final String? sound;

@@ -1,3 +1,7 @@
+## 3.0.1
+
+* Fix sending local messages
+
 ## 3.0.0
 
 * Compatible with flutter 3.0.0

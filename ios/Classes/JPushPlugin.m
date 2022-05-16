@@ -299,7 +299,7 @@ static NSMutableArray<FlutterResult> *getRidResults;
         content.sound = params[@"sound"];
     }
     JPushNotificationTrigger *trigger = [[JPushNotificationTrigger alloc] init];
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0) {
+    if (@available(iOS 10.0, *)) {
         if (params[@"fireTime"]) {
             NSNumber *date = params[@"fireTime"];
             NSTimeInterval currentInterval = [[NSDate date] timeIntervalSince1970];
@@ -311,13 +311,11 @@ static NSMutableArray<FlutterResult> *getRidResults;
     JPushNotificationRequest *request = [[JPushNotificationRequest alloc] init];
     request.content = content;
     request.trigger = trigger;
-
     if (params[@"id"]) {
-        NSNumber *identify = params[@"id"];
-        request.requestIdentifier = [identify stringValue];
+        request.requestIdentifier = [params[@"id"] stringValue];
     }
     request.completionHandler = ^(id result) {
-        NSLog(@"本地消息：%@", result);
+        NSLog(@"本地消息推送结果(null为失败)：%@", result);
     };
     [JPUSHService addNotification:request];
     result(@(YES));

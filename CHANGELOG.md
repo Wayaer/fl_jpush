@@ -47,7 +47,7 @@
 ## 0.3.0
 
 * Fix bugs
-* override JPushMessage
+* Override JPushMessage
 
 ## 0.2.8
 
@@ -79,7 +79,7 @@
 
 ## 0.1.0
 
-* modify API name
+* Modify API name
 * Update dart version to 2.12.1
 * Support 2.0
 

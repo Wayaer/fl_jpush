@@ -1,3 +1,7 @@
+## 3.0.2
+
+* Upgrade Android jcore、jpush@4.7.2 SDK version
+
 ## 3.0.1
 
 * Fix sending local messages

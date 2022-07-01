@@ -189,7 +189,7 @@ static NSMutableArray<FlutterResult> *getRidResults;
         [self sendLocalNotification:call result:result];
     } else if ([@"isNotificationEnabled" isEqualToString:call.method]) {
         [JPUSHService requestNotificationAuthorization:^(JPAuthorizationStatus status) {
-            result(@(status == JPAuthorizationStatusAuthorized));
+            result([NSNumber numberWithBool:status == JPAuthorizationStatusAuthorized]);
         }];
     } else if ([@"openSettingsForNotification" isEqualToString:call.method]) {
         [JPUSHService openSettingsForNotification:^(BOOL success) {

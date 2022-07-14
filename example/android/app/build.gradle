@@ -53,7 +53,8 @@ android {
                 VIVO_APPKEY   : "vivo的APPKEY",
                 VIVO_APPID    : "vivo的APPID",
                 HUAWEI_APPID  : "配置文件里的appid",
-                HUAWEI_CPID   : "配置文件里的cp_id"
+                HUAWEI_CPID   : "配置文件里的cp_id",
+                HONOR_APPID   : "配置文件里的cp_id"
         ]
     }
     buildTypes {

@@ -1,4 +1,4 @@
-## 3.0.3
+## 3.0.5
 
 * Upgrade Android jcore、jpush@4.7.2 SDK version
 

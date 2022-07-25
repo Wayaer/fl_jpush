@@ -429,8 +429,8 @@ class LocalNotification {
       this.buildId = 1,
       this.extra = const {},
       this.badge,
-      this.sound,
-      this.subtitle});
+      this.sound = 'default',
+      this.subtitle = ''});
 
   /// 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式）
   final int buildId;
@@ -459,7 +459,7 @@ class LocalNotification {
   /// 子标题
   final String? subtitle;
 
-  Map<String, dynamic> get toMap => <String, dynamic>{
+  Map<String, dynamic> get toMap => {
         'id': id,
         'title': title,
         'content': content,

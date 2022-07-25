@@ -184,7 +184,7 @@ static NSMutableArray<FlutterResult> *getRidResults;
     } else if ([@"getLaunchAppNotification" isEqualToString:call.method]) {
         result(_launchNotification == nil ? @{} : _launchNotification);
     } else if ([@"getRegistrationID" isEqualToString:call.method]) {
-        [self getRegistrationID:call result:result];
+        [self getRegistrationID:result];
     } else if ([@"sendLocalNotification" isEqualToString:call.method]) {
         [self sendLocalNotification:call result:result];
     } else if ([@"isNotificationEnabled" isEqualToString:call.method]) {
@@ -254,7 +254,7 @@ static NSMutableArray<FlutterResult> *getRidResults;
 }
 
 
-- (void)getRegistrationID:(FlutterMethodCall *)call result:(FlutterResult)result {
+- (void)getRegistrationID:(FlutterResult)result {
 #if TARGET_IPHONE_SIMULATOR//模拟器
     result(@"");
 #elif TARGET_OS_IPHONE//真机
@@ -275,19 +275,19 @@ static NSMutableArray<FlutterResult> *getRidResults;
 
     JPushNotificationContent *content = [[JPushNotificationContent alloc] init];
     NSDictionary *params = call.arguments;
-    if (params[@"title"]) {
+    if ([params[@"title"] isKindOfClass:[NSString class]]) {
         content.title = params[@"title"];
     }
 
-    if (params[@"subtitle"]) {
+    if ([params[@"subtitle"] isKindOfClass:[NSString class]]) {
         content.subtitle = params[@"subtitle"];
     }
 
-    if (params[@"content"]) {
+    if ([params[@"content"] isKindOfClass:[NSString class]]) {
         content.body = params[@"content"];
     }
 
-    if (params[@"badge"]) {
+    if ([params[@"badge"] isKindOfClass:[NSNumber class]]) {
         content.badge = params[@"badge"];
     }
 
@@ -295,19 +295,20 @@ static NSMutableArray<FlutterResult> *getRidResults;
         content.userInfo = params[@"extra"];
     }
 
-    if (params[@"sound"]) {
+    if ([params[@"sound"] isKindOfClass:[NSString class]]) {
         content.sound = params[@"sound"];
     }
+
     JPushNotificationTrigger *trigger = [[JPushNotificationTrigger alloc] init];
-    if (@available(iOS 10.0, *)) {
-        if (params[@"fireTime"]) {
-            NSNumber *date = params[@"fireTime"];
-            NSTimeInterval currentInterval = [[NSDate date] timeIntervalSince1970];
-            NSTimeInterval interval = [date doubleValue] / 1000 - currentInterval;
-            interval = interval > 0 ? interval : 0;
-            trigger.timeInterval = interval;
-        }
+
+    if ([params[@"fireTime"] isKindOfClass:[NSNumber class]]) {
+        NSNumber *date = params[@"fireTime"];
+        NSTimeInterval currentInterval = [[NSDate date] timeIntervalSince1970];
+        NSTimeInterval interval = [date doubleValue] / 1000 - currentInterval;
+        interval = interval > 0 ? interval : 0;
+        trigger.timeInterval = interval;
     }
+
     JPushNotificationRequest *request = [[JPushNotificationRequest alloc] init];
     request.content = content;
     request.trigger = trigger;

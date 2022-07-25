@@ -26,9 +26,9 @@ class _HomePageState extends State<HomePage> {
         .setup(
             appKey: '3af087cca42c9f95df54ab89',
             //你自己应用的 AppKey
-            production: false,
+            production: true,
             channel: 'channel',
-            debug: false)
+            debug: true)
         .then((bool value) {
       debugPrint('初始化成功：$value');
       addEventHandler();
@@ -89,12 +89,14 @@ class _HomePageState extends State<HomePage> {
               ElevatedText(
                   title: '发本地推送',
                   onPressed: () async {
+                    notificationID = DateTime.now().millisecondsSinceEpoch;
                     final LocalNotification localNotification =
                         LocalNotification(
                             id: notificationID,
                             title: 'test',
                             content: 'LocalMessage',
-                            fireTime: DateTime.now(),
+                            fireTime:
+                                DateTime.now().add(const Duration(seconds: 5)),
                             badge: 5);
                     final LocalNotification? res = await FlJPush()
                         .sendLocalNotification(localNotification);

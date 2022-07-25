@@ -1,3 +1,7 @@
+## 3.0.6
+
+* Fixed ios not sending local messages
+
 ## 3.0.5
 
 * Upgrade Android jcore、jpush@4.7.2 SDK version

@@ -9,14 +9,15 @@ environment:
 dependencies:
   fl_jpush:
     path: ../
-  flutter_curiosity: ^3.5.1
-  fl_jpush_android: ^2.2.0
+  flutter_curiosity: ^4.0.1
+  fl_jpush_android:
+    path: ../../fl_jpush_android
   #  fl_jpush_android_fcm: ^0.0.1
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
 
 flutter:
   uses-material-design: true

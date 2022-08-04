@@ -70,8 +70,8 @@ class _HomePageState extends State<HomePage> {
         Container(
             alignment: Alignment.center,
             margin: const EdgeInsets.all(10),
-            child: Text(text),
-            height: 100),
+            height: 100,
+            child: Text(text)),
         Wrap(
             alignment: WrapAlignment.center,
             runSpacing: 10,

@@ -299,12 +299,12 @@ class JPushMessage {
     } else {
       message = json['message'] as String?;
       alert = json['alert'] as dynamic;
-      final Map<dynamic, dynamic>? _extras =
+      final Map<dynamic, dynamic>? extras =
           json['extras'] as Map<dynamic, dynamic>?;
-      if (_extras != null) {
-        msgID = _extras['cn.jpush.android.MSG_ID'] as String?;
-        notificationID = _extras['cn.jpush.android.NOTIFICATION_ID'] as int?;
-        extras = _extras['cn.jpush.android.EXTRA'];
+      if (extras != null) {
+        msgID = extras['cn.jpush.android.MSG_ID'] as String?;
+        notificationID = extras['cn.jpush.android.NOTIFICATION_ID'] as int?;
+        this.extras = extras['cn.jpush.android.EXTRA'];
       }
     }
     original = json;

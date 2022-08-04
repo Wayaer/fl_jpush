@@ -1,6 +1,7 @@
 package fl.jpush
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,8 @@ import cn.jpush.android.service.JPushMessageReceiver
 import cn.jpush.android.ups.JPushUPSManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -20,8 +23,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class JPushPlugin : FlutterPlugin, MethodCallHandler {
+class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var context: Context
+    private lateinit var activity: Activity
 
     companion object {
         lateinit var channel: MethodChannel
@@ -39,8 +43,25 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
         context = plugin.applicationContext
     }
 
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        context = binding.activity
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        onAttachedToActivity(binding)
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+    }
+
+
+    override fun onDetachedFromActivity() {
+    }
+
     override fun onDetachedFromEngine(plugin: FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
+
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -57,7 +78,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
                 val map = call.arguments<HashMap<String, Any>>()!!
                 JPushInterface.setDebugMode(map["debug"] as Boolean)
                 JPushUPSManager.registerToken(
-                    context, map["appKey"] as String?, null, null
+                    activity, map["appKey"] as String?, null, null
                 ) {
                     result.success(it.returnCode == 0)
                     if (it.returnCode == 0) {
@@ -295,4 +316,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler {
             }
         }
     }
+
+
 }

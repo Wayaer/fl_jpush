@@ -1,5 +1,7 @@
 ## 3.1.0
 
+* Fixed MI push not receiving messages offline
+
 ## 3.0.6
 
 * Fixed ios not sending local messages

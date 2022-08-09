@@ -45,7 +45,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        context = binding.activity
+        activity = binding.activity
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {

@@ -1,3 +1,4 @@
+/// 当前sdk版本为 6.0.4.200 如存在 package ***.hi_push 请移除
 configurations.maybeCreate("default")
-artifacts.add("default", file('HiPushSdk-v6.0.4.101.aar'))
-artifacts.add("default", file('HiPushSdkCommon-v6.0.4.101.aar'))
+artifacts.add("default", file('HiPushSdk.aar'))
+artifacts.add("default", file('HiPushSdkCommon.aar'))

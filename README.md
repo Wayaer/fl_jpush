@@ -64,6 +64,8 @@ android:
 - [华为、小米、OPPO、VIVO、魅族]安装 [fl_jpush_android](https://pub.dev/packages/fl_jpush_android)
 - [Google FCM]安装 [fl_jpush_android_fcm](https://pub.dev/packages/fl_jpush_android_fcm)
 
+- 如集成国内厂商sdk 升级更新需参考 [fl_jpush_android](https://pub.dev/packages/fl_jpush_android) 升级
+
 ### iOS:
 
 Capability 添加 "Background Modes"  "Push Notifications"

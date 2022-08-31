@@ -45,8 +45,8 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'cn.jiguang.sdk:jcore:3.2.4'
-    implementation 'cn.jiguang.sdk:jpush:4.7.2'
+    implementation 'cn.jiguang.sdk:jcore:3.3.2'
+    implementation 'cn.jiguang.sdk:jpush:4.8.1'
 }
 repositories {
     mavenCentral()

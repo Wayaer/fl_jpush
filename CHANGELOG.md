@@ -1,3 +1,8 @@
+## 3.2.0
+
+* Update Sdk version to 4.8.1
+* If you are using `fl_jpush_android`, you will also need to update to the latest
+
 ## 3.1.1
 
 * Fixed MI push not receiving messages offline

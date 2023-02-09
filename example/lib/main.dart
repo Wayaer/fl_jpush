@@ -1,5 +1,6 @@
 import 'package:fl_jpush/fl_jpush.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_curiosity/flutter_curiosity.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -224,41 +225,41 @@ class _HomePageState extends State<HomePage> {
                     });
                   }),
             ]),
-        const Text('仅支持 IOS'),
-        ElevatedText(
-            title: 'getLaunchAppNotification',
-            onPressed: () {
-              FlJPush()
-                  .getLaunchAppNotificationWithIOS()
-                  .then((Map<dynamic, dynamic>? map) {
-                debugPrint('getLaunchAppNotification:$map');
-                text = 'getLaunchAppNotification success: $map';
-                setState(() {});
-              });
-            }),
-        const Text('仅支持 Android'),
-        Wrap(
-            alignment: WrapAlignment.center,
-            runSpacing: 10,
-            spacing: 10,
-            children: <Widget>[
-              ElevatedText(
-                  title: 'Push 是否已经被停止',
-                  onPressed: () {
-                    FlJPush().isPushStopped().then((bool? value) {
-                      text = 'Push Service 是否已经被停止: $value';
+        if (isIOS)
+          ElevatedText(
+              title: 'getLaunchAppNotification',
+              onPressed: () {
+                FlJPush()
+                    .getLaunchAppNotificationWithIOS()
+                    .then((Map<dynamic, dynamic>? map) {
+                  debugPrint('getLaunchAppNotification:$map');
+                  text = 'getLaunchAppNotification success: $map';
+                  setState(() {});
+                });
+              }),
+        if (isAndroid)
+          Wrap(
+              alignment: WrapAlignment.center,
+              runSpacing: 10,
+              spacing: 10,
+              children: <Widget>[
+                ElevatedText(
+                    title: 'Push 是否已经被停止',
+                    onPressed: () {
+                      FlJPush().isPushStopped().then((bool? value) {
+                        text = 'Push Service 是否已经被停止: $value';
+                        setState(() {});
+                      });
+                    }),
+                ElevatedText(
+                    title: 'getAndroidUdID',
+                    onPressed: () async {
+                      final String? id = await FlJPush().getUDIDWithAndroid();
+                      if (id == null) return;
+                      text = 'getAndroidJPushUdID success: $id';
                       setState(() {});
-                    });
-                  }),
-              ElevatedText(
-                  title: 'getAndroidUdID',
-                  onPressed: () async {
-                    final String? id = await FlJPush().getUDIDWithAndroid();
-                    if (id == null) return;
-                    text = 'getAndroidJPushUdID success: $id';
-                    setState(() {});
-                  }),
-            ]),
+                    }),
+              ]),
         const SizedBox(height: 100),
       ])),
     );

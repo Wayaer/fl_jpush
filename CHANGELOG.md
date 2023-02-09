@@ -1,3 +1,8 @@
+## 3.3.0
+
+* Update Sdk version to 4.9.0
+* If you are using `fl_jpush_android`, you must update to 3.3.0
+
 ## 3.2.0
 
 * Update Sdk version to 4.8.1

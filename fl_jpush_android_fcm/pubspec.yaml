@@ -1,7 +1,7 @@
 name: fl_jpush_android_fcm
 description: JPush integrated vendor push channel,Valid only on Android devices
 version: 3.3.0
-repository: https://github.com/Wayaer/fl_jpush_android_fcm.git
+repository: https://github.com/Wayaer/fl_jpush/tree/main/fl_jpush_android_fcm
 
 environment:
   sdk: '>=2.17.0 <3.0.0'

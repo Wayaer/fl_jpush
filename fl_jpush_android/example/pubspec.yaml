@@ -1,0 +1,19 @@
+name: fl_jpush_android_example
+description: Demonstrates how to use the fl_jpush_android plugin.
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fl_jpush: ^3.3.0
+  fl_jpush_android:
+    path: ../
+
+dev_dependencies:
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true

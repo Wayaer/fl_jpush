@@ -1,0 +1,22 @@
+name: fl_jpush_android
+description: JPush integrated vendor push channel,Valid only on Android devices
+version: 3.3.0
+repository: https://github.com/Wayaer/fl_jpush_android.git
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: '>=3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^2.0.1
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: fl.jpush.android
+        pluginClass: JPushAndroidPlugin

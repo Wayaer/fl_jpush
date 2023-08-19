@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android_fcm/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android_fcm/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android_fcm/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jverify/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jverify/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jverify/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jverify/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jverify/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jverify/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android_fcm/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android_fcm/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush_android_fcm/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush/build" />
+      <excludeFolder url="file://$MODULE_DIR$/fl_jpush/.pub" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

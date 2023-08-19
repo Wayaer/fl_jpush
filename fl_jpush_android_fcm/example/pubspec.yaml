@@ -1,0 +1,19 @@
+name: example
+description: Demonstrates how to use the fl_jpush_android_fcm plugin.
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.17.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fl_jpush: ^3.3.0
+  fl_jpush_android_fcm:
+    path: ../
+
+dev_dependencies:
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true

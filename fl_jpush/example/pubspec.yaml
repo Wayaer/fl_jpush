@@ -4,19 +4,21 @@ version: 1.0.0
 publish_to: 'none'
 
 environment:
-  sdk: '>=2.12.1 <3.0.0'
+  sdk: '>=2.18.0 <4.0.0'
 
 dependencies:
   fl_jpush:
     path: ../
-  flutter_curiosity: ^4.3.1
-  fl_jpush_android: ^3.3.0
-  fl_jpush_android_fcm: ^3.3.0
+  flutter_curiosity: ^4.5.0
+  fl_jpush_android:
+    path: ../../fl_jpush_android
+  #  fl_jpush_android_fcm:
+  #    path: ../../fl_jpush_android_fcm
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  flutter_lints: ^2.0.1
+  flutter_lints: ^2.0.2
 
 flutter:
   uses-material-design: true

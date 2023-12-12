@@ -31,6 +31,10 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 33
 
+    if (project.android.hasProperty("namespace")) {
+        namespace 'fl.jpush.android.fcm'
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }

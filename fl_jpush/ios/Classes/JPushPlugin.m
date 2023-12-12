@@ -1,19 +1,8 @@
 #import "JPushPlugin.h"
-
-#ifdef NSFoundationVersionNumber_iOS_9_x_Max
-
-#import <UserNotifications/UserNotifications.h>
-
-#endif
-
-#import <JPush/JPUSHService.h>
-
-#if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+#import "JPUSHService.h"
 
 @interface JPushPlugin () <JPUSHRegisterDelegate>
 @end
-
-#endif
 
 static NSMutableArray<FlutterResult> *getRidResults;
 
@@ -21,20 +10,17 @@ static NSMutableArray<FlutterResult> *getRidResults;
     NSDictionary *_launchNotification;
     NSDictionary *_completeLaunchNotification;
     BOOL _isJPushDidLogin;
-    BOOL hasOnReceiveMessage;
-    BOOL hasOnOpenNotification;
-    BOOL hasOnReceiveNotification;
     NSInteger notificationTypes;
 }
 
 + (void)registerWithRegistrar:(NSObject <FlutterPluginRegistrar> *)registrar {
     getRidResults = @[].mutableCopy;
     FlutterMethodChannel *channel = [FlutterMethodChannel
-            methodChannelWithName:@"fl_jpush"
-                  binaryMessenger:[registrar messenger]];
+                                     methodChannelWithName:@"fl_jpush"
+                                     binaryMessenger:[registrar messenger]];
     JPushPlugin *instance = [[JPushPlugin alloc] init];
     instance.channel = channel;
-
+    
     [registrar addApplicationDelegate:instance];
     [registrar addMethodCallDelegate:instance channel:channel];
 }
@@ -43,9 +29,9 @@ static NSMutableArray<FlutterResult> *getRidResults;
     self = [super init];
     notificationTypes = 0;
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-
+    
     [defaultCenter removeObserver:self];
-
+    
     [defaultCenter addObserver:self
                       selector:@selector(networkConnecting:)
                           name:kJPFNetworkIsConnectingNotification
@@ -54,7 +40,7 @@ static NSMutableArray<FlutterResult> *getRidResults;
                       selector:@selector(networkRegister:)
                           name:kJPFNetworkDidRegisterNotification
                         object:nil];
-
+    
     [defaultCenter addObserver:self
                       selector:@selector(networkDidSetup:)
                           name:kJPFNetworkDidSetupNotification
@@ -100,14 +86,11 @@ static NSMutableArray<FlutterResult> *getRidResults;
 }
 
 - (void)networkDidReceiveMessage:(NSNotification *)notification {
-    if (hasOnReceiveMessage) {
-        [_channel invokeMethod:@"onReceiveMessage" arguments:[notification userInfo]];
-    }
-
+    [_channel invokeMethod:@"onReceiveMessage" arguments:[notification userInfo]];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-
+    
     if ([@"setup" isEqualToString:call.method]) {
         [self setup:call];
         result(@(YES));
@@ -118,54 +101,54 @@ static NSMutableArray<FlutterResult> *getRidResults;
         if (call.arguments != NULL) tagSet = [NSSet setWithArray:call.arguments];
         [JPUSHService setTags:tagSet completion:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
-                    @"code": @(code)});
+                     @"code": @(code)});
         }                 seq:0];
     } else if ([@"validTag" isEqualToString:call.method]) {
         NSString *tag = call.arguments;
         [JPUSHService validTag:tag completion:^(NSInteger code, NSSet *iTags, NSInteger seq, BOOL isBind) {
             result(@{@"tags": [iTags allObjects] ?: @[],
-                    @"isBind": @(isBind),
-                    @"code": @(code)});
+                     @"isBind": @(isBind),
+                     @"code": @(code)});
         }                  seq:0];
     } else if ([@"cleanTags" isEqualToString:call.method]) {
         [JPUSHService cleanTags:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
-                    @"code": @(code)});
+                     @"code": @(code)});
         }                   seq:0];
     } else if ([@"addTags" isEqualToString:call.method]) {
         NSSet *tagSet;
         if (call.arguments != NULL) tagSet = [NSSet setWithArray:call.arguments];
         [JPUSHService addTags:tagSet completion:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
-                    @"code": @(code)});
+                     @"code": @(code)});
         }                 seq:0];
     } else if ([@"deleteTags" isEqualToString:call.method]) {
         NSSet *tagSet;
         if (call.arguments != NULL) tagSet = [NSSet setWithArray:call.arguments];
         [JPUSHService deleteTags:tagSet completion:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
-                    @"code": @(code)});
+                     @"code": @(code)});
         }                    seq:0];
     } else if ([@"getAllTags" isEqualToString:call.method]) {
         [JPUSHService getAllTags:^(NSInteger code, NSSet *iTags, NSInteger seq) {
             result(@{@"tags": [iTags allObjects] ?: @[],
-                    @"code": @(code)});
+                     @"code": @(code)});
         }                    seq:0];
     } else if ([@"getAlias" isEqualToString:call.method]) {
         [JPUSHService getAlias:^(NSInteger code, NSString *iAlias, NSInteger seq) {
             result(@{@"alias": iAlias ?: @"",
-                    @"code": @(code)});
+                     @"code": @(code)});
         }                  seq:0];
     } else if ([@"setAlias" isEqualToString:call.method]) {
         NSString *alias = call.arguments;
         [JPUSHService setAlias:alias completion:^(NSInteger code, NSString *iAlias, NSInteger seq) {
             result(@{@"alias": iAlias ?: @"",
-                    @"code": @(code)});
+                     @"code": @(code)});
         }                  seq:0];
     } else if ([@"deleteAlias" isEqualToString:call.method]) {
         [JPUSHService deleteAlias:^(NSInteger code, NSString *iAlias, NSInteger seq) {
             result(@{@"alias": iAlias ?: @"",
-                    @"code": @(code)});
+                     @"code": @(code)});
         }                     seq:0];
     } else if ([@"setBadge" isEqualToString:call.method]) {
         NSInteger badge = [call.arguments intValue];
@@ -195,11 +178,6 @@ static NSMutableArray<FlutterResult> *getRidResults;
         [JPUSHService openSettingsForNotification:^(BOOL success) {
             result(@(success));
         }];
-    } else if ([@"setEventHandler" isEqualToString:call.method]) {
-        hasOnReceiveMessage = [call.arguments[@"onReceiveMessage"] boolValue];
-        hasOnReceiveNotification = [call.arguments[@"onReceiveNotification"] boolValue];
-        hasOnOpenNotification = [call.arguments[@"onOpenNotification"] boolValue];
-        result(@(YES));
     } else {
         result(FlutterMethodNotImplemented);
     }
@@ -272,35 +250,35 @@ static NSMutableArray<FlutterResult> *getRidResults;
 }
 
 - (void)sendLocalNotification:(FlutterMethodCall *)call result:(FlutterResult)result {
-
+    
     JPushNotificationContent *content = [[JPushNotificationContent alloc] init];
     NSDictionary *params = call.arguments;
     if ([params[@"title"] isKindOfClass:[NSString class]]) {
         content.title = params[@"title"];
     }
-
+    
     if ([params[@"subtitle"] isKindOfClass:[NSString class]]) {
         content.subtitle = params[@"subtitle"];
     }
-
+    
     if ([params[@"content"] isKindOfClass:[NSString class]]) {
         content.body = params[@"content"];
     }
-
+    
     if ([params[@"badge"] isKindOfClass:[NSNumber class]]) {
         content.badge = params[@"badge"];
     }
-
+    
     if ([params[@"extra"] isKindOfClass:[NSDictionary class]]) {
         content.userInfo = params[@"extra"];
     }
-
+    
     if ([params[@"sound"] isKindOfClass:[NSString class]]) {
         content.sound = params[@"sound"];
     }
-
+    
     JPushNotificationTrigger *trigger = [[JPushNotificationTrigger alloc] init];
-
+    
     if ([params[@"fireTime"] isKindOfClass:[NSNumber class]]) {
         NSNumber *date = params[@"fireTime"];
         NSTimeInterval currentInterval = [[NSDate date] timeIntervalSince1970];
@@ -308,7 +286,7 @@ static NSMutableArray<FlutterResult> *getRidResults;
         interval = interval > 0 ? interval : 0;
         trigger.timeInterval = interval;
     }
-
+    
     JPushNotificationRequest *request = [[JPushNotificationRequest alloc] init];
     request.content = content;
     request.trigger = trigger;
@@ -347,10 +325,10 @@ static NSMutableArray<FlutterResult> *getRidResults;
 
 
 - (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    if (hasOnReceiveNotification) {
-        [JPUSHService handleRemoteNotification:userInfo];
-        [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
-    }
+    
+    [JPUSHService handleRemoteNotification:userInfo];
+    [_channel invokeMethod:@"onReceiveNotification" arguments:userInfo];
+    
     completionHandler(UIBackgroundFetchResultNewData);
     return YES;
 }
@@ -366,28 +344,25 @@ static NSMutableArray<FlutterResult> *getRidResults;
 }
 
 - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
-
+    
     NSDictionary *userInfo = response.notification.request.content.userInfo;
-    if (hasOnOpenNotification) {
-        if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-            [_channel invokeMethod:@"onOpenNotification" arguments:userInfo];
-        }
+    
+    if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        [_channel invokeMethod:@"onOpenNotification" arguments:userInfo];
     }
+    
     [JPUSHService handleRemoteNotification:userInfo];
     completionHandler();
 }
 
 
 - (void)jpushNotificationAuthorization:(JPAuthorizationStatus)status withInfo:(NSDictionary *)info {
-    if (hasOnOpenNotification) {
-        [self.channel invokeMethod:@"onReceiveNotificationAuthorization" arguments:@(status == JPAuthorizationStatusAuthorized)];
-
-    }
+    [self.channel invokeMethod:@"onReceiveNotificationAuthorization" arguments:@(status == JPAuthorizationStatusAuthorized)];
 }
 
 - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification {
-
-
+    
+    
 }
 
 @end

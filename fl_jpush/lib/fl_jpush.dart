@@ -44,11 +44,6 @@ class FlJPush {
     JPushNotificationAuthorization? onReceiveNotificationAuthorization,
   }) async {
     if (!_supportPlatform) return;
-    await _channel.invokeMethod<bool?>('setEventHandler', {
-      'onReceiveNotification': onReceiveNotification != null,
-      'onOpenNotification': onOpenNotification != null,
-      'onReceiveMessage': onReceiveMessage != null,
-    });
     _channel.setMethodCallHandler((MethodCall call) async {
       JPushMessage? message;
       if (call.arguments is Map) {

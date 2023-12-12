@@ -7,43 +7,37 @@
         android:protectionLevel="signature" />
 
     <!-- Required  一些系统要求的权限，如访问网络等-->
-    <uses-permission android:name="${applicationId}.permission.JOPERATE_MESSAGE" />
-
+    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <!--huawei_permission_start-->
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+    <!--huawei_permission_end-->
+    <!--vivo_permission_start-->
+    <uses-permission android:name="com.vivo.notification.permission.BADGE_ICON" />
+    <!--vivo_permission_end-->
+    <!-- Optional for location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <!--荣耀推送必备-->
-    <uses-permission android:name="${applicationId}.hihonor.permission.PROCESS_PUSH_MSG" />
-    <uses-permission
-        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
-    <!--华为角标-->
-    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
-
-    <!--vivo 角标-->
-    <uses-permission android:name="com.vivo.notification.permission.BADGE_ICON" />
-    <!-- Optional for location -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /><!-- Android Q后台定位权限-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <!--honor_permission_start-->
-    <uses-permission
-        android:name="${applicationId}.hihonor.permission.PROCESS_PUSH_MSG"
-        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="com.hihonor.android.launcher.permission.CHANGE_BADGE" />
+    <queries>
+        <intent>
+            <action android:name="com.hihonor.push.action.BIND_PUSH_SERVICE" />
+        </intent>
+    </queries>
     <!--honor_permission_end-->
     <!--xiaomi_permission_start-->
+    <uses-permission android:name="android.permission.VIBRATE" />
     <permission
         android:name="${applicationId}.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
@@ -55,6 +49,11 @@
     <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <!--oppo_permission_end-->
 
+    <!--meizu_permission_start-->
+    <uses-permission android:name="com.meizu.flyme.permission.PUSH" />
+    <!--meizu_permission_end-->
+
+    <!--jpush_permission_start-->
     <uses-sdk tools:overrideLibrary="
      cn.jpush.android.thirdpush.fcm
     ,cn.jpush.android.thirdpush.huawei
@@ -91,11 +90,8 @@
     ,android.support.coreui
     ,android.support.compat
     ,android.arch.lifecycle" />
-    <queries>
-        <intent>
-            <action android:name="com.hihonor.push.action.BIND_PUSH_SERVICE" />
-        </intent>
-    </queries>
+    <!--jpush_permission_end-->
+
     <application>
 
         <!--xiaomi_config_start-->

@@ -7,10 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import cn.jpush.android.api.CmdMessage
+import cn.jpush.android.api.CustomMessage
 import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.api.JPushMessage
+import cn.jpush.android.api.NotificationMessage
 import cn.jpush.android.data.JPushLocalNotification
-import cn.jpush.android.service.JPushMessageReceiver
+import cn.jpush.android.service.JPushMessageService
 import cn.jpush.android.ups.JPushUPSManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -31,9 +34,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         lateinit var channel: MethodChannel
         var channelResult: MethodChannel.Result? = null
         val handle = Handler(Looper.getMainLooper())
-        var hasOnReceiveMessage = false
-        var hasOnOpenNotification = false
-        var hasOnReceiveNotification = false
     }
 
 
@@ -88,12 +88,14 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     }
                 }
             }
+
             "setTags" -> {
                 val sequence = getSequence()
                 val tagList = call.arguments<List<String>>()!!
                 val tags: Set<String> = HashSet(tagList)
                 JPushInterface.setTags(context, sequence, tags)
             }
+
             "validTag" -> {
                 val sequence = getSequence()
                 val tag = call.arguments
@@ -101,47 +103,57 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     context, sequence, tag.toString()
                 )
             }
+
             "cleanTags" -> {
                 val sequence = getSequence()
                 JPushInterface.cleanTags(context, sequence)
             }
+
             "addTags" -> {
                 val sequence = getSequence()
                 val tagList = call.arguments<List<String>>()!!
                 val tags: Set<String> = HashSet(tagList)
                 JPushInterface.addTags(context, sequence, tags)
             }
+
             "deleteTags" -> {
                 val sequence = getSequence()
                 val tagList = call.arguments<List<String>>()!!
                 val tags: Set<String> = HashSet(tagList)
                 JPushInterface.deleteTags(context, sequence, tags)
             }
+
             "getAllTags" -> {
                 val sequence: Int = getSequence()
                 JPushInterface.getAllTags(context, sequence)
             }
+
             "getAlias" -> {
                 val sequence = getSequence()
                 JPushInterface.getAlias(context, sequence)
             }
+
             "setAlias" -> {
                 val sequence = getSequence()
                 val alias = call.arguments<String>()
                 JPushInterface.setAlias(context, sequence, alias)
             }
+
             "deleteAlias" -> {
                 val sequence = getSequence()
                 JPushInterface.deleteAlias(context, sequence)
             }
+
             "stopPush" -> {
                 JPushInterface.stopPush(context)
                 result.success(true)
             }
+
             "resumePush" -> {
                 JPushInterface.resumePush(context)
                 result.success(true)
             }
+
             "clearNotification" -> {
                 val id = call.arguments
                 if (id != null) {
@@ -151,13 +163,16 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
                 result.success(id != null)
             }
+
             "getLaunchAppNotification" -> {
                 result.success(null)
             }
+
             "getRegistrationID" -> {
                 JPushInterface.requestPermission(context)
                 result.success(JPushInterface.getRegistrationID(context))
             }
+
             "sendLocalNotification" -> {
                 val map = call.arguments<Map<String, Any>>()!!
                 val ln = JPushLocalNotification()
@@ -171,109 +186,120 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 JPushInterface.setBadgeNumber(context, map["badge"] as Int)
                 result.success(true)
             }
+
             "setBadge" -> {
                 val badge = call.arguments as Int
                 JPushInterface.setBadgeNumber(context, badge)
                 result.success(true)
             }
+
             "isNotificationEnabled" -> {
                 val isEnabled = JPushInterface.isNotificationEnabled(context)
                 //1表示开启，0表示关闭，-1表示检测失败
                 result.success(isEnabled == 1)
             }
+
             "isPushStopped" -> result.success(
                 JPushInterface.isPushStopped(context)
             )
+
             "getUdID" -> result.success(JPushInterface.getUdid(context))
             "openSettingsForNotification" -> {
                 JPushInterface.goToAppNotificationSettings(context)
                 result.success(true)
             }
-            "setEventHandler" -> {
-                hasOnOpenNotification = call.argument<Boolean>("onOpenNotification") == true
-                hasOnReceiveMessage = call.argument<Boolean>("onReceiveMessage") == true
-                hasOnReceiveNotification = call.argument<Boolean>("onReceiveNotification") == true
-                result.success(true)
-            }
+
+
             else -> result.notImplemented()
 
         }
     }
 
-    /**
-     * 接收自定义消息,通知,通知点击事件等事件的广播
-     * 文档链接:http://docs.jiguang.cn/client/android_api/
-     */
-    class JPushReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            when (intent!!.action) {
-                JPushInterface.ACTION_REGISTRATION_ID -> {
-//                    val rId = intent.getStringExtra(JPushInterface.EXTRA_REGISTRATION_ID)
-                }
-                JPushInterface.ACTION_MESSAGE_RECEIVED -> {
-                    if (!hasOnReceiveMessage) {
-                        return
-                    }
-                    val message = intent.getStringExtra(JPushInterface.EXTRA_MESSAGE)
-                    val extras = getNotificationExtras(intent)
-                    val msg: MutableMap<String, Any?> = HashMap()
-                    msg["message"] = message
-                    msg["extras"] = extras
-                    channel.invokeMethod("onReceiveMessage", msg)
-                }
-                JPushInterface.ACTION_NOTIFICATION_RECEIVED -> {
-                    if (!hasOnReceiveNotification) {
-                        return
-                    }
-                    val title = intent.getStringExtra(JPushInterface.EXTRA_NOTIFICATION_TITLE)
-                    val alert = intent.getStringExtra(JPushInterface.EXTRA_ALERT)
-                    val extras = getNotificationExtras(intent)
-                    val notification: MutableMap<String, Any?> = HashMap()
-                    notification["title"] = title
-                    notification["alert"] = alert
-                    notification["extras"] = extras
-                    channel.invokeMethod("onReceiveNotification", notification)
-                }
-                JPushInterface.ACTION_NOTIFICATION_OPENED -> {
-                    if (!hasOnOpenNotification) {
-                        return
-                    }
-                    val title = intent.getStringExtra(JPushInterface.EXTRA_NOTIFICATION_TITLE)
-                    val alert = intent.getStringExtra(JPushInterface.EXTRA_ALERT)
-                    val extras = getNotificationExtras(intent)
 
-                    val notification: MutableMap<String, Any?> = HashMap()
-                    notification["title"] = title
-                    notification["alert"] = alert
-                    notification["extras"] = extras
-                    channel.invokeMethod("onOpenNotification", notification)
+    class JPushService : JPushMessageService() {
+        override fun onMultiActionClicked(context: Context?, intent: Intent?) {
+            super.onMultiActionClicked(context, intent)
+            val nActionExtra: String? =
+                intent?.extras?.getString(JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA)
+            println("====onMultiActionClicked${nActionExtra}")
+        }
 
-                    val launch = context!!.packageManager.getLaunchIntentForPackage(
-                        context.packageName
-                    )
-                    if (launch != null) {
-                        launch.addCategory(Intent.CATEGORY_LAUNCHER)
-                        launch.flags =
-                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        context.startActivity(launch)
-                    }
-                }
+        override fun onMessage(context: Context?, message: CustomMessage?) {
+            super.onMessage(context, message)
+            println("====onMessage${message?.message}")
+            channel.invokeMethod(
+                "onReceiveMessage", mapOf(
+                    "message" to message?.message,
+                    "extras" to message?.extra,
+                    "messageId" to message?.messageId,
+                    "contentType" to message?.contentType,
+                    "title" to message?.title,
+                    "senderId" to message?.senderId,
+                    "appId" to message?.appId,
+                    "platform" to message?.platform,
+                )
+            )
+        }
+
+        override fun onNotifyMessageOpened(context: Context?, message: NotificationMessage?) {
+            super.onNotifyMessageOpened(context, message)
+            println("====onNotifyMessageOpened${message?.notificationContent}")
+            channel.invokeMethod(
+                "onOpenNotification", mapOf(
+                    "title" to message?.notificationTitle,
+                    "alert" to message?.notificationAlertType,
+                    "extras" to message?.notificationExtras,
+                    "type" to message?.notificationType
+                )
+            )
+            val launch = context!!.packageManager.getLaunchIntentForPackage(
+                context.packageName
+            )
+            if (launch != null) {
+                launch.addCategory(Intent.CATEGORY_LAUNCHER)
+                launch.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                context.startActivity(launch)
             }
+
         }
 
 
-        private fun getNotificationExtras(intent: Intent?): Map<String?, Any?> {
-            val extrasMap: MutableMap<String?, Any?> = HashMap()
-            if (intent != null && intent.extras != null) {
-                for (key in intent.extras!!.keySet()) {
-                    extrasMap[key] = intent.extras!!.get(key)
-                }
-            }
-            return extrasMap
+        override fun onNotifyMessageDismiss(context: Context?, message: NotificationMessage?) {
+            super.onNotifyMessageDismiss(context, message)
+            println("====onNotifyMessageDismiss${message?.notificationContent}")
         }
-    }
 
-    class JPushEventReceiver : JPushMessageReceiver() {
+        override fun onRegister(context: Context?, registrationId: String?) {
+            super.onRegister(context, registrationId)
+            println("====onRegister${registrationId}")
+        }
+
+        override fun onConnected(context: Context?, isConnected: Boolean) {
+            super.onConnected(context, isConnected)
+            println("====onConnected${isConnected}")
+        }
+
+        override fun onCommandResult(context: Context?, message: CmdMessage?) {
+            super.onCommandResult(context, message)
+            println("====onCommandResult${message?.msg}")
+
+        }
+
+        override fun onMobileNumberOperatorResult(context: Context?, message: JPushMessage?) {
+            super.onMobileNumberOperatorResult(context, message)
+            println("====onCommandResult${message?.mobileNumber}")
+        }
+
+        override fun onNotifyMessageArrived(context: Context?, message: NotificationMessage?) {
+            super.onNotifyMessageArrived(context, message)
+            println("====onNotifyMessageArrived${message?.notificationContent}")
+        }
+
+        override fun onNotificationSettingsCheck(context: Context?, isOn: Boolean, source: Int) {
+            super.onNotificationSettingsCheck(context, isOn, source)
+            println("====onNotificationSettingsCheck${isOn} ${source}")
+        }
+
 
         override fun onTagOperatorResult(
             context: Context?, jPushMessage: JPushMessage?

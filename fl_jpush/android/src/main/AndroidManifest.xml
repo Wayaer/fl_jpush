@@ -38,6 +38,24 @@
     </queries>
 
     <application>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!-- Required  显示通知栏 -->
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false" />
+        <!--jpush_config_end-->
+
         <receiver
             android:name="fl.jpush.JPushPlugin$JPushReceiver"
             android:enabled="true"
@@ -49,19 +67,17 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
-
                 <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name="fl.jpush.JPushPlugin$JPushEventReceiver"
-            android:enabled="true"
-            android:exported="false">
+        <service
+            android:name=".JPushPlugin$JPushService"
+            android:exported="true">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+                <action android:name="cn.jpush.android.intent.SERVICE_MESSAGE" />
                 <category android:name="${applicationId}" />
             </intent-filter>
-        </receiver>
+        </service>
         <!-- Since JCore2.0.0 Required SDK核心功能-->
         <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
         <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
@@ -80,7 +96,13 @@
             android:value="${JPUSH_CHANNEL}" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="${JPUSH_APPKEY}" /> <!-- </>值来自开发者平台取得的AppKey -->
+            android:value="${JPUSH_APPKEY}" />
+        <!-- </>值来自开发者平台取得的AppKey -->
+        <provider
+            android:exported="false"
+            android:authorities="${applicationId}.jiguang.InitProvider"
+            android:name="cn.jpush.android.service.InitProvider">
+        </provider>
         <receiver
             android:name="cn.jpush.android.asus.AsusPushMessageReceiver"
             android:exported="false" />

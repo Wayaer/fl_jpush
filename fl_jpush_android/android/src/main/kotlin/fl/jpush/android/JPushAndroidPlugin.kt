@@ -2,7 +2,6 @@ package fl.jpush.android
 
 import android.content.Context
 import com.heytap.msp.push.HeytapPushManager
-import com.meizu.cloud.pushsdk.PushManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -20,16 +19,7 @@ class JPushAndroidPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        when (call.method) {
-            "requestNotificationPermissionWithOPPO" -> {
-                HeytapPushManager.requestNotificationPermission()
-                result.success(true)
-            }
-            "checkNotificationMessageWithMEIZU" -> {
-                PushManager.checkNotificationMessage(context)
-                result.success(true)
-            }
-        }
+
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {

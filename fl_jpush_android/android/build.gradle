@@ -40,6 +40,11 @@ apply plugin: 'com.huawei.agconnect'
 
 android {
     compileSdkVersion 33
+
+    if (project.android.hasProperty("namespace")) {
+        namespace 'fl.jpush.android'
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -60,26 +65,25 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ["*.aar"])
     // 极光厂商插件版本与接入 JPush 版本保持一致，下同
     // 接入魅族厂商
-    api 'cn.jiguang.sdk.plugin:meizu:5.0.4'
-    // 接入 VIVO 厂商
-    api 'cn.jiguang.sdk.plugin:vivo:5.0.4'
-    // 接入 OPPO 厂商
-    api 'cn.jiguang.sdk.plugin:oppo:5.0.4'
-    api project(path: ':heytap_msp_push')
-    // 以下为 OPPO 3.0.0 aar需要依赖
-    api 'com.google.code.gson:gson:2.6.2'
-    api 'commons-codec:commons-codec:1.6'
-    api 'androidx.annotation:annotation:1.1.0'
-    // 接入小米厂商
-    api 'cn.jiguang.sdk.plugin:xiaomi:5.0.4'
-    // 接入华为厂商
-    api 'com.huawei.hms:push:6.5.0.300'
-    api 'cn.jiguang.sdk.plugin:huawei:5.0.4'
-    // 接入荣耀厂商
-    api project(path: ':hi_push')
-    api 'cn.jiguang.sdk.plugin:honor:5.0.4'
+//    api 'cn.jiguang.sdk.plugin:meizu:5.2.2'
+//    // 接入 VIVO 厂商
+//    api 'cn.jiguang.sdk.plugin:vivo:5.2.2'
+//    // 接入 OPPO 厂商
+//    api 'cn.jiguang.sdk.plugin:oppo:5.2.2'
+//    // 以下为 OPPO 3.0.0 aar需要依赖
+//    api 'com.google.code.gson:gson:2.10'
+//    api 'commons-codec:commons-codec:1.15'
+//    api 'androidx.annotation:annotation:1.7.0'
+//    // 接入小米厂商
+//    api 'cn.jiguang.sdk.plugin:xiaomi:5.2.2'
+//    // 接入华为厂商
+//    api 'com.huawei.hms:push:6.5.0.300'
+//    api 'cn.jiguang.sdk.plugin:huawei:5.2.2'
+//    // 接入荣耀厂商
+//    api 'cn.jiguang.sdk.plugin:honor:5.2.2'
 
 }

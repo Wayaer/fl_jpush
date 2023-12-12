@@ -1,7 +1,4 @@
 include ':app'
-/// 需要添加的
-include ':heytap_msp_push'
-include ':hi_push'
 
 def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
 def properties = new Properties()

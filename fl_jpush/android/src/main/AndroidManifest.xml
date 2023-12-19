@@ -56,20 +56,20 @@
             android:exported="false" />
         <!--jpush_config_end-->
 
-        <receiver
-            android:name="fl.jpush.JPushPlugin$JPushReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION" />
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />
-                <action android:name="cn.jpush.android.intent.CONNECTION" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
+        <!--        <receiver-->
+        <!--            android:name="fl.jpush.JPushPlugin$JPushReceiver"-->
+        <!--            android:enabled="true"-->
+        <!--            android:exported="false">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="cn.jpush.android.intent.REGISTRATION" />-->
+        <!--                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />-->
+        <!--                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />-->
+        <!--                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />-->
+        <!--                <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION" />-->
+        <!--                <action android:name="cn.jpush.android.intent.CONNECTION" />-->
+        <!--                <category android:name="${applicationId}" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
         <service
             android:name=".JPushPlugin$JPushService"
             android:exported="true">
@@ -99,10 +99,9 @@
             android:value="${JPUSH_APPKEY}" />
         <!-- </>值来自开发者平台取得的AppKey -->
         <provider
-            android:exported="false"
+            android:name="cn.jpush.android.service.InitProvider"
             android:authorities="${applicationId}.jiguang.InitProvider"
-            android:name="cn.jpush.android.service.InitProvider">
-        </provider>
+            android:exported="false" />
         <receiver
             android:name="cn.jpush.android.asus.AsusPushMessageReceiver"
             android:exported="false" />

@@ -2,6 +2,8 @@ import 'package:fl_jpush/fl_jpush.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_curiosity/flutter_curiosity.dart';
 
+void log(dynamic msg) => debugPrint(msg.toString());
+
 void main() {
   runApp(MaterialApp(
       theme: ThemeData.light(useMaterial3: true),
@@ -47,23 +49,48 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> addEventHandler() async {
-    FlJPush().addEventHandler(onReceiveNotification: (JPushMessage? message) {
-      debugPrint('onReceiveNotification: ${message?.toMap}');
-      text = 'onReceiveNotification: ${message?.toMap}';
-      setState(() {});
-    }, onOpenNotification: (JPushMessage? message) {
-      debugPrint('onOpenNotification: ${message?.toMap}');
-      text = 'onOpenNotification: ${message?.toMap}';
-      setState(() {});
-    }, onReceiveMessage: (JPushMessage? message) {
-      debugPrint('onReceiveMessage: ${message?.toMap}');
-      text = 'onReceiveMessage: ${message?.toMap}';
-      setState(() {});
-    }, onReceiveNotificationAuthorization: (bool? state) {
-      debugPrint('onReceiveNotificationAuthorization: $state');
-      text = 'onReceiveNotificationAuthorization: $state';
-      setState(() {});
-    });
+    FlJPush().addEventHandler(
+        eventHandler:
+            FlJPushEventHandler(onOpenNotification: (JPushMessage message) {
+          debugPrint('onOpenNotification: ${message.toMap()}');
+          text = 'onOpenNotification: ${message.toMap()}';
+          log("flutter: $text");
+          setState(() {});
+        }, onReceiveMessage: (JPushMessage message) {
+          debugPrint('onReceiveMessage: ${message.toMap()}');
+          text = 'onReceiveMessage: ${message.toMap()}';
+          log("flutter: $text");
+          setState(() {});
+        }),
+        androidEventHandler:
+            FlJPushAndroidEventHandler(onConnected: (bool isConnected) {
+          debugPrint('onConnected: $isConnected');
+          text = 'onConnected: $isConnected';
+          log("flutter: $text");
+          setState(() {});
+        }, onCommandResult: (FlJPushCmdMessage message) {
+          debugPrint('onCommandResult: ${message.toMap()}');
+          text = 'onCommandResult: ${message.toMap()}';
+          log("flutter: $text");
+          setState(() {});
+        }, onNotifyMessageDismiss: (JPushMessage message) {
+          debugPrint('onNotifyMessageDismiss: ${message.toMap()}');
+          text = 'onNotifyMessageDismiss: ${message.toMap()}';
+          log("flutter: $text");
+          setState(() {});
+        }),
+        iosEventHandler: FlJPushIOSEventHandler(
+            onReceiveNotification: (JPushMessage message) {
+          debugPrint('onReceiveNotification: ${message.toMap()}');
+          text = 'onReceiveNotification: ${message.toMap()}';
+          log("flutter: $text");
+          setState(() {});
+        }, onReceiveNotificationAuthorization: (bool? state) {
+          debugPrint('onReceiveNotificationAuthorization: $state');
+          text = 'onReceiveNotificationAuthorization: $state';
+          log("flutter: $text");
+          setState(() {});
+        }));
   }
 
   @override
@@ -99,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                         LocalNotification(
                             id: notificationID,
                             title: 'test',
-                            content: 'LocalMessage',
+                            content: 'flutter send LocalMessage',
                             fireTime:
                                 DateTime.now().add(const Duration(seconds: 5)),
                             badge: 5);

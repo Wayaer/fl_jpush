@@ -209,7 +209,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 result.success(true)
             }
 
-
             else -> result.notImplemented()
 
         }
@@ -221,20 +220,19 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             super.onMultiActionClicked(context, intent)
             val nActionExtra: String? =
                 intent?.extras?.getString(JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA)
-            println("====onMultiActionClicked${nActionExtra}")
+            channel.invokeMethod(
+                "onMultiActionClicked", nActionExtra
+            )
         }
 
         override fun onMessage(context: Context?, message: CustomMessage?) {
             super.onMessage(context, message)
-            println("====onMessage${message?.message}")
             channel.invokeMethod(
-                "onReceiveMessage", mapOf(
-                    "message" to message?.message,
-                    "extras" to message?.extra,
-                    "messageId" to message?.messageId,
-                    "contentType" to message?.contentType,
+                "onMessage", mapOf(
                     "title" to message?.title,
-                    "senderId" to message?.senderId,
+                    "extras" to message?.extra,
+                    "message" to message?.message,
+                    "messageId" to message?.messageId,
                     "appId" to message?.appId,
                     "platform" to message?.platform,
                 )
@@ -243,13 +241,17 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         override fun onNotifyMessageOpened(context: Context?, message: NotificationMessage?) {
             super.onNotifyMessageOpened(context, message)
-            println("====onNotifyMessageOpened${message?.notificationContent}")
             channel.invokeMethod(
                 "onOpenNotification", mapOf(
                     "title" to message?.notificationTitle,
                     "alert" to message?.notificationAlertType,
                     "extras" to message?.notificationExtras,
-                    "type" to message?.notificationType
+                    "type" to message?.notificationType,
+                    "message" to message?.notificationContent,
+                    "messageId" to message?.notificationId,
+                    "channelId" to message?.notificationChannelId,
+                    "appId" to message?.appId,
+                    "platform" to message?.platform,
                 )
             )
             val launch = context!!.packageManager.getLaunchIntentForPackage(
@@ -260,44 +262,68 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 launch.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 context.startActivity(launch)
             }
-
         }
 
 
         override fun onNotifyMessageDismiss(context: Context?, message: NotificationMessage?) {
             super.onNotifyMessageDismiss(context, message)
-            println("====onNotifyMessageDismiss${message?.notificationContent}")
+            channel.invokeMethod(
+                "onReceiveMessage", mapOf(
+                    "message" to message?.notificationContent,
+                    "extras" to message?.notificationExtras,
+                    "messageId" to message?.notificationId,
+                    "contentType" to message?.notificationAlertType,
+                    "title" to message?.notificationTitle,
+                    "channelId" to message?.notificationChannelId,
+                    "appId" to message?.appId,
+                    "platform" to message?.platform,
+                )
+            )
         }
 
         override fun onRegister(context: Context?, registrationId: String?) {
             super.onRegister(context, registrationId)
-            println("====onRegister${registrationId}")
         }
 
         override fun onConnected(context: Context?, isConnected: Boolean) {
             super.onConnected(context, isConnected)
-            println("====onConnected${isConnected}")
+            channel.invokeMethod("onConnected", isConnected)
         }
 
         override fun onCommandResult(context: Context?, message: CmdMessage?) {
             super.onCommandResult(context, message)
-            println("====onCommandResult${message?.msg}")
-
+            channel.invokeMethod(
+                "onCommandResult", mapOf(
+                    "msg" to message?.msg,
+                    "extra" to message?.extra,
+                    "errorCode" to message?.errorCode,
+                    "cmd" to message?.cmd
+                )
+            )
         }
 
         override fun onMobileNumberOperatorResult(context: Context?, message: JPushMessage?) {
             super.onMobileNumberOperatorResult(context, message)
-            println("====onCommandResult${message?.mobileNumber}")
         }
 
         override fun onNotifyMessageArrived(context: Context?, message: NotificationMessage?) {
             super.onNotifyMessageArrived(context, message)
-            println("====onNotifyMessageArrived${message?.notificationContent}")
+            channel.invokeMethod(
+                "onReceiveMessage", mapOf(
+                    "message" to message?.notificationContent,
+                    "extras" to message?.notificationExtras,
+                    "messageId" to message?.notificationId,
+                    "contentType" to message?.notificationAlertType,
+                    "title" to message?.notificationTitle,
+                    "channelId" to message?.notificationChannelId,
+                    "appId" to message?.appId,
+                    "platform" to message?.platform,
+                )
+            )
         }
 
         override fun onNotificationSettingsCheck(context: Context?, isOn: Boolean, source: Int) {
             super.onNotificationSettingsCheck(context, isOn, source)
-            println("====onNotificationSettingsCheck${isOn} ${source}")
         }
 
 
@@ -342,6 +368,5 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         }
     }
-
 
 }

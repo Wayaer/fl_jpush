@@ -31,17 +31,16 @@ class FlJPush {
   }
 
   /// 初始化 JPush 必须先初始化才能执行其他操作(比如接收事件传递)
-  Future<void> addEventHandler({
+  void addEventHandler({
     FlJPushEventHandler? eventHandler,
     FlJPushIOSEventHandler? iosEventHandler,
     FlJPushAndroidEventHandler? androidEventHandler,
-  }) async {
+  }) {
     if (!_supportPlatform) return;
     _channel.setMethodCallHandler((MethodCall call) async {
       try {
         JPushMessage buildMessage() =>
             JPushMessage.fromMap(call.arguments as Map<dynamic, dynamic>);
-
         switch (call.method) {
           case 'onOpenNotification':
             eventHandler?.onOpenNotification?.call(buildMessage());
@@ -55,6 +54,10 @@ class FlJPush {
           case 'onReceiveNotificationAuthorization':
             iosEventHandler?.onReceiveNotificationAuthorization
                 ?.call(call.arguments as bool? ?? false);
+            break;
+          case 'onOpenSettingsForNotification':
+            iosEventHandler?.onOpenSettingsForNotification
+                ?.call(call.arguments);
             break;
           case 'onCommandResult':
             androidEventHandler?.onCommandResult?.call(
@@ -87,7 +90,7 @@ class FlJPush {
           const NotificationSettingsIOS()]) async {
     if (!_isIOS) return false;
     final bool? state = await _channel.invokeMethod<bool?>(
-        'applyPushAuthority', iosSettings.toMap);
+        'applyPushAuthority', iosSettings.toMap());
     return state ?? false;
   }
 
@@ -224,7 +227,7 @@ class FlJPush {
       LocalNotification notification) async {
     if (!_supportPlatform) return null;
     final bool? data = await _channel.invokeMethod<bool>(
-        'sendLocalNotification', notification.toMap);
+        'sendLocalNotification', notification.toMap());
     if (data == null) return null;
     return notification;
   }

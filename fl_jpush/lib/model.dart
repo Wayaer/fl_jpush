@@ -60,17 +60,23 @@ class FlJPushAndroidEventHandler {
 }
 
 typedef JPushNotificationAuthorization = void Function(bool state);
+typedef JPushOnOpenSettingsForNotification = void Function(dynamic data);
 
 /// ios event handler
 class FlJPushIOSEventHandler {
   FlJPushIOSEventHandler(
-      {this.onReceiveNotification, this.onReceiveNotificationAuthorization});
+      {this.onReceiveNotification,
+      this.onReceiveNotificationAuthorization,
+      this.onOpenSettingsForNotification});
 
   /// 接收普通消息
   final JPushEventHandler? onReceiveNotification;
 
   /// ios 获取消息认证 回调
   final JPushNotificationAuthorization? onReceiveNotificationAuthorization;
+
+  /// openSettingsForNotification
+  final JPushOnOpenSettingsForNotification? onOpenSettingsForNotification;
 }
 
 /// 统一android ios 回传数据解析

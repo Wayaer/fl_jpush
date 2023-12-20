@@ -172,6 +172,9 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
         if let extra = args["extra"] as? [AnyHashable: Any] {
             content.userInfo = extra
         }
+        if #available(iOS 13.0, *) {
+            content.targetContentIdentifier = ""
+        }
         
         let trigger = JPushNotificationTrigger()
         if let date = args["fireTime"] as? NSNumber {
@@ -222,7 +225,6 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
     
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any] = [:]) -> Bool {
         completeLaunchNotification = launchOptions
-       
         launchNotification = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any]
         return true
     }

@@ -204,7 +204,7 @@ class FlJPush {
   }
 
   /// 清空通知栏上某个通知
-  /// [notificationId] == null 清空通知栏上的所有通知。
+  /// [notificationId] = null 清空通知栏上的所有通知。
   Future<bool> clearNotification(
       {int? notificationId,
 
@@ -212,7 +212,7 @@ class FlJPush {
       /// 仅支持ios
       bool delivered = true,
 
-      /// 清空本地消息 仅支持android
+      /// [notificationId] = null && [clearLocal] = true 清空本地消息 仅支持android
       bool clearLocal = false}) async {
     if (!_supportPlatform) return false;
     final bool? state = await _channel.invokeMethod<bool?>(

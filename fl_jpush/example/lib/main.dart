@@ -47,6 +47,9 @@ class _HomePageState extends State<HomePage> {
           log('请求通知 $value');
         });
       }
+      if (isAndroid) {
+        FlJPush().requestPermission();
+      }
     });
   }
 

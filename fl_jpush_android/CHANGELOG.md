@@ -1,3 +1,7 @@
+## 4.0.0
+
+* Update SDK version to 5.2.2
+
 ## 3.4.0
 
 * Update SDK version to 5.0.4

@@ -56,5 +56,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // 接入 FCM 厂商
     api 'com.google.firebase:firebase-messaging:23.1.2'
-    api 'cn.jiguang.sdk.plugin:fcm:5.0.4'
+    api 'cn.jiguang.sdk.plugin:fcm:5.2.2'
 }

@@ -1,5 +1,10 @@
 ## 4.0.0
 
+* 全新升级，更新ios和android sdk至最新版,(集成厂商推送需要同步更新)
+* 修改 `addEventHandler` 的回调，区分android和ios
+* `sendLocalNotification` 区分android和ios
+* 集成厂商推送的需要重新复制一下原生依赖包（heytap_msp_push和hi_push）
+
 ## 3.4.0
 
 * Update Sdk version to 5.0.4

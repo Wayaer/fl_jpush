@@ -27,7 +27,6 @@ import java.util.*
 
 class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var context: Context
-    private lateinit var activity: Activity
 
     companion object {
         lateinit var channel: MethodChannel
@@ -39,12 +38,11 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onAttachedToEngine(plugin: FlutterPluginBinding) {
         channel = MethodChannel(plugin.binaryMessenger, "fl_jpush")
         channel.setMethodCallHandler(this)
-        context = plugin.applicationContext
     }
 
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        activity = binding.activity
+        context = binding.activity
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -77,7 +75,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 val map = call.arguments<HashMap<String, Any>>()!!
                 JPushInterface.setDebugMode(map["debug"] as Boolean)
                 JPushUPSManager.registerToken(
-                    activity, map["appKey"] as String?, null, null
+                    context, map["appKey"] as String?, null, null
                 ) {
                     JPushInterface.setNotificationCallBackEnable(context, true)
                     result.success(it.returnCode == 0)
@@ -169,8 +167,12 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 result.success(null)
             }
 
-            "getRegistrationID" -> {
+            "requestPermission" -> {
                 JPushInterface.requestPermission(context)
+                result.success(true)
+            }
+
+            "getRegistrationID" -> {
                 result.success(JPushInterface.getRegistrationID(context))
             }
 

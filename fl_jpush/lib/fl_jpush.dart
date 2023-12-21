@@ -94,6 +94,13 @@ class FlJPush {
     return state ?? false;
   }
 
+  /// android 请求权限
+  Future<bool> requestPermission() async {
+    if (!_isAndroid) return false;
+    final bool? state = await _channel.invokeMethod<bool?>('requestPermission');
+    return state ?? false;
+  }
+
   /// 设置 Tag （会覆盖之前设置的 tags）
   Future<TagResultModel?> setTags(List<String> tags) async {
     if (!_supportPlatform) return null;

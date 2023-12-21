@@ -4,13 +4,13 @@ typedef JPushEventHandler = void Function(JPushMessage message);
 
 /// jPush event handler
 class FlJPushEventHandler {
-  FlJPushEventHandler({this.onOpenNotification, this.onReceiveMessage});
+  FlJPushEventHandler({this.onOpenNotification, this.onReceiveNotification});
 
   /// 点击通知栏消息回调
   final JPushEventHandler? onOpenNotification;
 
-  /// 接收消息
-  final JPushEventHandler? onReceiveMessage;
+  /// 接收普通消息
+  final JPushEventHandler? onReceiveNotification;
 }
 
 class FlJPushCmdMessage {
@@ -65,17 +65,20 @@ typedef JPushOnOpenSettingsForNotification = void Function(dynamic data);
 /// ios event handler
 class FlJPushIOSEventHandler {
   FlJPushIOSEventHandler(
-      {this.onReceiveNotification,
+      {this.onReceiveMessage,
       this.onReceiveNotificationAuthorization,
       this.onOpenSettingsForNotification});
 
-  /// 接收普通消息
-  final JPushEventHandler? onReceiveNotification;
+  /// 接收自定义消息
+  final JPushEventHandler? onReceiveMessage;
 
   /// ios 获取消息认证 回调
   final JPushNotificationAuthorization? onReceiveNotificationAuthorization;
 
   /// openSettingsForNotification
+  /// 从应用外部通知界面进入应用是指 左滑通知->管理->在“某 App”中配置->进入应用 。
+  /// 从通知设置界面进入应用是指 系统设置->对应应用->“某 App”的通知设置
+  /// 需要先在授权的时候增加这个选项 JPAuthorizationOptionProvidesAppNotificationSettings
   final JPushOnOpenSettingsForNotification? onOpenSettingsForNotification;
 }
 
@@ -88,20 +91,13 @@ class JPushMessage {
         alert = aps['alert'] as dynamic;
         badge = aps['badge'] as int?;
         sound = aps['sound'] as String?;
-        mutableContent = aps['mutableContent'] as int?;
+        mutableContent =
+            aps['mutableContent'] ?? aps['mutable-content'] as int?;
         notificationAuthorization = aps['notificationAuthorization'] as bool?;
       }
       msgID = json['_j_msgid']?.toString();
       notificationID = json['_j_uid'] as int?;
       extras = json;
-      (extras as Map<dynamic, dynamic>).removeWhere(
-          (dynamic key, dynamic value) =>
-              key == '_j_business' ||
-              key == '_j_data_' ||
-              key == 'aps' ||
-              key == 'actionIdentifier' ||
-              key == '_j_uid' ||
-              key == '_j_msgid');
     } else {
       message = json['message'] as String?;
       alert = json['alert'] as dynamic;
@@ -150,7 +146,6 @@ class JPushMessage {
         'title': title,
         'msgID': msgID,
         'notificationID': notificationID,
-        'notificationAuthorization': notificationAuthorization,
         'subtitle': subtitle,
         'sound': sound,
         'badge': badge,
@@ -215,6 +210,10 @@ class NotificationSettingsWithIOS {
     this.sound = true,
     this.alert = true,
     this.badge = true,
+    this.providesAppNotificationSettings = true,
+    this.announcement = true,
+    this.provisional = true,
+    this.carPlay = true,
   });
 
   /// sound
@@ -226,8 +225,30 @@ class NotificationSettingsWithIOS {
   /// badge
   final bool badge;
 
-  Map<String, dynamic> toMap() =>
-      {'sound': sound, 'alert': alert, 'badge': badge};
+  /// announcement
+  final bool announcement;
+
+  /// provisional
+  final bool provisional;
+
+  /// carPlay
+  final bool carPlay;
+
+  /// providesAppNotificationSettings
+  /// 从应用外部通知界面进入应用是指 左滑通知->管理->在“某 App”中配置->进入应用 。
+  /// 从通知设置界面进入应用是指 系统设置->对应应用->“某 App”的通知设置
+  /// 需要先在授权的时候增加这个选项 JPAuthorizationOptionProvidesAppNotificationSettings
+  final bool providesAppNotificationSettings;
+
+  Map<String, dynamic> toMap() => {
+        'sound': sound,
+        'alert': alert,
+        'badge': badge,
+        'announcement': announcement,
+        'provisional': provisional,
+        'carPlay': carPlay,
+        'providesAppNotificationSettings': providesAppNotificationSettings
+      };
 }
 
 /// android 本地推送消息设置

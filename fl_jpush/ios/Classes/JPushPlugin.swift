@@ -8,7 +8,6 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
     private var launchNotification: [AnyHashable: Any]?
     private var completeLaunchNotification: [AnyHashable: Any] = [:]
     private var isJPushDidLogin = false
-    private var registrationID: String?
     private var notificationTypes: Int = 0
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -39,7 +38,6 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
 
     @objc func networkDidLogin(notification: NSNotification) {
         isJPushDidLogin = true
-        registrationID = JPUSHService.registrationID()
     }
 
     @objc func networkDidReceiveMessage(notification: NSNotification) {
@@ -184,6 +182,18 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
         if args["badge"] as! Bool {
             notificationTypes |= Int(JPAuthorizationOptions.badge.rawValue)
         }
+        if args["providesAppNotificationSettings"] as! Bool {
+            notificationTypes |= Int(JPAuthorizationOptions.providesAppNotificationSettings.rawValue)
+        }
+        if #available(iOS 13.0, *), args["announcement"] as! Bool {
+            notificationTypes |= Int(JPAuthorizationOptions.announcement.rawValue)
+        }
+        if args["provisional"] as! Bool {
+            notificationTypes |= Int(JPAuthorizationOptions.provisional.rawValue)
+        }
+        if args["carPlay"] as! Bool {
+            notificationTypes |= Int(JPAuthorizationOptions.carPlay.rawValue)
+        }
         let entity = JPUSHRegisterEntity()
         entity.types = notificationTypes
         JPUSHService.register(forRemoteNotificationConfig: entity, delegate: self)
@@ -208,27 +218,20 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
     
     public func jpushNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (Int) -> Void) {
         let userInfo = notification.request.content.userInfo
-        if notification.request.trigger is UNPushNotificationTrigger {
-            JPUSHService.handleRemoteNotification(userInfo)
-            channel.invokeMethod("onReceiveNotification", arguments: userInfo)
-        }
+        JPUSHService.handleRemoteNotification(userInfo)
+        channel.invokeMethod("onReceiveNotification", arguments: userInfo)
         completionHandler(notificationTypes)
     }
-    
+
     public func jpushNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        if response.notification.request.trigger is UNPushNotificationTrigger {
-            JPUSHService.handleRemoteNotification(userInfo)
-            channel.invokeMethod("onOpenNotification", arguments: userInfo)
-        }
+        channel.invokeMethod("onOpenNotification", arguments: userInfo)
         JPUSHService.handleRemoteNotification(userInfo)
         completionHandler()
     }
     
     public func jpushNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification) {
-        if notification.request.trigger is UNPushNotificationTrigger {
-            channel.invokeMethod("onOpenSettingsForNotification", arguments: notification.request.content.userInfo)
-        }
+        channel.invokeMethod("onOpenSettingsForNotification", arguments: notification.request.content.userInfo)
     }
     
     public func jpushNotificationAuthorization(_ status: JPAuthorizationStatus, withInfo info: [AnyHashable: Any]?) {
@@ -242,12 +245,5 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
     
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         JPUSHService.registerDeviceToken(deviceToken)
-    }
-    
-    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
-        JPUSHService.handleRemoteNotification(userInfo)
-        channel.invokeMethod("onReceiveNotification", arguments: userInfo)
-        completionHandler(UIBackgroundFetchResult.newData)
-        return true
     }
 }

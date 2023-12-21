@@ -273,7 +273,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onNotifyMessageDismiss(context: Context?, message: NotificationMessage?) {
             super.onNotifyMessageDismiss(context, message)
             channel.invokeMethod(
-                "onReceiveMessage", mapOf(
+                "onNotifyMessageDismiss", mapOf(
                     "message" to message?.notificationContent,
                     "extras" to message?.notificationExtras,
                     "messageId" to message?.notificationId,
@@ -314,7 +314,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onNotifyMessageArrived(context: Context?, message: NotificationMessage?) {
             super.onNotifyMessageArrived(context, message)
             channel.invokeMethod(
-                "onReceiveMessage", mapOf(
+                "onReceiveNotification", mapOf(
                     "message" to message?.notificationContent,
                     "extras" to message?.notificationExtras,
                     "messageId" to message?.notificationId,

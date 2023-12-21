@@ -45,11 +45,11 @@ class FlJPush {
           case 'onOpenNotification':
             eventHandler?.onOpenNotification?.call(buildMessage());
             break;
-          case 'onReceiveMessage':
-            eventHandler?.onReceiveMessage?.call(buildMessage());
-            break;
           case 'onReceiveNotification':
-            iosEventHandler?.onReceiveNotification?.call(buildMessage());
+            eventHandler?.onReceiveNotification?.call(buildMessage());
+            break;
+          case 'onReceiveMessage':
+            iosEventHandler?.onReceiveMessage?.call(buildMessage());
             break;
           case 'onReceiveNotificationAuthorization':
             iosEventHandler?.onReceiveNotificationAuthorization
@@ -57,7 +57,7 @@ class FlJPush {
             break;
           case 'onOpenSettingsForNotification':
             iosEventHandler?.onOpenSettingsForNotification
-                ?.call(call.arguments);
+                ?.call(buildMessage());
             break;
           case 'onCommandResult':
             androidEventHandler?.onCommandResult?.call(

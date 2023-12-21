@@ -5,12 +5,17 @@ import 'package:flutter_curiosity/flutter_curiosity.dart';
 import 'package:flutter_waya/flutter_waya.dart';
 
 void main() {
-  runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false, title: '极光认证', home: HomePage()));
+  runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: '极光认证',
+      home: Scaffold(
+          appBar: AppBar(title: const Text('极光认证 Flutter')),
+          body:
+              const Padding(padding: EdgeInsets.all(20), child: HomePage()))));
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -67,70 +72,67 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ExtendedScaffold(
-        appBar: AppBar(title: const Text('极光认证 Flutter')),
-        padding: const EdgeInsets.all(20),
-        children: [
-          Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.all(10),
-              height: 130,
-              child: Text(text, style: const TextStyle(fontSize: 12))),
-          Wrap(
-              spacing: 12,
-              runSpacing: 6,
-              alignment: WrapAlignment.center,
-              children: [
-                ElevatedText('setup', onPressed: setup),
-                ElevatedText('setDebugMode', onPressed: () async {
-                  final result = await FlJVerify().setDebugMode(true);
-                  text = result.toString();
-                  setState(() {});
-                }),
-                ElevatedText('isInitSuccess', onPressed: () async {
-                  final result = await FlJVerify().isInitSuccess();
-                  text = result.toString();
-                  setState(() {});
-                }),
-                ElevatedText('checkVerifyEnable', onPressed: checkVerifyEnable),
-                ElevatedText('getToken', onPressed: () async {
-                  final result = await FlJVerify().getToken();
-                  if (result == null) return;
-                  text = result.toMap().toString();
-                  setState(() {});
-                }),
-                ElevatedText('preLogin', onPressed: () async {
-                  final result = await FlJVerify().preLogin();
-                  if (result == null) return;
-                  text = result.toMap().toString();
-                  setState(() {});
-                }),
-                ElevatedText('setCustomAuthorizationView',
-                    onPressed: setCustomAuthorizationView),
-                ElevatedText('loginAuth', onPressed: loginAuth),
-                ElevatedText('clearPreLoginCache', onPressed: () async {
-                  final result = await FlJVerify().clearPreLoginCache();
-                  text = result.toString();
-                  setState(() {});
-                }),
-                ElevatedText('getSMSCode', onPressed: () async {
-                  final result = await FlJVerify().getSMSCode(phone: '');
-                  if (result == null) return;
-                  text = result.toMap().toString();
-                  setState(() {});
-                }),
-                ElevatedText('setSmsIntervalTime', onPressed: () async {
-                  final result = await FlJVerify().setSmsIntervalTime(1000);
-                  text = result.toString();
-                  setState(() {});
-                }),
-                ElevatedText('dismissLoginAuthPage', onPressed: () async {
-                  final result = await FlJVerify().dismissLoginAuthPage();
-                  text = result.toString();
-                  setState(() {});
-                }),
-              ])
-        ]);
+    return Column(children: [
+      Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.all(10),
+          height: 130,
+          child: Text(text, style: const TextStyle(fontSize: 12))),
+      Wrap(
+          spacing: 12,
+          runSpacing: 6,
+          alignment: WrapAlignment.center,
+          children: [
+            ElevatedText('setup', onPressed: setup),
+            ElevatedText('setDebugMode', onPressed: () async {
+              final result = await FlJVerify().setDebugMode(true);
+              text = result.toString();
+              setState(() {});
+            }),
+            ElevatedText('isInitSuccess', onPressed: () async {
+              final result = await FlJVerify().isInitSuccess();
+              text = result.toString();
+              setState(() {});
+            }),
+            ElevatedText('checkVerifyEnable', onPressed: checkVerifyEnable),
+            ElevatedText('getToken', onPressed: () async {
+              final result = await FlJVerify().getToken();
+              if (result == null) return;
+              text = result.toMap().toString();
+              setState(() {});
+            }),
+            ElevatedText('preLogin', onPressed: () async {
+              final result = await FlJVerify().preLogin();
+              if (result == null) return;
+              text = result.toMap().toString();
+              setState(() {});
+            }),
+            ElevatedText('setCustomAuthorizationView',
+                onPressed: setCustomAuthorizationView),
+            ElevatedText('loginAuth', onPressed: loginAuth),
+            ElevatedText('clearPreLoginCache', onPressed: () async {
+              final result = await FlJVerify().clearPreLoginCache();
+              text = result.toString();
+              setState(() {});
+            }),
+            ElevatedText('getSMSCode', onPressed: () async {
+              final result = await FlJVerify().getSMSCode(phone: '');
+              if (result == null) return;
+              text = result.toMap().toString();
+              setState(() {});
+            }),
+            ElevatedText('setSmsIntervalTime', onPressed: () async {
+              final result = await FlJVerify().setSmsIntervalTime(1000);
+              text = result.toString();
+              setState(() {});
+            }),
+            ElevatedText('dismissLoginAuthPage', onPressed: () async {
+              final result = await FlJVerify().dismissLoginAuthPage();
+              text = result.toString();
+              setState(() {});
+            }),
+          ])
+    ]);
   }
 }
 
@@ -138,8 +140,7 @@ class ElevatedText extends StatelessWidget {
   final VoidCallback onPressed;
   final String title;
 
-  const ElevatedText(this.title, {Key? key, required this.onPressed})
-      : super(key: key);
+  const ElevatedText(this.title, {super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) =>

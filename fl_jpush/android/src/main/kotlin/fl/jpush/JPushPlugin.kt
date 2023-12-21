@@ -153,14 +153,19 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
 
             "clearNotification" -> {
-                val id = call.arguments
+                val map = call.arguments<HashMap<String, Any>>()!!
+                val id = map["id"] as Int?
                 if (id != null) {
-                    JPushInterface.clearNotificationById(context, id as Int)
+                    JPushInterface.clearNotificationById(context, id)
                 } else {
-                    JPushInterface.clearAllNotifications(context)
-//                    JPushInterface.clearLocalNotifications(context)
+                    val clearLocal = map["clearLocal"] as Boolean
+                    if (clearLocal) {
+                        JPushInterface.clearLocalNotifications(context)
+                    } else {
+                        JPushInterface.clearAllNotifications(context)
+                    }
                 }
-                result.success(id != null)
+                result.success(true)
             }
 
             "getLaunchAppNotification" -> {

@@ -118,14 +118,15 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
             UIApplication.shared.registerForRemoteNotifications()
             result(true)
         case "clearNotification":
-            let notificationId = call.arguments as? Int
+            let args = call.arguments as! [String: Any?]
+            let notificationId = args["id"] as? Int
             let identifier = JPushNotificationIdentifier()
             if notificationId != nil {
                 identifier.identifiers = ["\(notificationId!)"]
             } else {
                 identifier.identifiers = nil
             }
-            identifier.delivered = true
+            identifier.delivered = args["delivered"] as! Bool
             JPUSHService.removeNotification(identifier)
             result(true)
         case "getLaunchAppNotification":

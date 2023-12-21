@@ -4,6 +4,7 @@
 * 修改 `addEventHandler` 的回调，区分android和ios
 * `sendLocalNotification` 区分android和ios
 * 集成厂商推送的需要重新复制一下原生依赖包（heytap_msp_push和hi_push）
+* `clearNotification` 新增 `delivered` 和 `clearLocal`参数
 
 ## 3.4.0
 

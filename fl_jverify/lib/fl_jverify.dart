@@ -21,7 +21,6 @@ class FlJVerify {
   /// 初始化, timeout单位毫秒，合法范围是(0,30000]，推荐设置为5000-10000,默认值为10000
   Future<JVerifyResult?> setup(
       {
-
       /// ios 使用
       String? iosKey,
       String? channel,
@@ -746,6 +745,7 @@ enum JVIOSUIModalTransitionStyle {
   crossDissolve,
   partialCurl
 }
+
 /*
 *
 * iOS状态栏设置，需要设置info.plist文件中
@@ -780,7 +780,7 @@ class JVPrivacy {
       toMap()..removeWhere((key, value) => value == null);
 }
 
-String _getStringFromEnum<T>(T) {
-  if (T == null) return '';
-  return T.toString().split('.').last;
+String _getStringFromEnum<T>(value) {
+  if (value == null) return '';
+  return value.toString().split('.').last;
 }

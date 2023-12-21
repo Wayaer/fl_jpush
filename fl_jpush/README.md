@@ -88,15 +88,29 @@ import 'package:fl_jpush/fl_jpush_dart';
 ```dart
 
 Future<void> addEventHandler() async {
-  FlJPush().addEventHandler(onReceiveNotification: (JPushMessage? message) {
-    print('onReceiveNotification: ${message?.toMap}');
-  }, onOpenNotification: (JPushMessage? message) {
-    print('onOpenNotification: ${message?.toMap}');
-  }, onReceiveMessage: (JPushMessage? message) {
-    print('onReceiveMessage: ${message?.toMap}');
-  }, onReceiveNotificationAuthorization: (JPushMessage? message) {
-    print('onReceiveNotificationAuthorization: ${message?.toMap}');
-  });
+  FlJPush().addEventHandler(
+      eventHandler:
+      FlJPushEventHandler(onOpenNotification: (JPushMessage message) {
+        debugPrint('onOpenNotification: ${message.toMap()}');
+      }, onReceiveMessage: (JPushMessage message) {
+        debugPrint('onReceiveMessage: ${message.toMap()}');
+      }),
+      androidEventHandler:
+      FlJPushAndroidEventHandler(onConnected: (bool isConnected) {
+        debugPrint('onConnected: $isConnected');
+      }, onCommandResult: (FlJPushCmdMessage message) {
+        debugPrint('onCommandResult: ${message.toMap()}');
+      }, onNotifyMessageDismiss: (JPushMessage message) {
+        debugPrint('onNotifyMessageDismiss: ${message.toMap()}');
+      }),
+      iosEventHandler: FlJPushIOSEventHandler(
+          onReceiveNotification: (JPushMessage message) {
+            debugPrint('onReceiveNotification: ${message.toMap()}');
+          }, onReceiveNotificationAuthorization: (bool? state) {
+        debugPrint('onReceiveNotificationAuthorization: $state');
+      }, onOpenSettingsForNotification: (data) {
+        debugPrint('onOpenSettingsForNotification: $data');
+      }));
 }
 
 ```
@@ -255,22 +269,22 @@ void fun() {
 ```dart
 /// 延时 3 秒后触发本地通知。
 void fun() {
-  var fireDate = DateTime.fromMillisecondsSinceEpoch(DateTime
+  final notificationID = DateTime
       .now()
-      .millisecondsSinceEpoch + 3000);
+      .millisecondsSinceEpoch;
   var localNotification = LocalNotification(
-      id: 222,
+      id: notificationID,
       title: 'title',
-      buildId: 1,
       content: 'content',
-      fireTime: fireDate,
-      subtitle: 'subtitle',
-      // 该参数只有在 iOS 有效
+
+      /// 3秒后发送
+      fireTime: 3,
       badge: 5,
-      // 该参数只有在 iOS 有效
       extras: {'hh': '11'} // 设置 extras ，extras 需要是 Map<String, String>
   );
-  FlJPush().sendLocalNotification(localNotification).then((localNotification) {});
+  FlJPush().sendLocalNotification(
+      android: localNotification.toAndroid(buildId: 1,),
+      ios: localNotification.toIOS(subtitle: 'subtitle',));
 }
 ```
 
@@ -339,7 +353,7 @@ Future<void> fun() async {
 
 ```dart
 void fun() {
-  FlJPush().applyAuthorityWithIOS(NotificationSettingsIOS(
+  FlJPush().applyAuthorityWithIOS(NotificationSettingsWithIOS(
       sound: true,
       alert: true,
       badge: true));

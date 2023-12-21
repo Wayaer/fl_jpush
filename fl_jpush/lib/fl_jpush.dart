@@ -86,8 +86,8 @@ class FlJPush {
   /// iOS Only
   /// 申请推送权限，注意这个方法只会向用户弹出一次推送权限请求（如果用户不同意，之后只能用户到设置页面里面勾选相应权限），需要开发者选择合适的时机调用。
   Future<bool> applyAuthorityWithIOS(
-      [NotificationSettingsIOS iosSettings =
-          const NotificationSettingsIOS()]) async {
+      [NotificationSettingsWithIOS iosSettings =
+          const NotificationSettingsWithIOS()]) async {
     if (!_isIOS) return false;
     final bool? state = await _channel.invokeMethod<bool?>(
         'applyPushAuthority', iosSettings.toMap());
@@ -223,13 +223,14 @@ class FlJPush {
   }
 
   /// 发送本地通知到调度器，指定时间出发该通知。
-  Future<LocalNotification?> sendLocalNotification(
-      LocalNotification notification) async {
-    if (!_supportPlatform) return null;
-    final bool? data = await _channel.invokeMethod<bool>(
-        'sendLocalNotification', notification.toMap());
-    if (data == null) return null;
-    return notification;
+  Future<bool?> sendLocalNotification({
+    required LocalNotificationWithAndroid android,
+    required LocalNotificationWithIOS ios,
+  }) async {
+    if (!_supportPlatform) return false;
+    final result = await _channel.invokeMethod<bool>(
+        'sendLocalNotification', _isAndroid ? android.toMap() : ios.toMap());
+    return result ?? false;
   }
 
   ///  检测通知授权状态是否打开

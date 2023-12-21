@@ -1,1 +1,4 @@
 rootProject.name = 'fl_jpush_android'
+/// 需要添加的
+include ':heytap_msp_push'
+include ':hi_push'

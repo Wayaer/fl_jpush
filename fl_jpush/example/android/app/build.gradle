@@ -26,35 +26,36 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
-        applicationId "com.jpush.example"
+        applicationId "fl.jpush.example"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
                 JPUSH_APPKEY  : "3af087cca42c9f95df54ab89", //JPush 上注册的包名对应的 Appkey.
                 JPUSH_CHANNEL : "flutter", //暂时填写默认值即可.
-                /// 前缀不要去掉  MZ-  MI-
-                MEIZU_APPKEY  : "MZ-魅族的APPKEY",
-                MEIZU_APPID   : "MZ-魅族的APPID",
-                XIAOMI_APPID  : "MI-小米的APPID",
-                XIAOMI_APPKEY : "MI-小米的APPKEY",
-                OPPO_APPKEY   : "OP-oppo的APPKEY",
-                OPPO_APPID    : "OP-oppo的APPID",
-                OPPO_APPSECRET: "OP-oppo的APPSECRET",
-                VIVO_APPKEY   : "vivo的APPKEY",
-                VIVO_APPID    : "vivo的APPID",
-                HUAWEI_APPID  : "配置文件里的appid",
-                HUAWEI_CPID   : "配置文件里的cp_id",
-                HONOR_APPID   : "配置文件里的cp_id"
+                // 下面是多厂商配置，如需要开通使用请联系技术支持
+                // 如果不需要使用，预留空字段即可
+                MEIZU_APPKEY  : "MZ-1f5fc5c3fc994610bca9f786780fbf5b",
+                MEIZU_APPID   : "MZ-148373",
+                XIAOMI_APPID  : "MI-2882303761518374309",
+                XIAOMI_APPKEY : "MI-5361837424309",
+                OPPO_APPKEY   : "OP-2323f82cf0c244a6b0a3bab2742a738a",
+                OPPO_APPID    : "OP-30266024",
+                OPPO_APPSECRET: "OP-9d6c485dd03c41b083fc688ab063d4c6",
+                VIVO_APPKEY   : "dc885006bf3147f45b2a7293b81234ee",
+                VIVO_APPID    : "103892077",
+                HUAWEI_APPID  : "102086831",
+                HUAWEI_CPID   : "2850086000347619388",
+                HONOR_APPID   : ""
         ]
     }
     buildTypes {
@@ -69,7 +70,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'consumer-rules.pro'
         }
     }
-    namespace 'com.jpush.example'
+    namespace 'fl.jpush.example'
 
 }
 

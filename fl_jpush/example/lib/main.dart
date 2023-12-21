@@ -37,14 +37,16 @@ class _HomePageState extends State<HomePage> {
             channel: 'channel',
             debug: true)
         .then((bool value) {
-      debugPrint('初始化成功：$value');
+      log('初始化成功：$value');
       addEventHandler();
-      FlJPush()
-          .applyAuthorityWithIOS(const NotificationSettingsIOS(
-              sound: true, alert: true, badge: true))
-          .then((value) {
-        debugPrint('请求通知 $value');
-      });
+      if (isIOS) {
+        FlJPush()
+            .applyAuthorityWithIOS(const NotificationSettingsWithIOS(
+                sound: true, alert: true, badge: true))
+            .then((value) {
+          log('请求通知 $value');
+        });
+      }
     });
   }
 
@@ -52,48 +54,41 @@ class _HomePageState extends State<HomePage> {
     FlJPush().addEventHandler(
         eventHandler:
             FlJPushEventHandler(onOpenNotification: (JPushMessage message) {
-          debugPrint('onOpenNotification: ${message.toMap()}');
+          log('onOpenNotification: ${message.toMap()}');
           text = 'onOpenNotification: ${message.toMap()}';
-          log("flutter: $text");
           setState(() {});
         }, onReceiveMessage: (JPushMessage message) {
-          debugPrint('onReceiveMessage: ${message.toMap()}');
+          log('onReceiveMessage: ${message.toMap()}');
           text = 'onReceiveMessage: ${message.toMap()}';
-          log("flutter: $text");
           setState(() {});
         }),
         androidEventHandler:
             FlJPushAndroidEventHandler(onConnected: (bool isConnected) {
-          debugPrint('onConnected: $isConnected');
+          log('onConnected: $isConnected');
           text = 'onConnected: $isConnected';
-          log("flutter: $text");
           setState(() {});
         }, onCommandResult: (FlJPushCmdMessage message) {
-          debugPrint('onCommandResult: ${message.toMap()}');
+          log('onCommandResult: ${message.toMap()}');
           text = 'onCommandResult: ${message.toMap()}';
-          log("flutter: $text");
           setState(() {});
         }, onNotifyMessageDismiss: (JPushMessage message) {
-          debugPrint('onNotifyMessageDismiss: ${message.toMap()}');
+          log('onNotifyMessageDismiss: ${message.toMap()}');
           text = 'onNotifyMessageDismiss: ${message.toMap()}';
-          log("flutter: $text");
           setState(() {});
         }),
         iosEventHandler: FlJPushIOSEventHandler(
             onReceiveNotification: (JPushMessage message) {
-          debugPrint('onReceiveNotification: ${message.toMap()}');
+          log('onReceiveNotification: ${message.toMap()}');
           text = 'onReceiveNotification: ${message.toMap()}';
-          log("flutter: $text");
           setState(() {});
         }, onReceiveNotificationAuthorization: (bool? state) {
-          debugPrint('onReceiveNotificationAuthorization: $state');
+          log('onReceiveNotificationAuthorization: $state');
           text = 'onReceiveNotificationAuthorization: $state';
           log("flutter: $text");
           setState(() {});
         }, onOpenSettingsForNotification: (data) {
-          debugPrint('onOpenSettingsForNotification: $data');
+          log('onOpenSettingsForNotification: $data');
           text = 'onOpenSettingsForNotification: $data';
-          log("flutter: $text");
           setState(() {});
         }));
   }
@@ -118,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                   text: 'getRegistrationID',
                   onPressed: () {
                     FlJPush().getRegistrationID().then((String? rid) {
-                      debugPrint('get registration id : $rid');
+                      log('get registration id : $rid');
                       text = 'getRegistrationID: $rid';
                       setState(() {});
                     });
@@ -126,19 +121,16 @@ class _HomePageState extends State<HomePage> {
               ElevatedText(
                   text: '发本地推送',
                   onPressed: () async {
-                    notificationID = DateTime.now().millisecondsSinceEpoch;
-                    final LocalNotification localNotification =
-                        LocalNotification(
-                            id: notificationID,
-                            title: 'test',
-                            content: 'flutter send LocalMessage',
-                            fireTime:
-                                DateTime.now().add(const Duration(seconds: 5)),
-                            badge: 5);
-                    final LocalNotification? res = await FlJPush()
-                        .sendLocalNotification(localNotification);
-                    if (res == null) return;
-                    text = res.toMap().toString();
+                    final localNotification = LocalNotification(
+                        id: notificationID,
+                        title: 'test',
+                        content: 'flutter send LocalMessage',
+                        fireTime: 10,
+                        badge: 5);
+                    final res = await FlJPush().sendLocalNotification(
+                        android: localNotification.toAndroid(),
+                        ios: localNotification.toIOS());
+                    text = "$res";
                     setState(() {});
                   }),
               ElevatedText(
@@ -268,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                 FlJPush()
                     .getLaunchAppNotificationWithIOS()
                     .then((Map<dynamic, dynamic>? map) {
-                  debugPrint('getLaunchAppNotification:$map');
+                  log('getLaunchAppNotification:$map');
                   text = 'getLaunchAppNotification success: $map';
                   setState(() {});
                 });

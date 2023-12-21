@@ -59,36 +59,36 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
         case "setTags":
             let args = call.arguments as! [String]
             JPUSHService.setTags(Set(args), completion: { code, tags, _ in
-                result(["tags": Array(arrayLiteral: tags),
+                result(["tags": Array(tags ?? []) as Any,
                         "code": code])
             }, seq: 0)
         case "validTag":
             let args = call.arguments as! String
             JPUSHService.validTag(args, completion: { code, tags, _, isBind in
-                result(["tags": Array(arrayLiteral: tags),
+                result(["tags": Array(tags ?? []) as Any,
                         "isBind": isBind,
                         "code": code])
             }, seq: 0)
         case "cleanTags":
             JPUSHService.cleanTags({ code, tags, _ in
-                result(["tags": Array(arrayLiteral: tags),
+                result(["tags": Array(tags ?? []) as Any,
                         "code": code])
             }, seq: 0)
         case "deleteTags":
             let args = call.arguments as! [String]
             JPUSHService.deleteTags(Set(args), completion: { code, tags, _ in
-                result(["tags": Array(arrayLiteral: tags),
+                result(["tags": Array(tags ?? []) as Any,
                         "code": code])
             }, seq: 0)
         case "addTags":
             let args = call.arguments as! [String]
             JPUSHService.addTags(Set(args), completion: { code, tags, _ in
-                result(["tags": Array(arrayLiteral: tags),
+                result(["tags": Array(tags ?? []) as Any,
                         "code": code])
             }, seq: 0)
         case "getAllTags":
             JPUSHService.getAllTags({ code, tags, _ in
-                result(["tags": Array(arrayLiteral: tags),
+                result(["tags": Array(tags ?? []) as Any,
                         "code": code])
             }, seq: 0)
         case "getAlias":
@@ -153,43 +153,20 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
 
     public func sendLocalNotification(_ args: [String: Any?]) {
         let content = JPushNotificationContent()
-        if let title = args["title"] as? String {
-            content.title = title
-        }
-        if let subtitle = args["subtitle"] as? String {
-            content.subtitle = subtitle
-        }
-        if let body = args["content"] as? String {
-            content.body = body
-        }
-        if let sound = args["sound"] as? String {
-            content.sound = sound
-        }
+        content.title = args["title"] as! String
+        content.subtitle = args["subtitle"] as! String
+        content.body = args["content"] as! String
+        content.sound = args["sound"] as? String
         if let badge = args["badge"] as? Int {
-            content.badge = badge as NSNumber
+            content.badge = NSNumber(value: badge)
         }
-        
-        if let extra = args["extra"] as? [AnyHashable: Any] {
-            content.userInfo = extra
-        }
-        if #available(iOS 13.0, *) {
-            content.targetContentIdentifier = ""
-        }
-        
+        content.userInfo = args["extra"] as! [AnyHashable: Any]
         let trigger = JPushNotificationTrigger()
-        if let date = args["fireTime"] as? NSNumber {
-            let currentInterval = Date().timeIntervalSince1970
-            var interval = TimeInterval(date.doubleValue)
-            interval = TimeInterval(interval > 0 ? interval : 0)
-            trigger.timeInterval = interval
-        }
+        trigger.timeInterval = TimeInterval(args["fireTime"] as! Int)
         let request = JPushNotificationRequest()
         request.content = content
         request.trigger = trigger
-        
-        if let id = args["id"] as? String {
-            request.requestIdentifier = id
-        }
+        request.requestIdentifier = String(args["id"] as! Int)
         request.completionHandler = { result in
             print("本地消息推送结果(null为失败): \(result)")
         }

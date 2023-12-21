@@ -210,35 +210,66 @@ class AliasResultModel {
   Map<String, dynamic> toMap() => {'alias': alias, 'code': code};
 }
 
-class NotificationSettingsIOS {
-  const NotificationSettingsIOS({
+class NotificationSettingsWithIOS {
+  const NotificationSettingsWithIOS({
     this.sound = true,
     this.alert = true,
     this.badge = true,
   });
 
+  /// sound
   final bool sound;
+
+  /// alert
   final bool alert;
+
+  /// badge
   final bool badge;
 
   Map<String, dynamic> toMap() =>
       {'sound': sound, 'alert': alert, 'badge': badge};
 }
 
-class LocalNotification {
-  const LocalNotification(
-      {required this.id,
-      required this.title,
-      required this.content,
-      required this.fireTime,
-      this.buildId = 1,
-      this.extra = const {},
-      this.badge,
-      this.sound = 'default',
-      this.subtitle = ''});
+/// android 本地推送消息设置
+class LocalNotificationWithAndroid extends LocalNotification {
+  LocalNotificationWithAndroid({
+    required super.id,
+    this.buildId = 1,
+  });
 
   /// 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式）
   final int buildId;
+
+  @override
+  Map<String, dynamic> toMap() => {...super.toMap(), 'buildId': buildId};
+}
+
+/// ios 本地推送消息设置
+class LocalNotificationWithIOS extends LocalNotification {
+  LocalNotificationWithIOS(
+      {required super.id, this.sound = 'default', this.subtitle = 'subtitle'});
+
+  /// 指定推送的音频文件 默认为 'default'
+  final String? sound;
+
+  /// 子标题
+  final String subtitle;
+
+  @override
+  Map<String, dynamic> toMap() =>
+      {...super.toMap(), 'sound': sound, 'subtitle': subtitle};
+}
+
+/// 基础信息设置
+class LocalNotification {
+  const LocalNotification({
+    required this.id,
+    this.title = 'title',
+    this.content = 'content',
+    this.fireTime = 1,
+    this.extra = const {},
+    this.badge,
+  }) : assert(fireTime > 0);
 
   /// 通知 id, 可用于取消通知
   final int id;
@@ -252,27 +283,23 @@ class LocalNotification {
   /// extra 字段
   final Map<String, String> extra;
 
-  /// 通知触发时间（毫秒）
-  final DateTime fireTime;
+  /// 通知触发时间（秒）
+  final int fireTime;
 
   /// 本地推送触发后应用角标值
   final int? badge;
-
-  /// 指定推送的音频文件 仅支持ios
-  final String? sound;
-
-  /// 子标题
-  final String? subtitle;
 
   Map<String, dynamic> toMap() => {
         'id': id,
         'title': title,
         'content': content,
-        'fireTime': fireTime.millisecondsSinceEpoch,
-        'buildId': buildId,
+        'fireTime': fireTime,
         'extra': extra,
         'badge': badge,
-        'sound': sound,
-        'subtitle': subtitle
       };
+
+  LocalNotificationWithAndroid toAndroid() =>
+      LocalNotificationWithAndroid(id: id);
+
+  LocalNotificationWithIOS toIOS() => LocalNotificationWithIOS(id: id);
 }

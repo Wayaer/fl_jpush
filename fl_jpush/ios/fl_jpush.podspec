@@ -13,8 +13,8 @@ A new flutter plugin project.
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
   s.dependency 'Flutter'
-  s.dependency 'JCore'
-  s.dependency 'JPush'
+  s.dependency 'JCore','4.4.2'
+  s.dependency 'JPush','5.2.0'
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.platform = :ios, '11.0'

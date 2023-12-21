@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(useMaterial3: true),
-      darkTheme: ThemeData.dark(useMaterial3: true),
-      home: const MyApp()));
+  runApp(
+      const MaterialApp(debugShowCheckedModeBanner: false, home: _HomePage()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class _HomePage extends StatelessWidget {
+  const _HomePage();
 
   @override
   Widget build(BuildContext context) {

@@ -67,7 +67,7 @@
         <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
         <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
         <service
-            android:name=".JPushCustomService"
+            android:name="fl.community.JPushCustomService"
             android:enabled="true"
             android:exported="false"
             android:process=":pushcore">

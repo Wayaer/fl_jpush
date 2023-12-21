@@ -1,7 +1,6 @@
 package fl.jpush.android
 
 import android.content.Context
-import com.heytap.msp.push.HeytapPushManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -16,7 +15,6 @@ class JPushAndroidPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         channel.setMethodCallHandler(this)
         context = plugin.applicationContext
     }
-
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 

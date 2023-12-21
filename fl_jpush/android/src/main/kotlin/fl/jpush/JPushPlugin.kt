@@ -79,6 +79,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 JPushUPSManager.registerToken(
                     activity, map["appKey"] as String?, null, null
                 ) {
+                    JPushInterface.setNotificationCallBackEnable(context, true)
                     result.success(it.returnCode == 0)
                     if (it.returnCode == 0) {
                         JPushInterface.setChannel(
@@ -159,6 +160,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     JPushInterface.clearNotificationById(context, id as Int)
                 } else {
                     JPushInterface.clearAllNotifications(context)
+//                    JPushInterface.clearLocalNotifications(context)
                 }
                 result.success(id != null)
             }
@@ -175,14 +177,16 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "sendLocalNotification" -> {
                 val map = call.arguments<Map<String, Any>>()!!
                 val ln = JPushLocalNotification()
-                ln.builderId = (map["buildId"] as Number).toLong()
-                ln.notificationId = (map["id"] as Number).toLong()
+                //设置本地通知样式
+                ln.builderId = (map["buildId"] as Int).toLong()
+                ln.notificationId = (map["id"] as Int).toLong()
                 ln.title = map["title"] as String?
                 ln.content = map["content"] as String?
                 ln.extras = (map["extra"] as Map<*, *>?).toString()
-                ln.broadcastTime = map["fireTime"] as Long
+                ln.broadcastTime = (map["fireTime"] as Int).toLong()
                 JPushInterface.addLocalNotification(context, ln)
-                JPushInterface.setBadgeNumber(context, map["badge"] as Int)
+                val badge = map["badge"] as Int?
+                if (badge != null) JPushInterface.setBadgeNumber(context, badge)
                 result.success(true)
             }
 

@@ -70,18 +70,8 @@ class _HomePageState extends State<HomePage> {
           setState(() {});
         }),
         androidEventHandler: FlJPushAndroidEventHandler(
-            onConnected: (bool isConnected) {
-          log('onConnected: $isConnected');
-          text = 'onConnected: $isConnected';
-          setState(() {});
-        }, onRegister: (String? registrationId) {
-          log('onRegister: $registrationId');
-          text = 'onRegister: $registrationId';
-          setState(() {});
-        }, onCommandResult: (FlJPushCmdMessage message) {
+            onCommandResult: (FlJPushCmdMessage message) {
           log('onCommandResult: ${message.toMap()}');
-          text = 'onCommandResult: ${message.toMap()}';
-          setState(() {});
         }, onNotifyMessageDismiss: (JPushMessage message) {
           log('onNotifyMessageDismiss: ${message.toMap()}');
           text = 'onNotifyMessageDismiss: ${message.toMap()}';
@@ -134,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                       id: notificationID,
                       title: 'test',
                       content: 'flutter send LocalMessage',
-                      fireTime: 10,
+                      fireTime: 2,
                       badge: 5);
                   final res = await FlJPush().sendLocalNotification(
                       android: localNotification.toAndroid(),

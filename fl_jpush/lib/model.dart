@@ -48,13 +48,7 @@ class FlJPushNotificationSettingsCheck {
   Map<String, dynamic> toMap() => {'source': source, 'isOn': isOn};
 }
 
-typedef JPushAndroidOnConnected = void Function(bool isConnected);
-
-typedef JPushAndroidOnRegister = void Function(String? registrationId);
-
 typedef JPushAndroidOnCommandResult = void Function(FlJPushCmdMessage message);
-
-typedef JPushAndroidOnMultiActionClicked = void Function(String? action);
 
 typedef JPushOnNotificationSettingsCheck = void Function(
     FlJPushNotificationSettingsCheck settingsCheck);
@@ -62,31 +56,34 @@ typedef JPushOnNotificationSettingsCheck = void Function(
 /// android event handler
 class FlJPushAndroidEventHandler {
   FlJPushAndroidEventHandler({
-    this.onConnected,
-    this.onRegister,
     this.onCommandResult,
     this.onNotifyMessageDismiss,
-    this.onMultiActionClicked,
     this.onNotificationSettingsCheck,
   });
 
-  /// onConnected
-  final JPushAndroidOnConnected? onConnected;
-
-  /// registrationId 回调
-  final JPushAndroidOnRegister? onRegister;
-
   /// onCommandResult
+  /// cmd	  | errorCode	| msg	                     | DESCRIPTION
+  /// 0	    | 失败 code  | 失败信息	                 | 注册失败
+  /// 1000	| 0	        | 错误信息		               | 自定义消息展示错误
+  /// 2003	| 0 / 1  	  | not stop / stopped	     | isPushStopped 异步回调
+  /// 2004	| 0 / 1	    | connected / not connect	 | getConnectionState 异步回调
+  /// 2005	| 0	        | 对应 rid		               | getRegistrationID 异步回调
+  /// 2006	| 0	        | set success		           | onResume 设置回调
+  /// 2007	| 0	        | set success		           | onStop 设置回调
+  /// 2008	| 0	        | success		               | 应用冷启动后，SDK 首次初始化成功的回调(只回调一次)
+  /// 10000	| 0	        | 无		                   | 厂商 token 注册回调，通过 extra 可获取对应 platform 和 token 信息
   final JPushAndroidOnCommandResult? onCommandResult;
 
   /// onNotifyMessageDismiss
+  /// 清除通知回调
+  /// 1.同时删除多条通知，可能不会多次触发清除通知的回调
+  /// 2.只有用户手动清除才有回调，调接口清除不会有回调
   final JPushEventHandler? onNotifyMessageDismiss;
-
-  /// onMultiActionClicked
-  final JPushAndroidOnMultiActionClicked? onMultiActionClicked;
 
   /// onNotificationSettingsCheck
   /// 通知开关状态回调
+  /// 说明: sdk 内部检测通知开关状态的方法因系统差异，在少部分机型上可能存在兼容问题(判断不准确)。
+  /// source 触发场景，0 为 sdk 启动，1 为检测到通知开关状态变更
   final JPushOnNotificationSettingsCheck? onNotificationSettingsCheck;
 }
 

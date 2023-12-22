@@ -63,18 +63,8 @@ class FlJPush {
             androidEventHandler?.onCommandResult?.call(
                 FlJPushCmdMessage(call.arguments as Map<dynamic, dynamic>));
             break;
-          case 'onConnected':
-            androidEventHandler?.onConnected?.call(call.arguments as bool);
-            break;
-          case 'onRegister':
-            androidEventHandler?.onRegister?.call(call.arguments as String?);
-            break;
           case 'onNotifyMessageDismiss':
             androidEventHandler?.onNotifyMessageDismiss?.call(buildMessage());
-            break;
-          case 'onMultiActionClicked':
-            androidEventHandler?.onMultiActionClicked
-                ?.call(call.arguments as String?);
             break;
           case 'onNotificationSettingsCheck':
             androidEventHandler?.onNotificationSettingsCheck?.call(

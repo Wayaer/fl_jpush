@@ -1,4 +1,4 @@
-## 4.0.0
+## 4.0.1
 
 * 全新升级，更新ios和android sdk至最新版,(集成厂商推送需要同步更新)
 * 修改 `addEventHandler` 的回调，区分android和ios

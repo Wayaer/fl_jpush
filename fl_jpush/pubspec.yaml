@@ -1,6 +1,6 @@
 name: fl_jpush
 description: jpush plugin for flutter, only Android and IOS are supported
-version: 4.0.0
+version: 4.0.1
 repository: https://github.com/Wayaer/fl_jpush/tree/main/fl_jpush
 
 environment:

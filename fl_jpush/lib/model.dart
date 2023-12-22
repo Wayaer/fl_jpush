@@ -15,8 +15,7 @@ class FlJPushEventHandler {
   /// 接收普通消息
   final JPushEventHandler? onReceiveNotification;
 
-  /// onMessage
-  /// 自定义消息
+  /// 接收自定义消息
   final JPushEventHandler? onReceiveMessage;
 }
 
@@ -33,7 +32,6 @@ class FlJPushAndroidEventHandler {
     this.onNotificationSettingsCheck,
   });
 
-  /// onCommandResult
   /// cmd	  | errorCode	| msg	                     | DESCRIPTION
   /// 0	    | 失败 code  | 失败信息	                 | 注册失败
   /// 1000	| 0	        | 错误信息		               | 自定义消息展示错误
@@ -46,13 +44,11 @@ class FlJPushAndroidEventHandler {
   /// 10000	| 0	        | 无		                   | 厂商 token 注册回调，通过 extra 可获取对应 platform 和 token 信息
   final JPushAndroidOnCommandResult? onCommandResult;
 
-  /// onNotifyMessageDismiss
   /// 清除通知回调
   /// 1.同时删除多条通知，可能不会多次触发清除通知的回调
   /// 2.只有用户手动清除才有回调，调接口清除不会有回调
   final JPushEventHandler? onNotifyMessageDismiss;
 
-  /// onNotificationSettingsCheck
   /// 通知开关状态回调
   /// 说明: sdk 内部检测通知开关状态的方法因系统差异，在少部分机型上可能存在兼容问题(判断不准确)。
   /// source 触发场景，0 为 sdk 启动，1 为检测到通知开关状态变更
@@ -69,7 +65,7 @@ class FlJPushIOSEventHandler {
       {this.onReceiveNotificationAuthorization,
       this.onOpenSettingsForNotification});
 
-  /// ios 获取消息认证 回调
+  /// ios 申请通知权限 回调
   final JPushNotificationAuthorization? onReceiveNotificationAuthorization;
 
   /// openSettingsForNotification
@@ -147,17 +143,11 @@ class JPushMessage {
         'sound': sound,
         'badge': badge,
         'mutableContent': mutableContent,
-        'original': original,
+        'original': original
       };
 }
 
 class TagResultModel {
-  TagResultModel({
-    required this.code,
-    required this.tags,
-    this.isBind,
-  });
-
   TagResultModel.fromMap(Map<dynamic, dynamic> json, [String? tag]) {
     code = json['code'] as int;
     isBind = json['isBind'] as bool?;
@@ -183,11 +173,6 @@ class TagResultModel {
 }
 
 class AliasResultModel {
-  AliasResultModel({
-    required this.code,
-    this.alias,
-  });
-
   AliasResultModel.fromMap(Map<dynamic, dynamic> json) {
     code = json['code'] as int;
     alias = json['alias'] as String?;

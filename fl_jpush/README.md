@@ -303,23 +303,22 @@ void fun() {
 
 #### clearNotification
 
-- 清空通知栏上某个通知
+- 清空通知栏上的通知
 
 ```dart
 
 Future<void> fun() async {
-  bool? status = await FlJPush().clearNotification(notificationId);
-}
-```
+  /// 清空通知栏上某个通知
+  bool? status = await FlJPush().clearNotification(notificationId: notificationId);
 
-#### clearAllNotifications
+  /// 清空通知栏上全部通知
+  bool? status = await FlJPush().clearNotification();
 
-- 清楚通知栏上所有通知。
+  /// 清空通知栏上全部本地通知 仅支持android
+  bool? status = await FlJPush().clearNotification(clearLocal: true);
 
-```dart
-
-Future<void> fun() async {
-  FlJPush().clearAllNotifications();
+  /// 清空通知栏上全部待推送的通知 仅支持ios
+  bool? status = await FlJPush().clearNotification(delivered: false);
 }
 ```
 
@@ -345,6 +344,19 @@ Future<void> fun() async {
 }
 ```
 
+#### setBadge
+
+- 设置应用 badge 值，该方法还会同步 JPush 服务器的的 badge 值，JPush 服务器的 badge 值用于推送 badge 自动 +1 时会用到。
+
+```dart
+
+void fun() {
+  FlJPush().setBadge(66).then((bool? status) {});
+}
+```
+
+** android Only **
+
 #### getAndroidUdID
 
 - 获取UDID
@@ -356,7 +368,7 @@ Future<void> fun() async {
 }
 ```
 
-**iOS Only **
+** iOS Only **
 
 #### applyAuthorityWithIOS
 
@@ -370,17 +382,6 @@ void fun() {
       sound: true,
       alert: true,
       badge: true));
-}
-```
-
-#### setBadge
-
-- 设置应用 badge 值，该方法还会同步 JPush 服务器的的 badge 值，JPush 服务器的 badge 值用于推送 badge 自动 +1 时会用到。
-
-```dart
-
-void fun() {
-  FlJPush().setBadge(66).then((bool? status) {});
 }
 ```
 

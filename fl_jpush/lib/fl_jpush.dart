@@ -219,7 +219,6 @@ class FlJPush {
     return state ?? false;
   }
 
-  ///
   /// iOS Only
   /// 点击推送启动应用的时候原生会将该 notification 缓存起来，该方法用于获取缓存 notification
   /// 注意：notification 可能是 remoteNotification 和 localNotification，两种推送字段不一样。
@@ -247,13 +246,13 @@ class FlJPush {
     return result ?? false;
   }
 
-  ///  检测通知授权状态是否打开
+  /// 检测通知授权状态是否打开
   Future<bool?> isNotificationEnabled() async {
     if (!_supportPlatform) return null;
     return await _channel.invokeMethod<bool>('isNotificationEnabled');
   }
 
-  ///  Push Service 是否已经被停止
+  /// Push Service 是否已经被停止
   /// only android
   Future<bool?> isPushStopped() async {
     if (!_isAndroid) return true;
@@ -267,7 +266,7 @@ class FlJPush {
     return await _channel.invokeMethod<String>('getUdID');
   }
 
-  ///  跳转至系统设置中应用设置界面
+  /// 跳转至系统设置中应用设置界面
   Future<bool> openSettingsForNotification() async {
     if (!_supportPlatform) return false;
     final bool? state =

@@ -228,14 +228,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
     class JPushService : JPushMessageService() {
-        override fun onMultiActionClicked(activity: Context?, intent: Intent?) {
-            super.onMultiActionClicked(activity, intent)
-            val nActionExtra: String? =
-                intent?.extras?.getString(JPushInterface.EXTRA_NOTIFICATION_ACTION_EXTRA)
-            channel.invokeMethod(
-                "onMultiActionClicked", nActionExtra
-            )
-        }
 
         override fun onMessage(activity: Context?, message: CustomMessage?) {
             super.onMessage(activity, message)
@@ -275,7 +267,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 activity.startActivity(launch)
             }
         }
-
 
         override fun onCommandResult(activity: Context?, message: CmdMessage?) {
             super.onCommandResult(activity, message)

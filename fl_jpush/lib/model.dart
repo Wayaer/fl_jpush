@@ -20,34 +20,6 @@ class FlJPushEventHandler {
   final JPushEventHandler? onReceiveMessage;
 }
 
-class FlJPushCmdMessage {
-  FlJPushCmdMessage(Map<dynamic, dynamic> map)
-      : cmd = map['cmd'] as int,
-        errorCode = map['errorCode'] as int,
-        msg = map['msg'] as String;
-
-  final int cmd;
-  final int errorCode;
-  final String msg;
-
-  Map<String, dynamic> toMap() =>
-      {'cmd': cmd, 'errorCode': errorCode, 'msg': msg};
-}
-
-class FlJPushNotificationSettingsCheck {
-  FlJPushNotificationSettingsCheck(Map<dynamic, dynamic> map)
-      : source = map['source'] as int,
-        isOn = map['isOn'] as bool;
-
-  /// 触发场景，0 为 sdk 启动，1 为检测到通知开关状态变更
-  final int source;
-
-  /// 通知开关状态
-  final bool isOn;
-
-  Map<String, dynamic> toMap() => {'source': source, 'isOn': isOn};
-}
-
 typedef JPushAndroidOnCommandResult = void Function(FlJPushCmdMessage message);
 
 typedef JPushOnNotificationSettingsCheck = void Function(
@@ -348,4 +320,32 @@ class LocalNotification {
       LocalNotificationWithAndroid(id: id);
 
   LocalNotificationWithIOS toIOS() => LocalNotificationWithIOS(id: id);
+}
+
+class FlJPushCmdMessage {
+  FlJPushCmdMessage(Map<dynamic, dynamic> map)
+      : cmd = map['cmd'] as int,
+        errorCode = map['errorCode'] as int,
+        msg = map['msg'] as String;
+
+  final int cmd;
+  final int errorCode;
+  final String msg;
+
+  Map<String, dynamic> toMap() =>
+      {'cmd': cmd, 'errorCode': errorCode, 'msg': msg};
+}
+
+class FlJPushNotificationSettingsCheck {
+  FlJPushNotificationSettingsCheck(Map<dynamic, dynamic> map)
+      : source = map['source'] as int,
+        isOn = map['isOn'] as bool;
+
+  /// 触发场景，0 为 sdk 启动，1 为检测到通知开关状态变更
+  final int source;
+
+  /// 通知开关状态
+  final bool isOn;
+
+  Map<String, dynamic> toMap() => {'source': source, 'isOn': isOn};
 }

@@ -1,6 +1,7 @@
 ## 4.0.0
 
 * Update SDK version to 5.2.2
+* 需要重新复制一下原生依赖包（heytap_msp_push和hi_push）
 
 ## 3.4.0
 

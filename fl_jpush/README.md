@@ -103,7 +103,6 @@ Future<void> addEventHandler() async {
           onCommandResult: (FlJPushCmdMessage message) {
             log('onCommandResult: ${message.toMap()}');
           }, onNotifyMessageDismiss: (JPushMessage message) {
-        /// onNotifyMessageDismiss
         /// 清除通知回调
         /// 1.同时删除多条通知，可能不会多次触发清除通知的回调
         /// 2.只有用户手动清除才有回调，调接口清除不会有回调

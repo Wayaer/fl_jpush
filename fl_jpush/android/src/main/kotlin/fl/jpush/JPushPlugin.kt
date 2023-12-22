@@ -238,7 +238,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onMessage(context: Context?, message: CustomMessage?) {
             super.onMessage(context, message)
             channel.invokeMethod(
-                "onMessage", mapOf(
+                "onReceiveMessage", mapOf(
                     "title" to message?.title,
                     "extras" to message?.extra,
                     "message" to message?.message,
@@ -293,6 +293,8 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         override fun onRegister(context: Context?, registrationId: String?) {
             super.onRegister(context, registrationId)
+            println("=====onRegister ${registrationId}")
+            channel.invokeMethod("onRegister", registrationId)
         }
 
         override fun onConnected(context: Context?, isConnected: Boolean) {
@@ -334,6 +336,12 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         override fun onNotificationSettingsCheck(context: Context?, isOn: Boolean, source: Int) {
             super.onNotificationSettingsCheck(context, isOn, source)
+            println("=====onNotificationSettingsCheck ${isOn}")
+            channel.invokeMethod(
+                "onNotificationSettingsCheck", mapOf(
+                    "isOn" to isOn, "source" to source
+                )
+            )
         }
 
 

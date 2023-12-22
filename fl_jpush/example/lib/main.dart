@@ -64,11 +64,19 @@ class _HomePageState extends State<HomePage> {
           log('onReceiveNotification: ${message.toMap()}');
           text = 'onReceiveNotification: ${message.toMap()}';
           setState(() {});
+        }, onReceiveMessage: (JPushMessage message) {
+          log('onReceiveMessage: ${message.toMap()}');
+          text = 'onReceiveMessage: ${message.toMap()}';
+          setState(() {});
         }),
-        androidEventHandler:
-            FlJPushAndroidEventHandler(onConnected: (bool isConnected) {
+        androidEventHandler: FlJPushAndroidEventHandler(
+            onConnected: (bool isConnected) {
           log('onConnected: $isConnected');
           text = 'onConnected: $isConnected';
+          setState(() {});
+        }, onRegister: (String? registrationId) {
+          log('onRegister: $registrationId');
+          text = 'onRegister: $registrationId';
           setState(() {});
         }, onCommandResult: (FlJPushCmdMessage message) {
           log('onCommandResult: ${message.toMap()}');
@@ -78,13 +86,14 @@ class _HomePageState extends State<HomePage> {
           log('onNotifyMessageDismiss: ${message.toMap()}');
           text = 'onNotifyMessageDismiss: ${message.toMap()}';
           setState(() {});
-        }),
-        iosEventHandler:
-            FlJPushIOSEventHandler(onReceiveMessage: (JPushMessage message) {
-          log('onReceiveMessage: ${message.toMap()}');
-          text = 'onReceiveMessage: ${message.toMap()}';
+        }, onNotificationSettingsCheck:
+                (FlJPushNotificationSettingsCheck settingsCheck) {
+          log('onNotificationSettingsCheck: ${settingsCheck.toMap()}');
+          text = 'onNotificationSettingsCheck: ${settingsCheck.toMap()}';
           setState(() {});
-        }, onReceiveNotificationAuthorization: (bool? state) {
+        }),
+        iosEventHandler: FlJPushIOSEventHandler(
+            onReceiveNotificationAuthorization: (bool? state) {
           log('onReceiveNotificationAuthorization: $state');
           text = 'onReceiveNotificationAuthorization: $state';
           log("flutter: $text");

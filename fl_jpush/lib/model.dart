@@ -4,13 +4,20 @@ typedef JPushEventHandler = void Function(JPushMessage message);
 
 /// jPush event handler
 class FlJPushEventHandler {
-  FlJPushEventHandler({this.onOpenNotification, this.onReceiveNotification});
+  FlJPushEventHandler(
+      {this.onOpenNotification,
+      this.onReceiveNotification,
+      this.onReceiveMessage});
 
   /// 点击通知栏消息回调
   final JPushEventHandler? onOpenNotification;
 
   /// 接收普通消息
   final JPushEventHandler? onReceiveNotification;
+
+  /// onMessage
+  /// 自定义消息
+  final JPushEventHandler? onReceiveMessage;
 }
 
 class FlJPushCmdMessage {
@@ -27,24 +34,47 @@ class FlJPushCmdMessage {
       {'cmd': cmd, 'errorCode': errorCode, 'msg': msg};
 }
 
+class FlJPushNotificationSettingsCheck {
+  FlJPushNotificationSettingsCheck(Map<dynamic, dynamic> map)
+      : source = map['source'] as int,
+        isOn = map['isOn'] as bool;
+
+  /// 触发场景，0 为 sdk 启动，1 为检测到通知开关状态变更
+  final int source;
+
+  /// 通知开关状态
+  final bool isOn;
+
+  Map<String, dynamic> toMap() => {'source': source, 'isOn': isOn};
+}
+
 typedef JPushAndroidOnConnected = void Function(bool isConnected);
+
+typedef JPushAndroidOnRegister = void Function(String? registrationId);
 
 typedef JPushAndroidOnCommandResult = void Function(FlJPushCmdMessage message);
 
 typedef JPushAndroidOnMultiActionClicked = void Function(String? action);
 
+typedef JPushOnNotificationSettingsCheck = void Function(
+    FlJPushNotificationSettingsCheck settingsCheck);
+
 /// android event handler
 class FlJPushAndroidEventHandler {
   FlJPushAndroidEventHandler({
     this.onConnected,
+    this.onRegister,
     this.onCommandResult,
     this.onNotifyMessageDismiss,
     this.onMultiActionClicked,
-    this.onMessage,
+    this.onNotificationSettingsCheck,
   });
 
   /// onConnected
   final JPushAndroidOnConnected? onConnected;
+
+  /// registrationId 回调
+  final JPushAndroidOnRegister? onRegister;
 
   /// onCommandResult
   final JPushAndroidOnCommandResult? onCommandResult;
@@ -55,22 +85,20 @@ class FlJPushAndroidEventHandler {
   /// onMultiActionClicked
   final JPushAndroidOnMultiActionClicked? onMultiActionClicked;
 
-  /// onMessage
-  final JPushEventHandler? onMessage;
+  /// onNotificationSettingsCheck
+  /// 通知开关状态回调
+  final JPushOnNotificationSettingsCheck? onNotificationSettingsCheck;
 }
 
 typedef JPushNotificationAuthorization = void Function(bool state);
-typedef JPushOnOpenSettingsForNotification = void Function(dynamic data);
+
+typedef JPushOnOpenSettingsForNotification = void Function(JPushMessage data);
 
 /// ios event handler
 class FlJPushIOSEventHandler {
   FlJPushIOSEventHandler(
-      {this.onReceiveMessage,
-      this.onReceiveNotificationAuthorization,
+      {this.onReceiveNotificationAuthorization,
       this.onOpenSettingsForNotification});
-
-  /// 接收自定义消息
-  final JPushEventHandler? onReceiveMessage;
 
   /// ios 获取消息认证 回调
   final JPushNotificationAuthorization? onReceiveNotificationAuthorization;

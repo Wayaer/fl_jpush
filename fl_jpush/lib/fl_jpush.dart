@@ -49,7 +49,7 @@ class FlJPush {
             eventHandler?.onReceiveNotification?.call(buildMessage());
             break;
           case 'onReceiveMessage':
-            iosEventHandler?.onReceiveMessage?.call(buildMessage());
+            eventHandler?.onReceiveMessage?.call(buildMessage());
             break;
           case 'onReceiveNotificationAuthorization':
             iosEventHandler?.onReceiveNotificationAuthorization
@@ -66,6 +66,9 @@ class FlJPush {
           case 'onConnected':
             androidEventHandler?.onConnected?.call(call.arguments as bool);
             break;
+          case 'onRegister':
+            androidEventHandler?.onRegister?.call(call.arguments as String?);
+            break;
           case 'onNotifyMessageDismiss':
             androidEventHandler?.onNotifyMessageDismiss?.call(buildMessage());
             break;
@@ -73,8 +76,10 @@ class FlJPush {
             androidEventHandler?.onMultiActionClicked
                 ?.call(call.arguments as String?);
             break;
-          case 'onMessage':
-            androidEventHandler?.onMessage?.call(buildMessage());
+          case 'onNotificationSettingsCheck':
+            androidEventHandler?.onNotificationSettingsCheck?.call(
+                FlJPushNotificationSettingsCheck(
+                    call.arguments as Map<dynamic, dynamic>));
             break;
         }
       } catch (_) {

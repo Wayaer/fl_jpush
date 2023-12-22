@@ -1,4 +1,4 @@
-package fl.jpush.example
+package com.jpush.example
 
 import io.flutter.embedding.android.FlutterActivity
 

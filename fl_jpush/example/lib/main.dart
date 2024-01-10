@@ -41,8 +41,7 @@ class _HomePageState extends State<HomePage> {
       addEventHandler();
       if (isIOS) {
         FlJPush()
-            .applyAuthorityWithIOS(const NotificationSettingsWithIOS(
-                sound: true, alert: true, badge: true))
+            .applyAuthorityWithIOS(const NotificationSettingsWithIOS())
             .then((value) {
           log('请求通知 $value');
         });

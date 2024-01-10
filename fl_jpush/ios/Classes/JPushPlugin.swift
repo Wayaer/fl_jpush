@@ -183,14 +183,17 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
         if args["badge"] as! Bool {
             notificationTypes |= Int(JPAuthorizationOptions.badge.rawValue)
         }
-        if args["providesAppNotificationSettings"] as! Bool {
-            notificationTypes |= Int(JPAuthorizationOptions.providesAppNotificationSettings.rawValue)
-        }
+       
         if #available(iOS 13.0, *), args["announcement"] as! Bool {
             notificationTypes |= Int(JPAuthorizationOptions.announcement.rawValue)
         }
-        if args["provisional"] as! Bool {
-            notificationTypes |= Int(JPAuthorizationOptions.provisional.rawValue)
+        if #available(iOS 12.0, *) {
+            if args["provisional"] as! Bool {
+                notificationTypes |= Int(JPAuthorizationOptions.provisional.rawValue)
+            }
+            if args["providesAppNotificationSettings"] as! Bool {
+                notificationTypes |= Int(JPAuthorizationOptions.providesAppNotificationSettings.rawValue)
+            }
         }
         if args["carPlay"] as! Bool {
             notificationTypes |= Int(JPAuthorizationOptions.carPlay.rawValue)

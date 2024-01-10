@@ -1,3 +1,7 @@
+## 4.0.2
+
+* 修改`NotificationSettingsWithIOS`的部分默认值为`false`
+
 ## 4.0.1
 
 * 全新升级，更新ios和android sdk至最新版,(集成厂商推送需要同步更新)

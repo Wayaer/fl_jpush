@@ -192,10 +192,10 @@ class NotificationSettingsWithIOS {
     this.sound = true,
     this.alert = true,
     this.badge = true,
-    this.providesAppNotificationSettings = true,
-    this.announcement = true,
-    this.provisional = true,
-    this.carPlay = true,
+    this.providesAppNotificationSettings = false,
+    this.announcement = false,
+    this.provisional = false,
+    this.carPlay = false,
   });
 
   /// sound

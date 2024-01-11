@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-part 'model.dart';
+part 'src/jpush_message.dart';
+
+part 'src/android_message.dart';
+
+part 'src/ios_message.dart';
 
 class FlJPush {
   factory FlJPush() => _singleton ??= FlJPush._();
@@ -38,38 +43,51 @@ class FlJPush {
   }) {
     if (!_supportPlatform) return;
     _channel.setMethodCallHandler((MethodCall call) async {
+      final args = call.arguments;
       try {
-        JPushMessage buildMessage() =>
-            JPushMessage.fromMap(call.arguments as Map<dynamic, dynamic>);
         switch (call.method) {
           case 'onOpenNotification':
-            eventHandler?.onOpenNotification?.call(buildMessage());
+            eventHandler?.onOpenNotification?.call(args == null
+                ? null
+                : JPushNotificationMessage.fromMap(
+                    args as Map<dynamic, dynamic>));
             break;
           case 'onReceiveNotification':
-            eventHandler?.onReceiveNotification?.call(buildMessage());
+            eventHandler?.onReceiveNotification?.call(args == null
+                ? null
+                : JPushNotificationMessage.fromMap(
+                    args as Map<dynamic, dynamic>));
             break;
           case 'onReceiveMessage':
-            eventHandler?.onReceiveMessage?.call(buildMessage());
+            eventHandler?.onReceiveMessage?.call(args == null
+                ? null
+                : JPushMessage.fromMap(args as Map<dynamic, dynamic>));
             break;
           case 'onReceiveNotificationAuthorization':
             iosEventHandler?.onReceiveNotificationAuthorization
-                ?.call(call.arguments as bool? ?? false);
+                ?.call(args as bool? ?? false);
             break;
           case 'onOpenSettingsForNotification':
-            iosEventHandler?.onOpenSettingsForNotification
-                ?.call(buildMessage());
+            iosEventHandler?.onOpenSettingsForNotification?.call(args == null
+                ? null
+                : JPushNotificationMessage.fromMap(
+                    args as Map<dynamic, dynamic>));
             break;
           case 'onCommandResult':
             androidEventHandler?.onCommandResult?.call(
-                FlJPushCmdMessage(call.arguments as Map<dynamic, dynamic>));
+                FlJPushCmdMessage.fromMap(args as Map<dynamic, dynamic>));
             break;
           case 'onNotifyMessageDismiss':
-            androidEventHandler?.onNotifyMessageDismiss?.call(buildMessage());
+            androidEventHandler?.onNotifyMessageDismiss?.call(args == null
+                ? null
+                : JPushNotificationMessage.fromMap(
+                    args as Map<dynamic, dynamic>));
             break;
           case 'onNotificationSettingsCheck':
-            androidEventHandler?.onNotificationSettingsCheck?.call(
-                FlJPushNotificationSettingsCheck(
-                    call.arguments as Map<dynamic, dynamic>));
+            androidEventHandler?.onNotificationSettingsCheck?.call(args == null
+                ? null
+                : FlJPushNotificationSettingsCheck.fromMap(
+                    args as Map<dynamic, dynamic>));
             break;
         }
       } catch (_) {
@@ -273,14 +291,14 @@ class FlJPush {
         await _channel.invokeMethod<bool>('openSettingsForNotification');
     return state ?? false;
   }
-
-  bool get _supportPlatform {
-    if (!kIsWeb && (_isAndroid || _isIOS)) return true;
-    debugPrint('Not support platform for $defaultTargetPlatform');
-    return false;
-  }
-
-  bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
-
-  bool get _isIOS => defaultTargetPlatform == TargetPlatform.iOS;
 }
+
+bool get _supportPlatform {
+  if (!kIsWeb && (_isAndroid || _isIOS)) return true;
+  debugPrint('Not support platform for $defaultTargetPlatform');
+  return false;
+}
+
+bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
+
+bool get _isIOS => defaultTargetPlatform == TargetPlatform.iOS;

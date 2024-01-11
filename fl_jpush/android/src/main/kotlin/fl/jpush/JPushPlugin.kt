@@ -231,33 +231,16 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         override fun onMessage(activity: Context?, message: CustomMessage?) {
             super.onMessage(activity, message)
-            channel.invokeMethod(
-                "onReceiveMessage", mapOf(
-                    "title" to message?.title,
-                    "extras" to message?.extra,
-                    "message" to message?.message,
-                    "messageId" to message?.messageId,
-                    "appId" to message?.appId,
-                    "platform" to message?.platform,
-                )
-            )
+            handle.post {
+                channel.invokeMethod("onReceiveMessage", message?.toMap())
+            }
         }
 
         override fun onNotifyMessageOpened(activity: Context?, message: NotificationMessage?) {
             super.onNotifyMessageOpened(activity, message)
-            channel.invokeMethod(
-                "onOpenNotification", mapOf(
-                    "title" to message?.notificationTitle,
-                    "alert" to message?.notificationAlertType,
-                    "extras" to message?.notificationExtras,
-                    "type" to message?.notificationType,
-                    "message" to message?.notificationContent,
-                    "messageId" to message?.notificationId,
-                    "channelId" to message?.notificationChannelId,
-                    "appId" to message?.appId,
-                    "platform" to message?.platform,
-                )
-            )
+            handle.post {
+                channel.invokeMethod("onOpenNotification", message?.toMap())
+            }
             val launch = activity!!.packageManager.getLaunchIntentForPackage(
                 activity.packageName
             )
@@ -268,39 +251,44 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         }
 
-        override fun onCommandResult(activity: Context?, message: CmdMessage?) {
-            super.onCommandResult(activity, message)
-            channel.invokeMethod(
-                "onCommandResult", mapOf(
-                    "msg" to message?.msg, "errorCode" to message?.errorCode, "cmd" to message?.cmd
-                )
-            )
-        }
-
-
         override fun onNotifyMessageArrived(activity: Context?, message: NotificationMessage?) {
             super.onNotifyMessageArrived(activity, message)
-            channel.invokeMethod(
-                "onReceiveNotification", mapOf(
-                    "message" to message?.notificationContent,
-                    "extras" to message?.notificationExtras,
-                    "messageId" to message?.notificationId,
-                    "contentType" to message?.notificationAlertType,
-                    "title" to message?.notificationTitle,
-                    "channelId" to message?.notificationChannelId,
-                    "appId" to message?.appId,
-                    "platform" to message?.platform,
-                )
-            )
+            handle.post {
+                channel.invokeMethod("onReceiveNotification", message?.toMap())
+            }
         }
+
+        override fun onCommandResult(activity: Context?, message: CmdMessage?) {
+            super.onCommandResult(activity, message)
+            handle.post {
+                channel.invokeMethod(
+                    "onCommandResult", mapOf(
+                        "msg" to message?.msg,
+                        "errorCode" to message?.errorCode,
+                        "cmd" to message?.cmd
+                    )
+                )
+            }
+        }
+
+
+        override fun onNotifyMessageDismiss(activity: Context?, message: NotificationMessage?) {
+            super.onNotifyMessageDismiss(activity, message)
+            handle.post {
+                channel.invokeMethod("onNotifyMessageDismiss", message?.toMap())
+            }
+        }
+
 
         override fun onNotificationSettingsCheck(activity: Context?, isOn: Boolean, source: Int) {
             super.onNotificationSettingsCheck(activity, isOn, source)
-            channel.invokeMethod(
-                "onNotificationSettingsCheck", mapOf(
-                    "isOn" to isOn, "source" to source
+            handle.post {
+                channel.invokeMethod(
+                    "onNotificationSettingsCheck", mapOf(
+                        "isOn" to isOn, "source" to source
+                    )
                 )
-            )
+            }
         }
 
 
@@ -347,3 +335,4 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
 }
+

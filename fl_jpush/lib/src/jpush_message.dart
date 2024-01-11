@@ -1,6 +1,8 @@
-part of 'fl_jpush.dart';
+part of '../fl_jpush.dart';
 
-typedef JPushEventHandler = void Function(JPushMessage message);
+typedef JPushEventHandlerMessage = void Function(JPushMessage? message);
+typedef JPushEventHandlerNotificationMessage = void Function(
+    JPushNotificationMessage? message);
 
 /// jPush event handler
 class FlJPushEventHandler {
@@ -10,19 +12,19 @@ class FlJPushEventHandler {
       this.onReceiveMessage});
 
   /// 点击通知栏消息回调
-  final JPushEventHandler? onOpenNotification;
+  final JPushEventHandlerNotificationMessage? onOpenNotification;
 
   /// 接收普通消息
-  final JPushEventHandler? onReceiveNotification;
+  final JPushEventHandlerNotificationMessage? onReceiveNotification;
 
   /// 接收自定义消息
-  final JPushEventHandler? onReceiveMessage;
+  final JPushEventHandlerMessage? onReceiveMessage;
 }
 
 typedef JPushAndroidOnCommandResult = void Function(FlJPushCmdMessage message);
 
 typedef JPushOnNotificationSettingsCheck = void Function(
-    FlJPushNotificationSettingsCheck settingsCheck);
+    FlJPushNotificationSettingsCheck? settingsCheck);
 
 /// android event handler
 class FlJPushAndroidEventHandler {
@@ -47,7 +49,7 @@ class FlJPushAndroidEventHandler {
   /// 清除通知回调
   /// 1.同时删除多条通知，可能不会多次触发清除通知的回调
   /// 2.只有用户手动清除才有回调，调接口清除不会有回调
-  final JPushEventHandler? onNotifyMessageDismiss;
+  final JPushEventHandlerNotificationMessage? onNotifyMessageDismiss;
 
   /// 通知开关状态回调
   /// 说明: sdk 内部检测通知开关状态的方法因系统差异，在少部分机型上可能存在兼容问题(判断不准确)。
@@ -57,7 +59,8 @@ class FlJPushAndroidEventHandler {
 
 typedef JPushNotificationAuthorization = void Function(bool state);
 
-typedef JPushOnOpenSettingsForNotification = void Function(JPushMessage data);
+typedef JPushOnOpenSettingsForNotification = void Function(
+    JPushNotificationMessage? message);
 
 /// ios event handler
 class FlJPushIOSEventHandler {
@@ -72,79 +75,101 @@ class FlJPushIOSEventHandler {
   /// 从应用外部通知界面进入应用是指 左滑通知->管理->在“某 App”中配置->进入应用 。
   /// 从通知设置界面进入应用是指 系统设置->对应应用->“某 App”的通知设置
   /// 需要先在授权的时候增加这个选项 JPAuthorizationOptionProvidesAppNotificationSettings
+  /// 设置[NotificationSettingsWithIOS] providesAppNotificationSettings=true
   final JPushOnOpenSettingsForNotification? onOpenSettingsForNotification;
 }
 
-/// 统一android ios 回传数据解析
-class JPushMessage {
-  JPushMessage.fromMap(Map<dynamic, dynamic> json) {
-    if (json.containsKey('aps')) {
-      final Map<dynamic, dynamic>? aps = json['aps'] as Map<dynamic, dynamic>?;
-      if (aps != null) {
-        alert = aps['alert'] as dynamic;
-        badge = aps['badge'] as int?;
-        sound = aps['sound'] as String?;
-        mutableContent =
-            aps['mutableContent'] ?? aps['mutable-content'] as int?;
-        notificationAuthorization = aps['notificationAuthorization'] as bool?;
-      }
-      msgID = json['_j_msgid']?.toString();
-      notificationID = json['_j_uid'] as int?;
-      extras = json;
-    } else {
-      message = json['message'] as String?;
-      alert = json['alert'] as dynamic;
-      final Map<dynamic, dynamic>? extras =
-          json['extras'] as Map<dynamic, dynamic>?;
-      if (extras != null) {
-        msgID = extras['cn.jpush.android.MSG_ID'] as String?;
-        notificationID = extras['cn.jpush.android.NOTIFICATION_ID'] as int?;
-        this.extras = extras['cn.jpush.android.EXTRA'];
-      }
-    }
-    original = json;
-    title = json['title'] as String?;
-  }
-
+abstract class _Message {
   /// 原始数据 原生返回未解析的数据
-  /// 其他参数 均由 [original] 解析所得
   Map<dynamic, dynamic>? original;
+  Map<dynamic, dynamic>? extras;
+  String? message;
+  String? messageId;
 
-  String? msgID;
-  int? notificationID;
+  Map<String, dynamic> toMap() => {
+        'original': original,
+        'message': message,
+        'messageId': messageId,
+        'extras': extras
+      };
+}
 
-  /// 一般情况下使用的数据
-  dynamic alert;
+/// 统一android ios 回传数据解析
+class JPushNotificationMessage extends _Message {
+  JPushNotificationMessage.fromMap(Map<dynamic, dynamic> json) {
+    original = json;
+    try {
+      if (_isAndroid) {
+        android = NotificationMessageWithAndroid.fromMap(json);
+        title = android?.notificationTitle;
+        message = android?.notificationContent;
+        messageId = android?.notificationId?.toString();
 
-  /// 一般情况下使用的额外数据
-  dynamic extras;
+        extras = jsonDecode(android?.notificationExtras ?? '');
+      } else if (_isIOS) {
+        ios = NotificationMessageWithIOS.fromMap(json);
+        title = ios?.aps?.alert?.title;
+        message = ios?.aps?.alert?.body;
+        messageId = ios?.msgId?.toString();
+        extras = {...json}..removeWhere((key, value) =>
+            key == '_j_msgid' ||
+            key == 'aps' ||
+            key == '_j_business' ||
+            key == '_j_uid' ||
+            key == '_j_data_');
+      }
+    } catch (e) {
+      debugPrint(' JPushNotificationMessage.fromMap error: $e');
+    }
+  }
 
   String? title;
 
-  /// only android
-  String? message;
+  /// 仅 android 有数据
+  NotificationMessageWithAndroid? android;
 
-  /// only ios
-  /// 监测通知授权状态返回结果
-  bool? notificationAuthorization;
-  String? sound;
-  String? subtitle;
-  int? badge;
-  int? mutableContent;
+  /// 仅 ios 有数据
+  NotificationMessageWithIOS? ios;
 
+  @override
   Map<String, dynamic> toMap() => {
-        'alert': alert,
-        'extras': extras,
-        'message': message,
+        ...super.toMap(),
         'title': title,
-        'msgID': msgID,
-        'notificationID': notificationID,
-        'subtitle': subtitle,
-        'sound': sound,
-        'badge': badge,
-        'mutableContent': mutableContent,
-        'original': original
+        'android': android?.toMap(),
+        'ios': ios?.toMap()
       };
+}
+
+class JPushMessage extends _Message {
+  JPushMessage.fromMap(Map<dynamic, dynamic> json) {
+    original = json;
+    try {
+      if (_isAndroid) {
+        android = CustomMessageWithAndroid.fromMap(json);
+        message = android?.message;
+        messageId = android?.messageId;
+
+        extras = jsonDecode(android?.extra ?? '');
+      } else if (_isIOS) {
+        ios = CustomMessageWithIOS.fromMap(json);
+        extras = ios?.extra;
+        message = ios?.content;
+        messageId = ios?.msgId?.toString();
+      }
+    } catch (e) {
+      debugPrint('JPushMessage.fromMap error: $e');
+    }
+  }
+
+  /// 仅 android 有数据
+  CustomMessageWithAndroid? android;
+
+  /// 仅 ios 有数据
+  CustomMessageWithIOS? ios;
+
+  @override
+  Map<String, dynamic> toMap() =>
+      {...super.toMap(), 'android': android?.toMap(), 'ios': ios?.toMap()};
 }
 
 class TagResultModel {
@@ -308,7 +333,7 @@ class LocalNotification {
 }
 
 class FlJPushCmdMessage {
-  FlJPushCmdMessage(Map<dynamic, dynamic> map)
+  FlJPushCmdMessage.fromMap(Map<dynamic, dynamic> map)
       : cmd = map['cmd'] as int,
         errorCode = map['errorCode'] as int,
         msg = map['msg'] as String;
@@ -322,7 +347,7 @@ class FlJPushCmdMessage {
 }
 
 class FlJPushNotificationSettingsCheck {
-  FlJPushNotificationSettingsCheck(Map<dynamic, dynamic> map)
+  FlJPushNotificationSettingsCheck.fromMap(Map<dynamic, dynamic> map)
       : source = map['source'] as int,
         isOn = map['isOn'] as bool;
 

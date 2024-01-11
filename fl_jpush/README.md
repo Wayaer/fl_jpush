@@ -88,41 +88,43 @@ import 'package:fl_jpush/fl_jpush_dart';
 
 Future<void> addEventHandler() async {
   FlJPush().addEventHandler(
-      eventHandler:
-      FlJPushEventHandler(onOpenNotification: (JPushMessage message) {
-        /// 点击通知栏消息回调
-        log('onOpenNotification: ${message.toMap()}');
-      }, onReceiveNotification: (JPushMessage message) {
+      eventHandler: FlJPushEventHandler(
+          onOpenNotification: (JPushNotificationMessage? message) {
+            /// 点击通知栏消息回调
+            log('onOpenNotification: ${message?.toMap()}');
+          }, onReceiveNotification: (JPushNotificationMessage? message) {
         /// 接收普通消息
-        log('onReceiveNotification: ${message.toMap()}');
-      }, onReceiveMessage: (JPushMessage message) {
+        log('onReceiveNotification: ${message?.toMap()}');
+      }, onReceiveMessage: (JPushMessage? message) {
         /// 接收自定义消息
-        log('onReceiveMessage: ${message.toMap()}');
+        log('onReceiveMessage: ${message?.toMap()}');
       }),
       androidEventHandler: FlJPushAndroidEventHandler(
           onCommandResult: (FlJPushCmdMessage message) {
             log('onCommandResult: ${message.toMap()}');
-          }, onNotifyMessageDismiss: (JPushMessage message) {
+          }, onNotifyMessageDismiss: (JPushNotificationMessage? message) {
+        /// onNotifyMessageDismiss
         /// 清除通知回调
         /// 1.同时删除多条通知，可能不会多次触发清除通知的回调
         /// 2.只有用户手动清除才有回调，调接口清除不会有回调
-        log('onNotifyMessageDismiss: ${message.toMap()}');
+        log('onNotifyMessageDismiss: ${message?.toMap()}');
       }, onNotificationSettingsCheck:
-          (FlJPushNotificationSettingsCheck settingsCheck) {
+          (FlJPushNotificationSettingsCheck? settingsCheck) {
         /// 通知开关状态回调
         /// 说明: sdk 内部检测通知开关状态的方法因系统差异，在少部分机型上可能存在兼容问题(判断不准确)。
         /// source 触发场景，0 为 sdk 启动，1 为检测到通知开关状态变更
-        log('onNotificationSettingsCheck: ${settingsCheck.toMap()}');
+        log('onNotificationSettingsCheck: ${settingsCheck?.toMap()}');
       }),
       iosEventHandler: FlJPushIOSEventHandler(
           onReceiveNotificationAuthorization: (bool? state) {
             /// ios 申请通知权限 回调
             log('onReceiveNotificationAuthorization: $state');
-          }, onOpenSettingsForNotification: (data) {
+            text = 'onReceiveNotificationAuthorization: $state';
+          }, onOpenSettingsForNotification: (JPushNotificationMessage? data) {
         /// 从应用外部通知界面进入应用是指 左滑通知->管理->在“某 App”中配置->进入应用 。
         /// 从通知设置界面进入应用是指 系统设置->对应应用->“某 App”的通知设置
         /// 需要先在授权的时候增加这个选项 JPAuthorizationOptionProvidesAppNotificationSettings
-        log('onOpenSettingsForNotification: $data');
+        log('onOpenSettingsForNotification: ${data?.toMap()}');
       }));
 }
 

@@ -91,7 +91,7 @@ class FlJPush {
             break;
         }
       } catch (_) {
-        debugPrint(_.toString());
+        debugPrint('FlJPush().addEventHandler error:${_.toString()}');
       }
     });
   }

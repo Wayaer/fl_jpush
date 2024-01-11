@@ -2,7 +2,6 @@
 
 * android添加消息删除回调支持,`onNotifyMessageDismiss`
 * 区分通知和自定义消息回调 `JPushMessage`、`JPushNotificationMessage`,
-*
 
 ## 4.0.2
 

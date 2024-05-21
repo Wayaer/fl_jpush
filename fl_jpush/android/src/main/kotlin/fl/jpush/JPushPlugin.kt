@@ -26,11 +26,11 @@ import java.util.*
 
 
 class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
-    private lateinit var context: Context
-    private lateinit var activity: Activity
+    private var context: Context? = null
+    private var activity: Activity? = null
 
     companion object {
-        lateinit var channel: MethodChannel
+        var channel: MethodChannel? = null
         var channelResult: MethodChannel.Result? = null
         val handle = Handler(Looper.getMainLooper())
     }
@@ -38,7 +38,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onAttachedToEngine(plugin: FlutterPluginBinding) {
         channel = MethodChannel(plugin.binaryMessenger, "fl_jpush")
-        channel.setMethodCallHandler(this)
+        channel!!.setMethodCallHandler(this)
         context = plugin.applicationContext
     }
 
@@ -59,8 +59,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     override fun onDetachedFromEngine(plugin: FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
-
+        channel?.setMethodCallHandler(null)
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -232,14 +231,14 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onMessage(activity: Context?, message: CustomMessage?) {
             super.onMessage(activity, message)
             handle.post {
-                channel.invokeMethod("onReceiveMessage", message?.toMap())
+                channel?.invokeMethod("onReceiveMessage", message?.toMap())
             }
         }
 
         override fun onNotifyMessageOpened(activity: Context?, message: NotificationMessage?) {
             super.onNotifyMessageOpened(activity, message)
             handle.post {
-                channel.invokeMethod("onOpenNotification", message?.toMap())
+                channel?.invokeMethod("onOpenNotification", message?.toMap())
             }
             val launch = activity!!.packageManager.getLaunchIntentForPackage(
                 activity.packageName
@@ -254,14 +253,14 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onNotifyMessageArrived(activity: Context?, message: NotificationMessage?) {
             super.onNotifyMessageArrived(activity, message)
             handle.post {
-                channel.invokeMethod("onReceiveNotification", message?.toMap())
+                channel?.invokeMethod("onReceiveNotification", message?.toMap())
             }
         }
 
         override fun onCommandResult(activity: Context?, message: CmdMessage?) {
             super.onCommandResult(activity, message)
             handle.post {
-                channel.invokeMethod(
+                channel?.invokeMethod(
                     "onCommandResult", mapOf(
                         "msg" to message?.msg,
                         "errorCode" to message?.errorCode,
@@ -275,7 +274,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onNotifyMessageDismiss(activity: Context?, message: NotificationMessage?) {
             super.onNotifyMessageDismiss(activity, message)
             handle.post {
-                channel.invokeMethod("onNotifyMessageDismiss", message?.toMap())
+                channel?.invokeMethod("onNotifyMessageDismiss", message?.toMap())
             }
         }
 
@@ -283,7 +282,7 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onNotificationSettingsCheck(activity: Context?, isOn: Boolean, source: Int) {
             super.onNotificationSettingsCheck(activity, isOn, source)
             handle.post {
-                channel.invokeMethod(
+                channel?.invokeMethod(
                     "onNotificationSettingsCheck", mapOf(
                         "isOn" to isOn, "source" to source
                     )

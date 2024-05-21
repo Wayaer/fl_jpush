@@ -1,6 +1,6 @@
+import 'package:fl_extended/fl_extended.dart';
 import 'package:fl_jpush/fl_jpush.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_curiosity/flutter_curiosity.dart';
 
 void log(dynamic msg) => debugPrint(msg.toString());
 

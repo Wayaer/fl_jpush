@@ -1,3 +1,7 @@
+## 4.1.1
+
+* 修复已知问题
+
 ## 4.1.0
 
 * android添加消息删除回调支持,`onNotifyMessageDismiss`

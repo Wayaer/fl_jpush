@@ -90,8 +90,8 @@ class FlJPush {
                     args as Map<dynamic, dynamic>));
             break;
         }
-      } catch (_) {
-        debugPrint('FlJPush().addEventHandler error:${_.toString()}');
+      } catch (e) {
+        debugPrint('FlJPush().addEventHandler error:${e.toString()}');
       }
     });
   }

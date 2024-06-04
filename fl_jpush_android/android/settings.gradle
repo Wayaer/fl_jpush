@@ -1,3 +1,1 @@
 rootProject.name = 'fl_jpush_android'
-include ':heytap_msp_push'
-include ':hi_push'

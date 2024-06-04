@@ -1,3 +1,8 @@
+## 5.0.0
+
+* 更新 android SDK版本
+* 集成了厂商推送需移除`heytap_msp_push`和`hi_push`
+
 ## 4.1.1
 
 * 修复已知问题

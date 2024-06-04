@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('HiPushSDK-7.0.61.302.aar'))

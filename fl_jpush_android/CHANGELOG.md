@@ -1,3 +1,8 @@
+## 5.0.0
+
+* 需移除`heytap_msp_push`和`hi_push`
+* 移除`android/app/build.gradle` 中的`include ':hi_push'`和`include ':heytap_msp_push'`
+
 ## 4.0.0
 
 * Update SDK version to 5.2.2

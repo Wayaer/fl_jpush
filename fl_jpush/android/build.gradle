@@ -2,15 +2,13 @@ group 'fl.jpush'
 version '1.0'
 
 buildscript {
-    ext.kotlin_version = '1.8.0'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:8.5.2'
     }
 }
 
@@ -25,17 +23,22 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 33
+    compileSdk = 34
 
     if (project.android.hasProperty("namespace")) {
         namespace 'fl.jpush'
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
     defaultConfig {
-        minSdkVersion 17
+        minSdk = 17
         consumerProguardFiles 'consumer-rules.pro'
     }
     packagingOptions {
@@ -46,9 +49,8 @@ android {
         doNotStrip '*/mips/*.so'
         doNotStrip '*/mips64/*.so'
     }
-}
 
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'cn.jiguang.sdk:jpush:5.3.1'
+    dependencies {
+        implementation 'cn.jiguang.sdk:jpush:5.5.0'
+    }
 }

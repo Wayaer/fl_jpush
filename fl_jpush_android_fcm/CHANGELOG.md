@@ -1,3 +1,7 @@
+## 5.5.0
+
+* Updated sdk version to 5.5.0
+
 ## 5.0.0
 
 * Updated sdk version to 5.3.1

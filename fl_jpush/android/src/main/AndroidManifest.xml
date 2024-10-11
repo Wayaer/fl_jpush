@@ -55,14 +55,23 @@
             android:name="cn.jpush.android.service.AlarmReceiver"
             android:exported="false" />
         <!--jpush_config_end-->
-        <service
-            android:name=".JPushPlugin$JPushService"
-            android:exported="true">
+        <!--        <service-->
+        <!--            android:name=".JPushPlugin$JPushService"-->
+        <!--            android:exported="true">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="cn.jpush.android.intent.SERVICE_MESSAGE" />-->
+        <!--                <category android:name="${applicationId}" />-->
+        <!--            </intent-filter>-->
+        <!--        </service>-->
+        <receiver
+            android:name=".JPushPlugin$JPushReceiver"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.SERVICE_MESSAGE" />
+                <action android:name="cn.jpush.android.intent.RECEIVER_MESSAGE" />
                 <category android:name="${applicationId}" />
             </intent-filter>
-        </service>
+        </receiver>
         <!-- Since JCore2.0.0 Required SDK核心功能-->
         <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
         <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->

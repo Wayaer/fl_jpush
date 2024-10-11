@@ -15,7 +15,7 @@ A new Flutter project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'JVerification',  '~> 2.7.9'
-  s.platform = :ios, '10.0'
+  s.dependency 'JVerification'
+  s.platform = :ios, '12.0'
   s.static_framework = true
 end

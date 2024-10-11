@@ -10,7 +10,7 @@
     <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!--huawei_permission_start-->
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
@@ -23,7 +23,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -52,7 +52,6 @@
     <!--meizu_permission_start-->
     <uses-permission android:name="com.meizu.flyme.permission.PUSH" />
     <!--meizu_permission_end-->
-
     <!--jpush_permission_start-->
     <uses-sdk tools:overrideLibrary="
      cn.jpush.android.thirdpush.fcm
@@ -100,13 +99,13 @@
             android:enabled="true"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":pushcore"
-            tools:replace="android:process" />
+            android:process=":pushservice" />
+
         <service
             android:name="com.xiaomi.push.service.XMPushService"
             android:enabled="true"
-            android:process=":pushcore"
-            tools:replace="android:process" />
+            android:process=":pushservice" />
+
         <service
             android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
             android:enabled="true"
@@ -116,23 +115,24 @@
             android:enabled="true" />
 
         <receiver
-            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
             android:name="com.xiaomi.push.service.receivers.PingReceiver"
             android:exported="false"
-            android:process=":pushcore"
-            tools:replace="android:process">
+            android:process=":pushservice">
             <intent-filter>
                 <action android:name="com.xiaomi.push.PING_TIMER" />
             </intent-filter>
         </receiver>
+        <activity
+            android:name="com.xiaomi.mipush.sdk.NotificationClickedActivity"
+            android:enabled="true"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <meta-data
+                android:name="supportStyle"
+                android:value="scene|voip" />
+        </activity>
         <receiver
             android:name="cn.jpush.android.service.PluginXiaomiPlatformsReceiver"
             android:exported="true">
@@ -175,7 +175,8 @@
         <!--meizu_config_start-->
         <receiver
             android:name="cn.jpush.android.service.PluginMeizuPlatformsReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:permission="com.meizu.flyme.permission.PUSH">
             <intent-filter>
                 <!-- 接收 push 消息 -->
                 <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
@@ -187,7 +188,17 @@
                 <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
                 <action android:name="com.meizu.c2dm.intent.RECEIVE" />
 
-                <category android:name="${applicationId}" />
+                <category android:name="${applicationId}"></category>
+            </intent-filter>
+        </receiver>
+        <!--        <service-->
+        <!--            android:name="com.meizu.cloud.pushsdk.NotificationService"-->
+        <!--            android:exported="true" />-->
+        <receiver
+            android:name="com.meizu.cloud.pushsdk.MzPushSystemReceiver"
+            android:permission="com.meizu.flyme.permission.PUSH">
+            <intent-filter>
+                <action android:name="com.meizu.flyme.push.intent.PUSH_SYSTEM" />
             </intent-filter>
         </receiver>
 
@@ -200,15 +211,16 @@
         <!--meizu_config_end-->
 
         <!--oppo_config_start-->
+        <!-- since JPushv3.6.8 ，oppov2.1.0 oppo 核心功能-->
         <service
             android:name="cn.jpush.android.service.PluginOppoPushService"
             android:exported="true"
             android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
-
             <intent-filter>
                 <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
         </service>
+
         <!-- since JPushv3.6.8 ，oppov2.1.0 oppo 核心功能-->
         <service
             android:name="com.heytap.msp.push.service.DataMessageCallbackService"
@@ -235,8 +247,7 @@
         <!--vivo_config_start-->
         <receiver
             android:name="cn.jpush.android.service.PluginVivoMessageReceiver"
-            android:exported="true"
-            tools:replace="android:exported">
+            android:exported="false">
 
             <intent-filter>
                 <!-- 接收 push 消息 -->
@@ -245,12 +256,9 @@
         </receiver>
         <service
             android:name="com.vivo.push.sdk.service.CommandClientService"
-            android:exported="true" />
-        <activity
-            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:exported="true"
+            android:permission="com.push.permission.UPSTAGESERVICE"
+            tools:node="replace" />
 
         <meta-data
             android:name="com.vivo.push.api_key"

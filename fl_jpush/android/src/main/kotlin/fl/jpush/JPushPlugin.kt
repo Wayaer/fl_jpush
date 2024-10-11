@@ -12,7 +12,7 @@ import cn.jpush.android.api.JPushInterface
 import cn.jpush.android.api.JPushMessage
 import cn.jpush.android.api.NotificationMessage
 import cn.jpush.android.data.JPushLocalNotification
-import cn.jpush.android.service.JPushMessageService
+import cn.jpush.android.service.JPushMessageReceiver
 import cn.jpush.android.ups.JPushUPSManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
@@ -225,18 +225,15 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         }
     }
 
-
-    class JPushService : JPushMessageService() {
+    class JPushReceiver : JPushMessageReceiver() {
 
         override fun onMessage(activity: Context?, message: CustomMessage?) {
-            super.onMessage(activity, message)
             handle.post {
                 channel?.invokeMethod("onReceiveMessage", message?.toMap())
             }
         }
 
         override fun onNotifyMessageOpened(activity: Context?, message: NotificationMessage?) {
-            super.onNotifyMessageOpened(activity, message)
             handle.post {
                 channel?.invokeMethod("onOpenNotification", message?.toMap())
             }
@@ -251,14 +248,12 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         }
 
         override fun onNotifyMessageArrived(activity: Context?, message: NotificationMessage?) {
-            super.onNotifyMessageArrived(activity, message)
             handle.post {
                 channel?.invokeMethod("onReceiveNotification", message?.toMap())
             }
         }
 
         override fun onCommandResult(activity: Context?, message: CmdMessage?) {
-            super.onCommandResult(activity, message)
             handle.post {
                 channel?.invokeMethod(
                     "onCommandResult", mapOf(
@@ -272,7 +267,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
         override fun onNotifyMessageDismiss(activity: Context?, message: NotificationMessage?) {
-            super.onNotifyMessageDismiss(activity, message)
             handle.post {
                 channel?.invokeMethod("onNotifyMessageDismiss", message?.toMap())
             }
@@ -280,7 +274,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
         override fun onNotificationSettingsCheck(activity: Context?, isOn: Boolean, source: Int) {
-            super.onNotificationSettingsCheck(activity, isOn, source)
             handle.post {
                 channel?.invokeMethod(
                     "onNotificationSettingsCheck", mapOf(
@@ -294,7 +287,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onTagOperatorResult(
             activity: Context?, jPushMessage: JPushMessage?
         ) {
-            super.onTagOperatorResult(activity, jPushMessage)
             val res: MutableMap<String, Any?> = HashMap()
             res["code"] = jPushMessage?.errorCode
             if (jPushMessage?.tags != null) res["tags"] = jPushMessage.tags.toList()
@@ -307,7 +299,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onCheckTagOperatorResult(
             activity: Context?, jPushMessage: JPushMessage?
         ) {
-            super.onCheckTagOperatorResult(activity, jPushMessage)
             val res: MutableMap<String, Any?> = HashMap()
             res["code"] = jPushMessage?.errorCode
             res["isBind"] = jPushMessage?.tagCheckStateResult
@@ -322,7 +313,6 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         override fun onAliasOperatorResult(
             activity: Context?, jPushMessage: JPushMessage?
         ) {
-            super.onAliasOperatorResult(activity, jPushMessage)
             val res: MutableMap<String, Any?> = HashMap()
             res["alias"] = jPushMessage?.alias
             res["code"] = jPushMessage?.errorCode

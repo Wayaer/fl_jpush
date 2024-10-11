@@ -1,3 +1,7 @@
+## 5.5.0
+
+* 更新 android SDK版本
+
 ## 5.0.0
 
 * 更新 android SDK版本

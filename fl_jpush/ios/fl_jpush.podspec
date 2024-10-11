@@ -13,11 +13,11 @@ A new flutter plugin project.
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
   s.dependency 'Flutter'
-  s.dependency 'JCore','4.4.2'
-  s.dependency 'JPush','5.2.0'
+  s.dependency 'JCore'
+  s.dependency 'JPush'
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
-  s.platform = :ios, '11.0'
+  s.platform = :ios, '12.0'
   s.static_framework = true
 
   # Flutter.framework does not contain a i386 slice.

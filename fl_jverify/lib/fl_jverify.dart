@@ -19,16 +19,16 @@ class FlJVerify {
   final MethodChannel _channel = const MethodChannel('fl_jverify');
 
   /// 初始化, timeout单位毫秒，合法范围是(0,30000]，推荐设置为5000-10000,默认值为10000
-  Future<JVerifyResult?> setup(
-      {
-      /// ios 使用
-      String? iosKey,
-      String? channel,
-      bool useIDFA = false,
+  Future<JVerifyResult?> setup({
+    /// ios 使用
+    String? iosKey,
+    String? channel,
+    bool useIDFA = false,
 
-      /// andorid 使用
-      int timeout = 10000,
-      bool setControlWifiSwitch = true}) async {
+    /// andorid 使用
+    int timeout = 10000,
+    bool setControlWifiSwitch = true,
+  }) async {
     if (!_supportPlatform) return null;
     if (_isIOS) assert(iosKey != null);
     final map = await _channel.invokeMethod<Map<dynamic, dynamic>?>('setup', {
@@ -36,7 +36,7 @@ class FlJVerify {
       'channel': channel,
       'useIDFA': useIDFA,
       'timeout': timeout,
-      'setControlWifiSwitch': setControlWifiSwitch
+      'setControlWifiSwitch': setControlWifiSwitch,
     });
     return map == null ? null : JVerifyResult.fromJson(map);
   }
@@ -88,7 +88,9 @@ class FlJVerify {
   Future<JVerifyResult?> getToken({int timeOut = 5000}) async {
     if (!_supportPlatform) return null;
     final map = await _channel.invokeMethod<Map<dynamic, dynamic>?>(
-        'getToken', timeOut);
+      'getToken',
+      timeOut,
+    );
     return map == null ? null : JVerifyResult.fromJson(map);
   }
 
@@ -105,7 +107,9 @@ class FlJVerify {
       timeOut = timeOut;
     }
     final map = await _channel.invokeMethod<Map<dynamic, dynamic>?>(
-        'preLogin', timeOut);
+      'preLogin',
+      timeOut,
+    );
     return map == null ? null : JVerifyResult.fromJson(map);
   }
 
@@ -122,11 +126,15 @@ class FlJVerify {
   * @discussion since SDK v2.4.0，授权页面点击事件监听：通过添加 JVAuthPageEventListener 监听，来监听授权页点击事件
   *
   * */
-  Future<JVerifyResult?> loginAuth(
-      {bool autoDismiss = true, int timeout = 5000}) async {
+  Future<JVerifyResult?> loginAuth({
+    bool autoDismiss = true,
+    int timeout = 5000,
+  }) async {
     if (!_supportPlatform) return null;
     final map = await _channel.invokeMethod<Map<dynamic, dynamic>?>(
-        'loginAuth', {'autoDismiss': autoDismiss, 'timeout': timeout});
+      'loginAuth',
+      {'autoDismiss': autoDismiss, 'timeout': timeout},
+    );
     return map == null ? null : JVerifyResult.fromJson(map);
   }
 
@@ -136,9 +144,11 @@ class FlJVerify {
   * @para landscapeConfig   Android 横屏的 UI 配置，该配置只生效在 Android
   * @para widgets           自定义添加的控件
   * */
-  Future<bool> setAuthorizationView(JVGeneralUIConfig portraitConfig,
-      {JVAndroidUIConfig? landscapeConfig,
-      List<JVCustomWidget>? widgets}) async {
+  Future<bool> setAuthorizationView(
+    JVGeneralUIConfig portraitConfig, {
+    JVAndroidUIConfig? landscapeConfig,
+    List<JVCustomWidget>? widgets,
+  }) async {
     Map<String, dynamic> para = {};
     if (_isAndroid) {
       assert(portraitConfig is JVAndroidUIConfig);
@@ -158,8 +168,10 @@ class FlJVerify {
       }
       para["widgets"] = widgetList;
     }
-    final status =
-        await _channel.invokeMethod<bool>("setCustomAuthorizationView", para);
+    final status = await _channel.invokeMethod<bool>(
+      "setCustomAuthorizationView",
+      para,
+    );
     return status ?? false;
   }
 
@@ -169,19 +181,26 @@ class FlJVerify {
    *        key = 'message', 提示信息
    *        key = 'result',uuid
    * */
-  Future<JVerifyResult?> getSMSCode(
-      {required String phone, String? signId, String? tempId}) async {
+  Future<JVerifyResult?> getSMSCode({
+    required String phone,
+    String? signId,
+    String? tempId,
+  }) async {
     if (!_supportPlatform) return null;
     final map = await _channel.invokeMethod<Map<dynamic, dynamic>?>(
-        'getSMSCode', {'phone': phone, 'signId': signId, 'tempId': tempId});
+      'getSMSCode',
+      {'phone': phone, 'signId': signId, 'tempId': tempId},
+    );
     return map == null ? null : JVerifyResult.fromJson(map);
   }
 
   /// 设置前后两次获取验证码的时间间隔，默认 30000ms，有效范围(0,300000)
   Future<bool> setSmsIntervalTime(int intervalTime) async {
     if (!_supportPlatform) return false;
-    final state =
-        await _channel.invokeMethod<bool?>('setSmsIntervalTime', intervalTime);
+    final state = await _channel.invokeMethod<bool?>(
+      'setSmsIntervalTime',
+      intervalTime,
+    );
     return state ?? false;
   }
 
@@ -224,17 +243,17 @@ class JVerifyResult {
   String? result;
 
   JVerifyResult.fromJson(Map<dynamic, dynamic> json)
-      : code = json['code'],
-        message = json['message'],
-        result = json['result'],
-        operator = json['operator'];
+    : code = json['code'],
+      message = json['message'],
+      result = json['result'],
+      operator = json['operator'];
 
   Map<String, dynamic> toMap() => {
-        'code': code,
-        'message': message,
-        'operator': operator,
-        'result': result
-      };
+    'code': code,
+    'message': message,
+    'operator': operator,
+    'result': result,
+  };
 }
 
 /*
@@ -359,64 +378,64 @@ class JVGeneralUIConfig {
   JVPopViewConfig? popViewConfig;
 
   Map<String, dynamic> toMap() => {
-        'privacy': privacy?.map((e) => e.toMap()).toList(),
-        'authBackgroundImage': authBackgroundImage,
-        'authBGGifPath': authBGGifPath,
-        'authBGVideoPath': authBGVideoPath,
-        'authBGVideoImgPath': authBGVideoImgPath,
-        'navColor': navColor,
-        'navText': navText,
-        'navTextColor': navTextColor,
-        'navReturnImgPath': navReturnImgPath,
-        'navHidden': navHidden,
-        'navReturnBtnHidden': navReturnBtnHidden,
-        'navTransparent': navTransparent,
-        'logoImgPath': logoImgPath,
-        'logoWidth': logoWidth,
-        'logoHeight': logoHeight,
-        'logoOffsetY': logoOffsetY,
-        'logoOffsetX': logoOffsetX,
-        'logoHidden': logoHidden,
-        'numberColor': numberColor,
-        'numberSize': numberSize,
-        'numFieldOffsetY': numFieldOffsetY,
-        'numFieldOffsetX': numFieldOffsetX,
-        'numberFieldWidth': numberFieldWidth,
-        'numberFieldHeight': numberFieldHeight,
-        'loginButtonText': loginButtonText,
-        'loginButtonOffsetY': loginButtonOffsetY,
-        'loginButtonOffsetX': loginButtonOffsetX,
-        'loginButtonWidth': loginButtonWidth,
-        'loginButtonHeight': loginButtonHeight,
-        'loginButtonTextSize': loginButtonTextSize,
-        'loginButtonTextColor': loginButtonTextColor,
-        'uncheckedImgPath': uncheckedImgPath,
-        'checkedImgPath': checkedImgPath,
-        'privacyCheckboxSize': privacyCheckboxSize,
-        'privacyHintToast': privacyHintToast,
-        'privacyOffsetY': privacyOffsetY,
-        'privacyOffsetX': privacyOffsetX,
-        'privacyText': privacyText,
-        'privacyTextSize': privacyTextSize,
-        'clauseBaseColor': clauseBaseColor,
-        'clauseColor': clauseColor,
-        'sloganOffsetY': sloganOffsetY,
-        'sloganTextColor': sloganTextColor,
-        'sloganOffsetX': sloganOffsetX,
-        'sloganTextSize': sloganTextSize,
-        'privacyState': privacyState,
-        'privacyCheckboxInCenter': privacyCheckboxInCenter,
-        'privacyTextCenterGravity': privacyTextCenterGravity,
-        'privacyCheckboxHidden': privacyCheckboxHidden,
-        'privacyWithBookTitleMark': privacyWithBookTitleMark,
-        'privacyNavColor': privacyNavColor,
-        'privacyNavTitleTextColor': privacyNavTitleTextColor,
-        'privacyNavTitleTextSize': privacyNavTitleTextSize,
-        'privacyNavReturnBtnImage': privacyNavReturnBtnImage,
-        'popViewConfig': popViewConfig?.toMap(),
-        'needStartAnim': needStartAnim,
-        'needCloseAnim': needCloseAnim,
-      }..removeWhere((key, value) => value == null);
+    'privacy': privacy?.map((e) => e.toMap()).toList(),
+    'authBackgroundImage': authBackgroundImage,
+    'authBGGifPath': authBGGifPath,
+    'authBGVideoPath': authBGVideoPath,
+    'authBGVideoImgPath': authBGVideoImgPath,
+    'navColor': navColor,
+    'navText': navText,
+    'navTextColor': navTextColor,
+    'navReturnImgPath': navReturnImgPath,
+    'navHidden': navHidden,
+    'navReturnBtnHidden': navReturnBtnHidden,
+    'navTransparent': navTransparent,
+    'logoImgPath': logoImgPath,
+    'logoWidth': logoWidth,
+    'logoHeight': logoHeight,
+    'logoOffsetY': logoOffsetY,
+    'logoOffsetX': logoOffsetX,
+    'logoHidden': logoHidden,
+    'numberColor': numberColor,
+    'numberSize': numberSize,
+    'numFieldOffsetY': numFieldOffsetY,
+    'numFieldOffsetX': numFieldOffsetX,
+    'numberFieldWidth': numberFieldWidth,
+    'numberFieldHeight': numberFieldHeight,
+    'loginButtonText': loginButtonText,
+    'loginButtonOffsetY': loginButtonOffsetY,
+    'loginButtonOffsetX': loginButtonOffsetX,
+    'loginButtonWidth': loginButtonWidth,
+    'loginButtonHeight': loginButtonHeight,
+    'loginButtonTextSize': loginButtonTextSize,
+    'loginButtonTextColor': loginButtonTextColor,
+    'uncheckedImgPath': uncheckedImgPath,
+    'checkedImgPath': checkedImgPath,
+    'privacyCheckboxSize': privacyCheckboxSize,
+    'privacyHintToast': privacyHintToast,
+    'privacyOffsetY': privacyOffsetY,
+    'privacyOffsetX': privacyOffsetX,
+    'privacyText': privacyText,
+    'privacyTextSize': privacyTextSize,
+    'clauseBaseColor': clauseBaseColor,
+    'clauseColor': clauseColor,
+    'sloganOffsetY': sloganOffsetY,
+    'sloganTextColor': sloganTextColor,
+    'sloganOffsetX': sloganOffsetX,
+    'sloganTextSize': sloganTextSize,
+    'privacyState': privacyState,
+    'privacyCheckboxInCenter': privacyCheckboxInCenter,
+    'privacyTextCenterGravity': privacyTextCenterGravity,
+    'privacyCheckboxHidden': privacyCheckboxHidden,
+    'privacyWithBookTitleMark': privacyWithBookTitleMark,
+    'privacyNavColor': privacyNavColor,
+    'privacyNavTitleTextColor': privacyNavTitleTextColor,
+    'privacyNavTitleTextSize': privacyNavTitleTextSize,
+    'privacyNavReturnBtnImage': privacyNavReturnBtnImage,
+    'popViewConfig': popViewConfig?.toMap(),
+    'needStartAnim': needStartAnim,
+    'needCloseAnim': needCloseAnim,
+  }..removeWhere((key, value) => value == null);
 }
 
 class JVIOSUIConfig extends JVGeneralUIConfig {
@@ -477,8 +496,9 @@ class JVIOSUIConfig extends JVGeneralUIConfig {
       'sloganVerticalLayout': _getStringFromEnum(sloganVerticalLayout),
       'sloganWidth': sloganWidth,
       'sloganHeight': sloganHeight,
-      'loginButtonVerticalLayout':
-          _getStringFromEnum(loginButtonVerticalLayout),
+      'loginButtonVerticalLayout': _getStringFromEnum(
+        loginButtonVerticalLayout,
+      ),
       'loginBtnNormalImage': loginBtnNormalImage,
       'loginBtnPressedImage': loginBtnPressedImage,
       'loginBtnUnableImage': loginBtnUnableImage,
@@ -626,15 +646,15 @@ class JVPopViewConfig {
   }
 
   Map<String, dynamic> toMap() => {
-        'isPopViewTheme': isPopViewTheme,
-        'width': width,
-        'height': height,
-        'offsetCenterX': offsetCenterX,
-        'offsetCenterY': offsetCenterY,
-        'isBottom': isBottom,
-        'popViewCornerRadius': popViewCornerRadius,
-        'backgroundAlpha': backgroundAlpha,
-      }..removeWhere((key, value) => value == null);
+    'isPopViewTheme': isPopViewTheme,
+    'width': width,
+    'height': height,
+    'offsetCenterX': offsetCenterX,
+    'offsetCenterY': offsetCenterY,
+    'isBottom': isBottom,
+    'popViewCornerRadius': popViewCornerRadius,
+    'backgroundAlpha': backgroundAlpha,
+  }..removeWhere((key, value) => value == null);
 }
 
 ///  自定义控件
@@ -681,24 +701,24 @@ class JVCustomWidget {
   /// 是否可点击，默认：不可点击
 
   Map<String, dynamic> toJsonMap() => {
-        'widgetId': widgetId,
-        'type': _getStringFromEnum(type),
-        'title': title,
-        'titleFont': titleFont,
-        'textAlignment': _getStringFromEnum(textAlignment),
-        'titleColor': titleColor,
-        'backgroundColor': backgroundColor,
-        'isShowUnderline': isShowUnderline,
-        'isClickEnable': isClickEnable,
-        'btnNormalImageName': btnNormalImageName,
-        'btnPressedImageName': btnPressedImageName,
-        'lines': lines,
-        'isSingleLine': isSingleLine,
-        'left': left,
-        'top': top,
-        'width': width,
-        'height': height,
-      }..removeWhere((key, value) => value == null);
+    'widgetId': widgetId,
+    'type': _getStringFromEnum(type),
+    'title': title,
+    'titleFont': titleFont,
+    'textAlignment': _getStringFromEnum(textAlignment),
+    'titleColor': titleColor,
+    'backgroundColor': backgroundColor,
+    'isShowUnderline': isShowUnderline,
+    'isClickEnable': isClickEnable,
+    'btnNormalImageName': btnNormalImageName,
+    'btnPressedImageName': btnPressedImageName,
+    'lines': lines,
+    'isSingleLine': isSingleLine,
+    'left': left,
+    'top': top,
+    'width': width,
+    'height': height,
+  }..removeWhere((key, value) => value == null);
 }
 
 ///  添加自定义控件类型，目前只支持 textView
@@ -727,7 +747,7 @@ enum JVLayoutItem {
   login,
   check,
   privacy,
-  superView
+  superView,
 }
 
 /*
@@ -743,7 +763,7 @@ enum JVIOSUIModalTransitionStyle {
 
   /// 淡出
   crossDissolve,
-  partialCurl
+  partialCurl,
 }
 
 /*
@@ -761,7 +781,7 @@ enum JVStatusBarStyle {
   lightContent,
 
   /// Dark content, for use on light backgrounds  iOS 13 以上
-  darkContent
+  darkContent,
 }
 
 class JVPrivacy {
@@ -773,8 +793,11 @@ class JVPrivacy {
 
   JVPrivacy(this.name, this.url, {this.separator});
 
-  Map<String, dynamic> toMap() =>
-      {'name': name, 'url': url, 'separator': separator};
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'url': url,
+    'separator': separator,
+  };
 
   Map<String, dynamic> toJson() =>
       toMap()..removeWhere((key, value) => value == null);

@@ -1,6 +1,8 @@
-## 5.5.0
+## 5.6.0
 
 * 更新 android SDK版本
+* JVM 改为 17
+* ios加入`PrivacyInfo.xcprivacy`
 
 ## 5.0.0
 

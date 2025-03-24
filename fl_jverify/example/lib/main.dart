@@ -4,13 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(
+    MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '极光认证',
       home: Scaffold(
-          appBar: AppBar(title: const Text('极光认证 Flutter')),
-          body:
-              const Padding(padding: EdgeInsets.all(20), child: HomePage()))));
+        appBar: AppBar(title: const Text('极光认证 Flutter')),
+        body: const Padding(padding: EdgeInsets.all(20), child: HomePage()),
+      ),
+    ),
+  );
 }
 
 class HomePage extends StatefulWidget {
@@ -38,15 +41,18 @@ class _HomePageState extends State<HomePage> {
     await setCustomAuthorizationView();
     setState(() {});
     checkVerifyEnable();
-    FlJVerify().addEventHandler(authPageEventListener: (JVerifyResult result) {
-      if (kDebugMode) {
-        print('authPageEventListener===  ${result.toMap()}');
-      }
-    }, clickWidgetEventListener: (String id) {
-      if (kDebugMode) {
-        print('clickWidgetEventListener===  $id');
-      }
-    });
+    FlJVerify().addEventHandler(
+      authPageEventListener: (JVerifyResult result) {
+        if (kDebugMode) {
+          print('authPageEventListener===  ${result.toMap()}');
+        }
+      },
+      clickWidgetEventListener: (String id) {
+        if (kDebugMode) {
+          print('clickWidgetEventListener===  $id');
+        }
+      },
+    );
   }
 
   void checkVerifyEnable() async {
@@ -71,67 +77,97 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
+    return Column(
+      children: [
+        Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.all(10),
           height: 130,
-          child: Text(text, style: const TextStyle(fontSize: 12))),
-      Wrap(
+          child: Text(text, style: const TextStyle(fontSize: 12)),
+        ),
+        Wrap(
           spacing: 12,
           runSpacing: 6,
           alignment: WrapAlignment.center,
           children: [
             ElevatedText('setup', onPressed: setup),
-            ElevatedText('setDebugMode', onPressed: () async {
-              final result = await FlJVerify().setDebugMode(true);
-              text = result.toString();
-              setState(() {});
-            }),
-            ElevatedText('isInitSuccess', onPressed: () async {
-              final result = await FlJVerify().isInitSuccess();
-              text = result.toString();
-              setState(() {});
-            }),
+            ElevatedText(
+              'setDebugMode',
+              onPressed: () async {
+                final result = await FlJVerify().setDebugMode(true);
+                text = result.toString();
+                setState(() {});
+              },
+            ),
+            ElevatedText(
+              'isInitSuccess',
+              onPressed: () async {
+                final result = await FlJVerify().isInitSuccess();
+                text = result.toString();
+                setState(() {});
+              },
+            ),
             ElevatedText('checkVerifyEnable', onPressed: checkVerifyEnable),
-            ElevatedText('getToken', onPressed: () async {
-              final result = await FlJVerify().getToken();
-              if (result == null) return;
-              text = result.toMap().toString();
-              setState(() {});
-            }),
-            ElevatedText('preLogin', onPressed: () async {
-              final result = await FlJVerify().preLogin();
-              if (result == null) return;
-              text = result.toMap().toString();
-              setState(() {});
-            }),
-            ElevatedText('setCustomAuthorizationView',
-                onPressed: setCustomAuthorizationView),
+            ElevatedText(
+              'getToken',
+              onPressed: () async {
+                final result = await FlJVerify().getToken();
+                if (result == null) return;
+                text = result.toMap().toString();
+                setState(() {});
+              },
+            ),
+            ElevatedText(
+              'preLogin',
+              onPressed: () async {
+                final result = await FlJVerify().preLogin();
+                if (result == null) return;
+                text = result.toMap().toString();
+                setState(() {});
+              },
+            ),
+            ElevatedText(
+              'setCustomAuthorizationView',
+              onPressed: setCustomAuthorizationView,
+            ),
             ElevatedText('loginAuth', onPressed: loginAuth),
-            ElevatedText('clearPreLoginCache', onPressed: () async {
-              final result = await FlJVerify().clearPreLoginCache();
-              text = result.toString();
-              setState(() {});
-            }),
-            ElevatedText('getSMSCode', onPressed: () async {
-              final result = await FlJVerify().getSMSCode(phone: '');
-              if (result == null) return;
-              text = result.toMap().toString();
-              setState(() {});
-            }),
-            ElevatedText('setSmsIntervalTime', onPressed: () async {
-              final result = await FlJVerify().setSmsIntervalTime(1000);
-              text = result.toString();
-              setState(() {});
-            }),
-            ElevatedText('dismissLoginAuthPage', onPressed: () async {
-              final result = await FlJVerify().dismissLoginAuthPage();
-              text = result.toString();
-              setState(() {});
-            }),
-          ])
-    ]);
+            ElevatedText(
+              'clearPreLoginCache',
+              onPressed: () async {
+                final result = await FlJVerify().clearPreLoginCache();
+                text = result.toString();
+                setState(() {});
+              },
+            ),
+            ElevatedText(
+              'getSMSCode',
+              onPressed: () async {
+                final result = await FlJVerify().getSMSCode(phone: '');
+                if (result == null) return;
+                text = result.toMap().toString();
+                setState(() {});
+              },
+            ),
+            ElevatedText(
+              'setSmsIntervalTime',
+              onPressed: () async {
+                final result = await FlJVerify().setSmsIntervalTime(1000);
+                text = result.toString();
+                setState(() {});
+              },
+            ),
+            ElevatedText(
+              'dismissLoginAuthPage',
+              onPressed: () async {
+                final result = await FlJVerify().dismissLoginAuthPage();
+                text = result.toString();
+                setState(() {});
+              },
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -184,7 +220,7 @@ class JVerifyUI {
     config.sloganVerticalLayout = JVLayoutItem.number;
     config.sloganTextColor = Colors.black.value;
     config.sloganTextSize = 15;
-//        config.slogan
+    //        config.slogan
     //config.sloganHidden = 0;
     config.logoImgPath = 'logo';
     config.logoOffsetY = 100;
@@ -211,9 +247,7 @@ class JVerifyUI {
     config.privacyOffsetY = 10; // 距离底部距离
     config.clauseBaseColor = Colors.blue.value;
     config.privacyTextSize = 13;
-    config.privacy = [
-      JVPrivacy('协议', 'http://www.baidu.com', separator: '*'),
-    ];
+    config.privacy = [JVPrivacy('协议', 'http://www.baidu.com', separator: '*')];
     config.clauseColor = Colors.blueAccent.value;
     config.textVerAlignment = 1;
     config.privacyWithBookTitleMark = true;

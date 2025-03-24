@@ -1,3 +1,8 @@
+## 5.6.0
+
+* Update SDK version to 5.6.0
+* JVM 改为 17
+
 ## 5.0.0
 
 * 需移除`heytap_msp_push`和`hi_push`

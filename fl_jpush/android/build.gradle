@@ -30,17 +30,23 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
     defaultConfig {
         minSdk = 17
         consumerProguardFiles 'consumer-rules.pro'
     }
+
     packagingOptions {
         merge 'AndroidManifest.xml'
         merge 'R.txt'
@@ -51,6 +57,6 @@ android {
     }
 
     dependencies {
-        implementation 'cn.jiguang.sdk:jpush:5.5.0'
+        implementation 'cn.jiguang.sdk:jpush:5.6.0'
     }
 }

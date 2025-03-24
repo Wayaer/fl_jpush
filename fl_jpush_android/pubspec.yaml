@@ -1,6 +1,6 @@
 name: fl_jpush_android
 description: JPush integrated vendor push channel,Valid only on Android devices
-version: 5.5.0
+version: 5.6.0
 repository: https://github.com/Wayaer/fl_jpush/tree/main/fl_jpush_android
 
 environment:

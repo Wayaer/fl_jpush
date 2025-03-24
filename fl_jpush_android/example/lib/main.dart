@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(
-      theme: ThemeData.light(useMaterial3: true),
-      darkTheme: ThemeData.dark(useMaterial3: true),
-      title: 'FlJPush with Android',
-      home: const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,8 +9,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('FlJPush with Android')),
-        body: const Center(child: Text('集成厂商通道')));
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        title: 'FlJPush with Android',
+        home: Scaffold(
+            appBar: AppBar(title: const Text('FlJPush with Android')),
+            body: const Center(child: Text('集成厂商通道'))));
   }
 }

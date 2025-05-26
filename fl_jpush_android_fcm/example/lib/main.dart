@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(
-      const MaterialApp(debugShowCheckedModeBanner: false, home: _HomePage()));
+    const MaterialApp(debugShowCheckedModeBanner: false, home: _HomePage()),
+  );
 }
 
 class _HomePage extends StatelessWidget {
@@ -11,7 +12,8 @@ class _HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('FlJPush with Android FCM')),
-        body: const Center(child: Text('集成FCM推送')));
+      appBar: AppBar(title: const Text('FlJPush with Android FCM')),
+      body: const Center(child: Text('集成FCM推送')),
+    );
   }
 }

@@ -77,24 +77,24 @@ android {
         // 极光厂商插件版本与接入 JPush 版本保持一致，下同
         // 接入 OPPO 厂商
         api(name: 'com.heytap.msp_3.5.3', ext: 'aar')
-        api 'cn.jiguang.sdk.plugin:oppo:5.6.0'
+        api 'cn.jiguang.sdk.plugin:oppo:5.7.0'
         // 以下为 OPPO 3.0.0 aar需要依赖
         api 'com.google.code.gson:gson:2.10.1'
         api 'commons-codec:commons-codec:1.15'
         api 'androidx.annotation:annotation:1.8.2'
         // 接入魅族厂商
-        api 'cn.jiguang.sdk.plugin:meizu:5.6.0'
+        api 'cn.jiguang.sdk.plugin:meizu:5.7.0'
         api(name: 'push-internal-5.0.2', ext: 'aar')
         // 接入 VIVO 厂商
-        api 'cn.jiguang.sdk.plugin:vivo:5.6.0'
+        api 'cn.jiguang.sdk.plugin:vivo:5.7.0'
         // 接入小米厂商
-        api 'cn.jiguang.sdk.plugin:xiaomi:5.6.0'
+        api 'cn.jiguang.sdk.plugin:xiaomi:5.7.0'
         // 接入华为厂商
         api 'com.huawei.hms:push:6.5.0.300'
-        api 'cn.jiguang.sdk.plugin:huawei:5.6.0'
+        api 'cn.jiguang.sdk.plugin:huawei:5.7.0'
         // 接入荣耀厂商
         api(name: 'HiPushSDK-8.0.12.307', ext: 'aar')
-        api 'cn.jiguang.sdk.plugin:honor:5.6.0'
+        api 'cn.jiguang.sdk.plugin:honor:5.7.0'
 
     }
 }

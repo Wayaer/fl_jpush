@@ -1,3 +1,8 @@
+## 5.7.0
+
+* Update Sdk version to 5.7.0
+* 新增 `setAuth`方法
+
 ## 5.6.0
 
 * 更新 android SDK版本

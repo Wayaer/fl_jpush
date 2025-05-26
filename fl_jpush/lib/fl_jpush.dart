@@ -25,13 +25,20 @@ class FlJPush {
       String? channel = '',
       bool debug = false}) async {
     if (!_supportPlatform) return false;
-    final bool? state = await _channel.invokeMethod<bool?>(
-        'setup', <String, dynamic>{
+    final state = await _channel.invokeMethod<bool?>('setup', <String, dynamic>{
       'appKey': appKey,
       'channel': channel,
       'production': production,
       'debug': debug
     });
+    return state ?? false;
+  }
+
+  /// setAuth
+  Future<bool> setAuth(bool enable) async {
+    if (!_supportPlatform) return false;
+    final state =
+        await _channel.invokeMethod<bool?>('setAuth', {'auth': enable});
     return state ?? false;
   }
 
@@ -102,7 +109,7 @@ class FlJPush {
       [NotificationSettingsWithIOS iosSettings =
           const NotificationSettingsWithIOS()]) async {
     if (!_isIOS) return false;
-    final bool? state = await _channel.invokeMethod<bool?>(
+    final state = await _channel.invokeMethod<bool?>(
         'applyPushAuthority', iosSettings.toMap());
     return state ?? false;
   }
@@ -110,7 +117,7 @@ class FlJPush {
   /// android 请求权限
   Future<bool> requestPermission() async {
     if (!_isAndroid) return false;
-    final bool? state = await _channel.invokeMethod<bool?>('requestPermission');
+    final state = await _channel.invokeMethod<bool?>('requestPermission');
     return state ?? false;
   }
 
@@ -198,21 +205,21 @@ class FlJPush {
   /// 注意：如果是 Android 手机，目前仅支持华为手机
   Future<bool> setBadge(int badge) async {
     if (!_supportPlatform) return false;
-    final bool? state = await _channel.invokeMethod<bool?>('setBadge', badge);
+    final state = await _channel.invokeMethod<bool?>('setBadge', badge);
     return state ?? false;
   }
 
   /// 停止接收推送，调用该方法后应用将不再受到推送，如果想要重新收到推送可以调用 resumePush。
   Future<bool> stop() async {
     if (!_supportPlatform) return false;
-    final bool? state = await _channel.invokeMethod<bool?>('stopPush');
+    final state = await _channel.invokeMethod<bool?>('stopPush');
     return state ?? false;
   }
 
   /// 恢复推送功能。
   Future<bool> resume() async {
     if (!_supportPlatform) return false;
-    final bool? state = await _channel.invokeMethod<bool?>('resumePush');
+    final state = await _channel.invokeMethod<bool?>('resumePush');
     return state ?? false;
   }
 
@@ -228,8 +235,7 @@ class FlJPush {
       /// [notificationId] = null && [clearLocal] = true 清空本地消息 仅支持android
       bool clearLocal = false}) async {
     if (!_supportPlatform) return false;
-    final bool? state = await _channel.invokeMethod<bool?>(
-        'clearNotification', {
+    final state = await _channel.invokeMethod<bool?>('clearNotification', {
       'id': notificationId,
       'delivered': delivered,
       'clearLocal': clearLocal
@@ -287,7 +293,7 @@ class FlJPush {
   /// 跳转至系统设置中应用设置界面
   Future<bool> openSettingsForNotification() async {
     if (!_supportPlatform) return false;
-    final bool? state =
+    final state =
         await _channel.invokeMethod<bool>('openSettingsForNotification');
     return state ?? false;
   }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import cn.jiguang.api.utils.JCollectionAuth
 import cn.jpush.android.api.CmdMessage
 import cn.jpush.android.api.CustomMessage
 import cn.jpush.android.api.JPushInterface
@@ -72,8 +73,16 @@ class JPushPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         channelResult = result
         when (call.method) {
+            "setAuth" -> {
+                val map = call.arguments<HashMap<String, Any>>()!!
+                JCollectionAuth.setAuth(context, map["auth"] as Boolean)
+                result.success(true)
+            }
+
             "setup" -> {
                 val map = call.arguments<HashMap<String, Any>>()!!
+                JPushInterface.init(context)
+
                 JPushInterface.setDebugMode(map["debug"] as Boolean)
                 JPushUPSManager.registerToken(
                     activity, map["appKey"] as String?, null, null

@@ -7,8 +7,8 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  flutter_curiosity: ^6.6.0
-  fl_extended: ^1.7.2
+  flutter_curiosity: ^6.7.0
+  fl_extended: ^1.8.0
   fl_jpush:
     path: ../
   #  fl_jpush_android:

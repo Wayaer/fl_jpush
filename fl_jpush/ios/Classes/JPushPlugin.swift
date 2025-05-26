@@ -50,6 +50,10 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
             let args = call.arguments as! [String: Any?]
             setup(args)
             result(true)
+        case "setAuth":
+            let args = call.arguments as! [String: Any?]
+            setAuth(args)
+            result(true)
         case "applyPushAuthority":
             let args = call.arguments as! [String: Any?]
             applyPushAuthority(args)
@@ -212,6 +216,13 @@ public class JPushPlugin: NSObject, FlutterPlugin, JPUSHRegisterDelegate {
             JPUSHService.setLogOFF()
         }
         JPUSHService.setup(withOption: completeLaunchNotification, appKey: args["appKey"] as! String, channel: args["channel"] as? String, apsForProduction: args["production"] as! Bool)
+    }
+    
+    public func setAuth(_ args: [String: Any?]) {
+        let auth = args["auth"] as! Bool
+        JGInforCollectionAuth.jCollectionAuth { JGInforCollectionAuthItems in
+            JGInforCollectionAuthItems.isAuth=auth
+        }
     }
     
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable: Any] = [:]) -> Bool {
